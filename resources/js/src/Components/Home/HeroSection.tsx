@@ -7,7 +7,7 @@ import Button from "@/src/Components/UI/Button";
 
 const HeroSection: React.FC = () => {
     return (
-        <section className="relative z-10 px-4 sm:px-6 py-12 sm:py-20">
+        <section className="relative px-4 sm:px-6 py-12 sm:py-20">
             <div className="max-w-7xl mx-auto text-center">
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
