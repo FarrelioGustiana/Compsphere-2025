@@ -26,7 +26,11 @@ export default function Register() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route("register"));
+        post(route("register"), {
+            onSuccess: () => {
+                window.location.href = "/verify-email";
+            },
+        });
     };
 
     return (

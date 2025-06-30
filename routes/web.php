@@ -21,6 +21,10 @@ Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 })->name('register');
 
+Route::get('/verify-email', function () {
+    return Inertia::render('Auth/VerifyEmail');
+})->name('verify-email');
+
 
 Route::middleware([
     'auth:sanctum',
