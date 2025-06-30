@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { motion } from "framer-motion";
 import Logo from "@/src/Components/UI/Logo";
@@ -28,7 +26,7 @@ const HeroSection: React.FC = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                    <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent font-orbitron">
                         Compsphere
                     </span>
                 </motion.h1>

@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { Head } from "@inertiajs/react";
 import { motion } from "framer-motion";

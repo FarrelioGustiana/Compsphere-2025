@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { motion } from "framer-motion";
 
@@ -39,7 +37,7 @@ const Logo: React.FC<LogoProps> = ({
             />
             {showText && (
                 <span
-                    className={`${textSizeClasses[size]} font-bold bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent`}
+                    className={`${textSizeClasses[size]} font-bold bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent font-orbitron`}
                 >
                     Compsphere
                 </span>
