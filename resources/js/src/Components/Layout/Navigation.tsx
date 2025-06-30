@@ -8,7 +8,6 @@ import {
     User,
     LogOut,
     ChevronDown,
-    Bell,
     Settings,
     Home,
 } from "lucide-react";
@@ -18,6 +17,7 @@ const Navigation: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { auth } = usePage().props as any;
+    console.log(auth?.user);
 
     // Handle scroll effect
     useEffect(() => {
@@ -49,10 +49,10 @@ const Navigation: React.FC = () => {
 
     // Define event programs for dropdown
     const eventPrograms = [
-        { href: "/hacksphere", label: "Hacksphere" },
-        { href: "/talksphere", label: "Talksphere" },
-        { href: "/festsphere", label: "FestSphere" },
-        { href: "/exposphere", label: "Exposphere" },
+        { href: "/events/hacksphere", label: "Hacksphere" },
+        { href: "/events/talksphere", label: "Talksphere" },
+        { href: "/events/festsphere", label: "FestSphere" },
+        { href: "/events/exposphere", label: "Exposphere" },
     ];
 
     // Define navigation items based on authentication status
@@ -70,7 +70,11 @@ const Navigation: React.FC = () => {
     ];
 
     const postLoginNavItems = [
-        { href: "/dashboard", label: "Dashboard", dropdown: false },
+        {
+            href: auth?.user?.role ? `/${auth?.user?.role}/dashboard` : "/",
+            label: "Dashboard",
+            dropdown: false,
+        },
         {
             href: "#",
             label: "Event Overview",
@@ -231,17 +235,21 @@ const Navigation: React.FC = () => {
                                             </AnimatePresence>
                                         </div>
                                     ) : (
-                                        <motion.a
+                                        <Link
                                             href={item.href}
                                             className="text-gray-300 hover:text-blue-400 transition-colors duration-300 font-medium"
-                                            whileHover={{ scale: 1.05 }}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                handleNavClick(item.href);
-                                            }}
                                         >
-                                            {item.label}
-                                        </motion.a>
+                                            <motion.span
+                                                whileHover={{ scale: 1.05 }}
+                                                className="inline-block"
+                                                onClick={() => {
+                                                    setIsMenuOpen(false);
+                                                    setActiveDropdown(null);
+                                                }}
+                                            >
+                                                {item.label}
+                                            </motion.span>
+                                        </Link>
                                     )}
                                 </div>
                             ))}
@@ -269,7 +277,7 @@ const Navigation: React.FC = () => {
                                                 <User className="w-4 h-4 text-white" />
                                             </div>
                                             <span className="text-sm lg:text-base font-medium">
-                                                {auth.user.name}
+                                                {auth.user.first_name}
                                             </span>
                                             <ChevronDown
                                                 className={`w-4 h-4 transition-transform ${
@@ -305,7 +313,10 @@ const Navigation: React.FC = () => {
                                                     <div className="py-2">
                                                         <div className="px-4 py-3 border-b border-gray-800">
                                                             <p className="text-sm font-medium text-white">
-                                                                {auth.user.name}
+                                                                {
+                                                                    auth.user
+                                                                        .first_name
+                                                                }
                                                             </p>
                                                             <p className="text-xs text-gray-400">
                                                                 {
@@ -541,29 +552,30 @@ const Navigation: React.FC = () => {
                                                     </AnimatePresence>
                                                 </div>
                                             ) : (
-                                                <motion.a
+                                                <Link
                                                     href={item.href}
                                                     className="block py-3 px-4 text-lg font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all duration-300"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        handleNavClick(
-                                                            item.href
-                                                        );
-                                                    }}
-                                                    initial={{
-                                                        x: -20,
-                                                        opacity: 0,
-                                                    }}
-                                                    animate={{
-                                                        x: 0,
-                                                        opacity: 1,
-                                                    }}
-                                                    transition={{
-                                                        delay: index * 0.1,
-                                                    }}
                                                 >
-                                                    {item.label}
-                                                </motion.a>
+                                                    <motion.span
+                                                        onClick={() => {
+                                                            setIsMenuOpen(false);
+                                                        }}
+                                                        initial={{
+                                                            x: -20,
+                                                            opacity: 0,
+                                                        }}
+                                                        animate={{
+                                                            x: 0,
+                                                            opacity: 1,
+                                                        }}
+                                                        transition={{
+                                                            delay: index * 0.1,
+                                                        }}
+                                                        className="block"
+                                                    >
+                                                        {item.label}
+                                                    </motion.span>
+                                                </Link>
                                             )}
                                         </div>
                                     ))}
@@ -584,10 +596,7 @@ const Navigation: React.FC = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-white font-medium">
-                                                        {auth.user.name}
-                                                    </p>
-                                                    <p className="text-gray-400 text-sm capitalize">
-                                                        {auth.user.role}
+                                                        {auth.user.first_name}
                                                     </p>
                                                 </div>
                                             </div>

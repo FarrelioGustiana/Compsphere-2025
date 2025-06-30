@@ -4,7 +4,7 @@ export interface User {
     last_name: string;
     full_name: string;
     email: string;
-    role: 'participant' | 'admin' | 'judge';
+    role: "participant" | "admin" | "judge";
     email_verified: boolean;
 }
 

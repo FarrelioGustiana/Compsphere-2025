@@ -15,7 +15,7 @@ use Inertia\Inertia;
 
 // Homepage
 Route::get('/', function () {
-    return Inertia::render('Home', [
+    return Inertia::render('Pages/Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -25,11 +25,11 @@ Route::get('/', function () {
 
 // Public event information routes
 Route::prefix('events')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Events/Index');
-    })->name('events');
-    
     Route::get('/{slug}', function ($slug) {
-        return Inertia::render('Events/Show', ['eventSlug' => $slug]);
+        // This will dynamically render the correct event component based on the slug
+        $validSlugs = ['hacksphere', 'talksphere', 'festsphere', 'exposphere'];
+        $slug = in_array($slug, $validSlugs) ? ucfirst($slug) : 'Home';
+        
+        return Inertia::render('Pages/Events/' . $slug);
     })->name('events.show');
 });

@@ -31,11 +31,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route("login"), {
-            onSuccess: () => {
-                window.location.href = "/dashboard";
-            },
-        });
+        post(route("login"));
     };
 
     return (
