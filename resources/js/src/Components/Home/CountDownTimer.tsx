@@ -56,13 +56,13 @@ const CountdownTimer: React.FC = () => {
             transition={{ duration: 0.8, delay: 1 }}
         >
             <h3 className="text-lg sm:text-xl mb-4 sm:mb-6 text-blue-400 flex justify-center">
-                Countdown to Hacksphere
+                Countdown to Compsphere
             </h3>
             <div className="grid grid-cols-2 sm:flex sm:justify-center gap-3 sm:gap-4 lg:gap-8 max-w-2xl mx-auto">
                 {timeUnits.map((item, index) => (
                     <motion.div
                         key={item.label}
-                        className="bg-gradient-to-br from-blue-600/20 to-red-600/20 backdrop-blur-sm border border-blue-500/30 rounded-lg p-3 sm:p-4 lg:p-6"
+                        className="bg-gradient-to-br from-blue-600/20 to-red-600/20 backdrop-blur-sm border border-blue-500/30 rounded-lg p-3 sm:p-4 lg:p-6 flex flex-col items-center justify-center"
                         whileHover={{ scale: 1.05 }}
                         transition={{ type: "spring", stiffness: 300 }}
                     >

@@ -1,5 +1,5 @@
 import type React from "react";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import {
     Calendar,
@@ -17,43 +17,9 @@ import Navigation from "@/src/Components/Layout/Navigation";
 import HeroSection from "@/src/Components/Home/HeroSection";
 import CountDownTimer from "@/src/Components/Home/CountDownTimer";
 import Logo from "@/src/Components/UI/Logo";
+import { events } from "@/src/Constants/events";
 
 const Home: React.FC = () => {
-    const events = [
-        {
-            name: "Hacksphere",
-            description:
-                "Kompetisi hackathon untuk mengembangkan solusi inovatif menggunakan teknologi terdepan",
-            icon: <Zap className="w-6 h-6 sm:w-8 sm:h-8" />,
-            color: "from-red-500 to-pink-500",
-            date: "12-14 Oktober 2025",
-        },
-        {
-            name: "Talksphere",
-            description:
-                "Sesi presentasi dan diskusi dengan para ahli teknologi dan inovator terkemuka",
-            icon: <Users className="w-6 h-6 sm:w-8 sm:h-8" />,
-            color: "from-blue-500 to-cyan-500",
-            date: "13 Oktober 2025",
-        },
-        {
-            name: "FestSphere",
-            description:
-                "Festival teknologi dengan berbagai aktivitas menarik dan showcase produk inovatif",
-            icon: <Lightbulb className="w-6 h-6 sm:w-8 sm:h-8" />,
-            color: "from-purple-500 to-indigo-500",
-            date: "14 Oktober 2025",
-        },
-        {
-            name: "Exposphere",
-            description:
-                "Pameran teknologi dan startup showcase untuk memamerkan inovasi terbaru",
-            icon: <Globe className="w-6 h-6 sm:w-8 sm:h-8" />,
-            color: "from-green-500 to-teal-500",
-            date: "12-14 Oktober 2025",
-        },
-    ];
-
     return (
         <>
             <Head title="Compsphere 2025 - Accelerating Innovation Through Intelligent Technology" />
@@ -61,9 +27,8 @@ const Home: React.FC = () => {
             <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
                 <AnimatedBackground />
                 <Navigation />
-                <section className="relative z-10 px-4 sm:px-6 py-8 sm:py-16">
-                    <HeroSection />
-                </section>
+
+                <HeroSection />
                 <CountDownTimer />
 
                 {/* Events Section */}
@@ -92,38 +57,41 @@ const Home: React.FC = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                             {events.map((event, index) => (
-                                <motion.div
-                                    key={event.name}
-                                    className="group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300"
-                                    initial={{ y: 50, opacity: 0 }}
-                                    whileInView={{ y: 0, opacity: 1 }}
-                                    transition={{
-                                        duration: 0.8,
-                                        delay: index * 0.1,
-                                    }}
-                                    viewport={{ once: true }}
-                                    whileHover={{ y: -10, scale: 1.02 }}
+                                <Link
+                                    href={`/${event.name.toLowerCase()}`}
+                                    className="block group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
-                                    <div
-                                        className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-r ${event.color} flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
+                                    <motion.div
+                                        initial={{ y: 50, opacity: 0 }}
+                                        whileInView={{ y: 0, opacity: 1 }}
+                                        transition={{
+                                            duration: 0.8,
+                                            delay: index * 0.1,
+                                        }}
+                                        viewport={{ once: true }}
+                                        whileHover={{ y: -10, scale: 1.02 }}
                                     >
-                                        {event.icon}
-                                    </div>
-                                    <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-white">
-                                        {event.name}
-                                    </h3>
-                                    <p className="text-gray-400 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
-                                        {event.description}
-                                    </p>
-                                    <div className="flex items-center text-xs sm:text-sm text-blue-400 mb-3 sm:mb-4">
-                                        <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                                        {event.date}
-                                    </div>
-                                    <button className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group-hover:translate-x-2 transform duration-300 text-sm sm:text-base">
-                                        Selengkapnya{" "}
-                                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-                                    </button>
-                                </motion.div>
+                                        <div
+                                            className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-r ${event.color} flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
+                                        >
+                                            <event.icon />
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-white">
+                                            {event.name}
+                                        </h3>
+                                        <p className="text-gray-400 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
+                                            {event.description}
+                                        </p>
+                                        <div className="flex items-center text-xs sm:text-sm text-blue-400 mb-3 sm:mb-4">
+                                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                                            {event.date}
+                                        </div>
+                                        <button className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group-hover:translate-x-2 transform duration-300 text-sm sm:text-base">
+                                            Selengkapnya{" "}
+                                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+                                        </button>
+                                    </motion.div>
+                                </Link>
                             ))}
                         </div>
                     </div>
