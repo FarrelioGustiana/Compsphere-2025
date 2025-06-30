@@ -1,37 +1,29 @@
 <?php
 
-use Illuminate\Foundation\Application;
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+// Import domain-specific route files
+require __DIR__ . '/web/public.php';
+require __DIR__ . '/web/auth.php';
+require __DIR__ . '/web/participant.php';
+require __DIR__ . '/web/admin.php';
+require __DIR__ . '/web/judge.php';
+
+// Fallback route for authenticated users
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
-})->name('login');
-
-Route::get('/register', function () {
-    return Inertia::render('Auth/Register');
-})->name('register');
-
-Route::get('/verify-email', function () {
-    return Inertia::render('Auth/VerifyEmail');
-})->name('verify-email');
-
-
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+Route::fallback(function () {
+    if (request()->user()) {
+        return redirect()->route(request()->user()->role . '.dashboard');
+    }
+    return redirect('/');
 });

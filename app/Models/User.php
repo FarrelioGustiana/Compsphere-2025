@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -26,9 +27,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'role',
+        'email_verified',
     ];
 
     /**
@@ -60,8 +64,66 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'email_verified' => 'boolean',
             'password' => 'hashed',
         ];
+    }
+    
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+    
+    /**
+     * Get the participant details associated with the user.
+     */
+    public function participantDetails(): HasOne
+    {
+        return $this->hasOne(ParticipantDetail::class);
+    }
+    
+    /**
+     * Get the judge profile associated with the user.
+     */
+    public function judgeProfile(): HasOne
+    {
+        return $this->hasOne(JudgeProfile::class);
+    }
+    
+    /**
+     * Get the admin profile associated with the user.
+     */
+    public function adminProfile(): HasOne
+    {
+        return $this->hasOne(AdminProfile::class);
+    }
+    
+    /**
+     * Check if the user is a participant.
+     */
+    public function isParticipant(): bool
+    {
+        return $this->role === 'participant';
+    }
+    
+    /**
+     * Check if the user is a judge.
+     */
+    public function isJudge(): bool
+    {
+        return $this->role === 'judge';
+    }
+    
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }

@@ -98,12 +98,30 @@ const Navigation: React.FC = () => {
                         <div className="hidden md:flex items-center space-x-4">
                             {auth.user ? (
                                 <div className="flex items-center space-x-4">
+                                    <Link
+                                        href={`/${auth.user.role}/dashboard`}
+                                        className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 text-white mr-2"
+                                    >
+                                        <span className="text-sm lg:text-base font-medium">
+                                            Dashboard
+                                        </span>
+                                    </Link>
+                                    
                                     <div className="flex items-center space-x-2 text-gray-300">
                                         <User className="w-4 h-4" />
                                         <span className="text-sm lg:text-base font-medium">
-                                            {auth.user.name}
+                                            {auth.user.first_name} {auth.user.last_name}
                                         </span>
                                     </div>
+                                    
+                                    <Link
+                                        href="/logout"
+                                        method="post"
+                                        as="button"
+                                        className="ml-3 p-2 text-gray-400 hover:text-red-400 transition-colors"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                    </Link>
                                 </div>
                             ) : (
                                 <div className="flex items-center space-x-3">
@@ -227,19 +245,30 @@ const Navigation: React.FC = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-white font-medium">
-                                                        {auth.user.name}
+                                                        {auth.user.first_name} {auth.user.last_name}
                                                     </p>
-                                                    <p className="text-gray-400 text-sm">
-                                                        {auth.user.email}
+                                                    <p className="text-gray-400 text-sm capitalize">
+                                                        {auth.user.role}
                                                     </p>
                                                 </div>
                                             </div>
+                                            
+                                            <Link
+                                                href={`/${auth.user.role}/dashboard`}
+                                                className="flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-300"
+                                                onClick={() => setIsMenuOpen(false)}
+                                            >
+                                                <span>Go to Dashboard</span>
+                                            </Link>
+                                            
                                             <Link
                                                 href="/logout"
                                                 method="post"
-                                                className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-4 py-3 rounded-lg font-semibold transition-all duration-300"
+                                                as="button"
+                                                className="flex items-center justify-center space-x-2 px-4 py-3 bg-gray-800 hover:bg-red-900/30 text-gray-300 hover:text-red-300 font-medium rounded-lg transition-all duration-300 w-full"
+                                                onClick={() => setIsMenuOpen(false)}
                                             >
-                                                <LogOut className="w-5 h-5" />
+                                                <LogOut className="w-5 h-5 mr-2" />
                                                 <span>Logout</span>
                                             </Link>
                                         </div>
