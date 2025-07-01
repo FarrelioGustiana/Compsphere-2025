@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class ParticipantDetail extends Model
+class Participant extends Model
 {
     use HasFactory;
 
@@ -17,7 +17,7 @@ class ParticipantDetail extends Model
      *
      * @var string
      */
-    protected $table = 'participant_details';
+    protected $table = 'participants';
 
     /**
      * The primary key for the model.
@@ -54,7 +54,6 @@ class ParticipantDetail extends Model
         'job_or_institution',
         'date_of_birth',
         'domicile',
-        'payment_status',
     ];
 
     /**

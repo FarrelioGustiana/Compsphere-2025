@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\AdminProfile;
 use App\Models\JudgeProfile;
-use App\Models\ParticipantDetail;
+use App\Models\Participant;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
             'email_verified' => true,
         ]);
         
-        ParticipantDetail::create([
+        Participant::create([
             'user_id' => $participant1->id,
             'encryption_code' => 'ENC001',
             'nik' => '1234567890123456',
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
             'job_or_institution' => 'University of Indonesia',
             'date_of_birth' => '2000-01-01',
             'domicile' => 'Jakarta',
-            'payment_status' => 'paid',
+
         ]);
         
         $participant2 = User::create([
@@ -78,7 +78,7 @@ class DatabaseSeeder extends Seeder
             'email_verified' => true,
         ]);
         
-        ParticipantDetail::create([
+        Participant::create([
             'user_id' => $participant2->id,
             'encryption_code' => 'ENC002',
             'nik' => '6543210987654321',
@@ -87,7 +87,7 @@ class DatabaseSeeder extends Seeder
             'job_or_institution' => 'Bandung Institute of Technology',
             'date_of_birth' => '2001-02-02',
             'domicile' => 'Bandung',
-            'payment_status' => 'paid',
+
         ]);
         
         $participant3 = User::create([
@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
             'email_verified' => false,
         ]);
         
-        ParticipantDetail::create([
+        Participant::create([
             'user_id' => $participant3->id,
             'encryption_code' => 'ENC003',
             'nik' => '9876543210123456',

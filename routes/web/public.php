@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\EventController;
+use App\Models\Event;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,23 +15,19 @@ use Inertia\Inertia;
 |
 */
 
-// Homepage
 Route::get('/', function () {
+    $events = Event::all();
     return Inertia::render('Pages/Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'events' => $events,
     ]);
 });
 
 // Public event information routes
 Route::prefix('events')->group(function () {
-    Route::get('/{slug}', function ($slug) {
-        // This will dynamically render the correct event component based on the slug
-        $validSlugs = ['hacksphere', 'talksphere', 'festsphere', 'exposphere'];
-        $slug = in_array($slug, $validSlugs) ? ucfirst($slug) : 'Home';
-        
-        return Inertia::render('Pages/Events/' . $slug);
-    })->name('events.show');
+    Route::get('/', [EventController::class, 'index'])->name('events.index');
+    Route::get('/{slug}', [EventController::class, 'show'])->name('events.show');
 });

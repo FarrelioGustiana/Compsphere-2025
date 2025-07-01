@@ -16,9 +16,10 @@ return new class extends Migration
             $table->string('team_name');
             $table->string('profile_picture')->nullable();
             $table->unsignedBigInteger('team_leader_id');
+            $table->string('team_code')->unique();
             $table->timestamps();
             
-            $table->foreign('team_leader_id')->references('user_id')->on('participant_details')->onDelete('cascade');
+            $table->foreign('team_leader_id')->references('user_id')->on('participants')->onDelete('cascade');
         });
     }
 

@@ -1,5 +1,5 @@
 import type React from "react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import {
     Calendar,
@@ -17,9 +17,32 @@ import Navigation from "@/src/Components/Layout/Navigation";
 import HeroSection from "@/src/Components/Home/HeroSection";
 import CountDownTimer from "@/src/Components/Home/CountDownTimer";
 import Logo from "@/src/Components/UI/Logo";
-import { events } from "@/src/Constants/events";
+import { Event } from "@/types/models";
+import EventCard from "@/src/Components/Home/EventCard";
+
+export const getColorAndIcon = (
+    event_code: string
+): { color: string; icon: any } => {
+    switch (event_code) {
+        case "hacksphere":
+            return { color: "from-red-500 to-pink-500", icon: <Zap /> };
+        case "talksphere":
+            return { color: "from-blue-500 to-cyan-500", icon: <Users /> };
+        case "exposphere":
+            return { color: "from-green-500 to-teal-500", icon: <Globe /> };
+        case "festsphere":
+            return {
+                color: "from-purple-500 to-indigo-500",
+                icon: <Lightbulb />,
+            };
+        default:
+            return { color: "bg-gray-500", icon: <Globe /> };
+    }
+};
 
 const Home: React.FC = () => {
+    const { events } = usePage().props as unknown as { events: Event[] };
+
     return (
         <>
             <Head title="Compsphere 2025 - Accelerating Innovation Through Intelligent Technology" />
@@ -57,41 +80,17 @@ const Home: React.FC = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                             {events.map((event, index) => (
-                                <Link
-                                    href={`/${event.name.toLowerCase()}`}
-                                    className="block group relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                >
-                                    <motion.div
-                                        initial={{ y: 50, opacity: 0 }}
-                                        whileInView={{ y: 0, opacity: 1 }}
-                                        transition={{
-                                            duration: 0.8,
-                                            delay: index * 0.1,
-                                        }}
-                                        viewport={{ once: true }}
-                                        whileHover={{ y: -10, scale: 1.02 }}
-                                    >
-                                        <div
-                                            className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-r ${event.color} flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300`}
-                                        >
-                                            <event.icon />
-                                        </div>
-                                        <h3 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-white">
-                                            {event.name}
-                                        </h3>
-                                        <p className="text-gray-400 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base">
-                                            {event.description}
-                                        </p>
-                                        <div className="flex items-center text-xs sm:text-sm text-blue-400 mb-3 sm:mb-4">
-                                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                                            {event.date}
-                                        </div>
-                                        <button className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group-hover:translate-x-2 transform duration-300 text-sm sm:text-base">
-                                            Selengkapnya{" "}
-                                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-                                        </button>
-                                    </motion.div>
-                                </Link>
+                                <EventCard
+                                    key={index}
+                                    event={event}
+                                    index={index}
+                                    icon={
+                                        getColorAndIcon(event.event_code).icon
+                                    }
+                                    color={
+                                        getColorAndIcon(event.event_code).color
+                                    }
+                                />
                             ))}
                         </div>
                     </div>
@@ -130,7 +129,7 @@ const Home: React.FC = () => {
                                                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6" />
                                             ),
                                             title: "Lokasi",
-                                            content: "Fablab",
+                                            content: "President University",
                                             subtitle:
                                                 "Venue utama untuk Hacksphere dan event lainnya",
                                             bgColor: "bg-red-600",

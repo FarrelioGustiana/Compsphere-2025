@@ -18,7 +18,7 @@ return new class extends Migration
             
             $table->primary(['team_id', 'user_id']);
             $table->foreign('team_id')->references('id')->on('teams')->onDelete('cascade');
-            $table->foreign('user_id')->references('user_id')->on('participant_details')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('participants')->onDelete('cascade');
         });
     }
 

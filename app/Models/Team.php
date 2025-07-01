@@ -27,7 +27,7 @@ class Team extends Model
      */
     public function leader(): BelongsTo
     {
-        return $this->belongsTo(ParticipantDetail::class, 'team_leader_id', 'user_id');
+        return $this->belongsTo(Participant::class, 'team_leader_id', 'user_id');
     }
 
     /**
@@ -35,6 +35,6 @@ class Team extends Model
      */
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(ParticipantDetail::class, 'team_members', 'team_id', 'user_id');
+        return $this->belongsToMany(Participant::class, 'team_members', 'team_id', 'user_id');
     }
 }

@@ -5,6 +5,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -80,11 +82,11 @@ class User extends Authenticatable
     }
     
     /**
-     * Get the participant details associated with the user.
+     * Get the participant associated with the user.
      */
-    public function participantDetails(): HasOne
+    public function participant(): HasOne
     {
-        return $this->hasOne(ParticipantDetail::class);
+        return $this->hasOne(Participant::class);
     }
     
     /**
@@ -101,6 +103,24 @@ class User extends Authenticatable
     public function adminProfile(): HasOne
     {
         return $this->hasOne(AdminProfile::class);
+    }
+    
+    /**
+     * Get the events that the user has registered for.
+     */
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_registrations')
+                    ->withPivot(['registration_date', 'registration_status', 'payment_status', 'payment_amount', 'payment_date', 'invoice_id'])
+                    ->withTimestamps();
+    }
+    
+    /**
+     * Get all event registrations for this user.
+     */
+    public function eventRegistrations(): HasMany
+    {
+        return $this->hasMany(EventRegistration::class);
     }
     
     /**

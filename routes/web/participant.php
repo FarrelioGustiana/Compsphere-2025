@@ -25,5 +25,15 @@ Route::group([
         Route::get('/profile', function () {
             return app()->make(ParticipantController::class)->profile(request());
         })->name('participant.profile');
+        
+        Route::post('/register-event/{eventId}', function ($eventId) {
+            return app()->make(ParticipantController::class)->registerEvent(request(), $eventId);
+        })->name('participant.register-event');
+        
+        Route::post('/update-nik', function () {
+            return app()->make(ParticipantController::class)->updateNik(request());
+        })->name('participant.update-nik');
+
+        Route::post('/profile/update', [\App\Http\Controllers\ParticipantController::class, 'updateProfile'])->name('participant.profile.update');
     });
 });

@@ -1,61 +1,116 @@
-import React from "react";
 import { Head } from "@inertiajs/react";
-import DashboardLayout from "../Components/Layout/DashboardLayout";
-import { User } from "@/types/models";
-import EventCard from "../Components/Participant/EventCard";
-
-interface Event {
-    name: string;
-    description: string;
-    registered: boolean;
-}
+import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
+import { Event, Participant, User } from "@/types/models";
+import EventCard from "@/src/Components/Home/EventCard";
+import { getColorAndIcon } from "@/src/Pages/Home";
 
 interface ParticipantDashboardProps {
     user: User;
-    participantDetails: any;
-    events: Event[];
+    participantDetails: any | Participant;
+    allEvents: Event[];
+    registeredEvents: Event[];
 }
 
-export default function Dashboard({ user, participantDetails, events }: ParticipantDashboardProps) {
+export default function Dashboard({
+    user,
+    participantDetails,
+    allEvents,
+    registeredEvents,
+}: ParticipantDashboardProps) {
     return (
         <DashboardLayout>
             <Head title="Participant Dashboard" />
-            
+
             <div className="py-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-2xl font-semibold text-gray-200">Welcome, {user.first_name + " " + user.last_name}!</h1>
+                    <h1 className="text-2xl font-semibold text-gray-200">
+                        Welcome, {user.first_name + " " + user.last_name}!
+                    </h1>
                     <p className="mt-1 text-gray-400">
                         This is your participant dashboard for Compsphere 2025.
                     </p>
                 </div>
-                
+
+                {/* Profile Completion Warning */}
+                {(!participantDetails ||
+                    !participantDetails.category ||
+                    !participantDetails.phone_number ||
+                    !participantDetails.date_of_birth ||
+                    !participantDetails.domicile) && (
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6 ">
+                        <div className="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-200 p-4 rounded">
+                            <div className="font-semibold mb-1">
+                                Complete Your Profile
+                            </div>
+                            <div>
+                                You must complete your participant profile
+                                before you can register for events.{" "}
+                                <a
+                                    href="/participant/profile"
+                                    className="underline text-yellow-300"
+                                >
+                                    Go to your profile
+                                </a>
+                                .
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                    <h2 className="text-xl font-semibold text-gray-200 mb-4">Available Events</h2>
-                    
+                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
+                        Registered Events
+                    </h2>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {events.map((event, index) => (
+                        {registeredEvents.map((event, index) => (
                             <EventCard
                                 key={index}
-                                name={event.name}
-                                description={event.description}
-                                registered={event.registered}
+                                event={event}
+                                index={index}
+                                icon={getColorAndIcon(event.event_code).icon}
+                                color={getColorAndIcon(event.event_code).color}
                             />
                         ))}
                     </div>
                 </div>
-                
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
+                        Available Events
+                    </h2>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {allEvents.map((event, index) => (
+                            <EventCard
+                                key={index}
+                                event={event}
+                                index={index}
+                                icon={getColorAndIcon(event.event_code).icon}
+                                color={getColorAndIcon(event.event_code).color}
+                            />
+                        ))}
+                    </div>
+                </div>
+
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-                    <h2 className="text-xl font-semibold text-gray-200 mb-4">Your Profile</h2>
-                    
+                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
+                        Your Profile
+                    </h2>
+
                     <div className="bg-gray-800 rounded-lg shadow-md p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <h3 className="text-lg font-medium text-gray-300 mb-2">Personal Information</h3>
+                                <h3 className="text-lg font-medium text-gray-300 mb-2">
+                                    Personal Information
+                                </h3>
                                 <p className="text-gray-400">
-                                    <span className="font-medium">Name:</span> {user.first_name + " " + user.last_name}
+                                    <span className="font-medium">Name:</span>{" "}
+                                    {user.first_name + " " + user.last_name}
                                 </p>
                                 <p className="text-gray-400">
-                                    <span className="font-medium">Email:</span> {user.email}
+                                    <span className="font-medium">Email:</span>{" "}
+                                    {user.email}
                                 </p>
                             </div>
                         </div>

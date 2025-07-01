@@ -1,7 +1,7 @@
 import type React from "react";
 import { Head, Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
-import AnimatedBackground from "../UI/AnimatedBackground";
+import AnimatedBackground from "@/src/Components/UI/AnimatedBackground";
 import Logo from "@/src/Components/UI/Logo";
 
 interface AuthLayoutProps {

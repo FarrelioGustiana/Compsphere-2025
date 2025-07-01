@@ -2,19 +2,46 @@ export interface User {
     id: number;
     first_name: string;
     last_name: string;
-    full_name: string;
     email: string;
-    role: "participant" | "admin" | "judge";
+    role: string;
+    profile_photo_url: string;
+    full_name: string;
     email_verified: boolean;
 }
 
-export interface ParticipantDetail {
-    id: number;
+export interface Participant {
     user_id: number;
-    institution: string;
+    encryption_code: string;
+    nik?: string | null;
+    category: string;
     phone_number: string;
+    job_or_institution?: string | null;
+    date_of_birth: string;
+    domicile: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Event {
+    id: number;
+    event_code: string;
+    event_name: string;
+    description: string;
+    registration_open_date: string;
+    registration_close_date: string;
+    start_date: string;
+    end_date: string;
+    location: string;
+    is_paid_event: boolean;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    status:
+        | "upcoming"
+        | "registration_open"
+        | "registration_closed"
+        | "ongoing"
+        | "completed";
 }
 
 export interface JudgeProfile {
@@ -40,6 +67,6 @@ export interface Team {
     leader_id: number;
     created_at: string;
     updated_at: string;
-    leader?: ParticipantDetail;
-    members?: ParticipantDetail[];
+    leader?: Participant;
+    members?: Participant[];
 }
