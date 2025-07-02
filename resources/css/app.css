@@ -48,8 +48,23 @@
     font-style: normal;
 }
 
+/* Helvetica Font */
+@font-face {
+    font-family: "Helvetica";
+    src: url("/fonts/helvetica/Helvetica.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Helvetica";
+    src: url("/fonts/helvetica/Helvetica-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
 @theme {
-    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+    --font-sans: "Helvetica", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
     --font-orbitron: "Orbitron", var(--font-sans);

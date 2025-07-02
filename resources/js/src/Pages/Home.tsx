@@ -71,21 +71,10 @@ const Home: React.FC = () => {
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
                         >
-                            <motion.div 
-                                className="inline-block mb-3"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                whileInView={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true }}
-                            >
-                                <span className="px-4 py-1.5 rounded-full bg-[#1E88E5]/10 border border-[#1E88E5]/20 text-[#7ECEF4] text-sm font-medium">
-                                    Compsphere 2025
-                                </span>
-                            </motion.div>
                             
                             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight">
-                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent">
-                                    Our Events
+                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
+                                    OUR SUB-EVENTS
                                 </span>
                             </h2>
                             
@@ -271,21 +260,10 @@ const Home: React.FC = () => {
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
                         >
-                            <motion.div 
-                                className="inline-block mb-3"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                whileInView={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 0.5, delay: 0.2 }}
-                                viewport={{ once: true }}
-                            >
-                                <span className="px-4 py-1.5 rounded-full bg-[#1E88E5]/10 border border-[#1E88E5]/20 text-[#7ECEF4] text-sm font-medium">
-                                    Event Details
-                                </span>
-                            </motion.div>
                             
                             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent">
-                                    Event Information
+                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
+                                    EVENT INFORMATION
                                 </span>
                             </h2>
                         </motion.div>
@@ -377,7 +355,7 @@ const Home: React.FC = () => {
                                             />
                                         </div>
                                         
-                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent">
+                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-orbitron">
                                             Ready to Join?
                                         </h3>
                                         
@@ -424,17 +402,6 @@ const Home: React.FC = () => {
                             
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
                                 <div>
-                                    <motion.div 
-                                        className="inline-block mb-4"
-                                        initial={{ scale: 0.9, opacity: 0 }}
-                                        whileInView={{ scale: 1, opacity: 1 }}
-                                        transition={{ duration: 0.5, delay: 0.2 }}
-                                        viewport={{ once: true }}
-                                    >
-                                        <span className="px-4 py-1.5 rounded-full bg-[#1E88E5]/10 border border-[#1E88E5]/20 text-[#7ECEF4] text-sm font-medium">
-                                            Join Compsphere 2025
-                                        </span>
-                                    </motion.div>
                                     
                                     <motion.h2 
                                         className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 tracking-tight"
@@ -443,7 +410,7 @@ const Home: React.FC = () => {
                                         transition={{ duration: 0.6, delay: 0.3 }}
                                         viewport={{ once: true }}
                                     >
-                                        <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent">
+                                        <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
                                             Ready to Transform Your Tech Journey?
                                         </span>
                                     </motion.h2>
@@ -474,16 +441,6 @@ const Home: React.FC = () => {
                                                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                                             </span>
                                             <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                                        </Link>
-                                        
-                                        <Link 
-                                            href="#events" 
-                                            className="group relative overflow-hidden bg-transparent border border-[#666666] hover:border-[#1E88E5]/50 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 transform hover:scale-[1.02] inline-flex items-center gap-2"
-                                        >
-                                            <span className="relative z-10 flex items-center justify-center gap-2 group-hover:gap-3 transition-all duration-300 text-gray-300 group-hover:text-[#7ECEF4]">
-                                                Explore Events
-                                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                                            </span>
                                         </Link>
                                     </motion.div>
                                 </div>

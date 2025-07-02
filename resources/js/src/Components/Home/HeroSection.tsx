@@ -43,13 +43,6 @@ const HeroSection: React.FC = () => {
                 >
                     <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron inline-block relative">
                         Compsphere
-                        <motion.span 
-                            className="absolute -right-4 top-0 text-[#FF5252] opacity-80"
-                            animate={{ opacity: [0.5, 1, 0.5] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        >
-                            .
-                        </motion.span>
                     </span>
                 </motion.h1>
 
