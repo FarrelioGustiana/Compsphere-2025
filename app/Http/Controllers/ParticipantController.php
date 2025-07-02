@@ -35,13 +35,14 @@ class ParticipantController extends Controller
             'phone_number' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'domicile' => 'required|string|max:255',
+            'job_or_institution' => 'string|max:255',
         ]);
 
         $participant = $user->participant;
         if ($participant) {
             $participant->update($validated);
         } else {
-            $encryption_code = bin2hex(random_bytes(16));
+            $encryption_code = bin2hex(random_bytes(8));
             $user->participant()->create($validated + [
                 'user_id' => $user->id,
                 'encryption_code' => $encryption_code,
