@@ -2,7 +2,7 @@ import type React from "react";
 import { motion } from "framer-motion";
 
 interface LogoProps {
-    size?: "sm" | "md" | "lg" | "xl";
+    size?: "sm" | "md" | "lg" | "xl" | "xxl" | "xxxl";
     showText?: boolean;
     className?: string;
 }
@@ -17,6 +17,8 @@ const Logo: React.FC<LogoProps> = ({
         md: "w-10 h-10",
         lg: "w-24 h-24",
         xl: "w-28 h-28",
+        xxl: "w-32 h-32",
+        xxxl: "w-36 h-36",
     };
 
     const textSizeClasses = {
@@ -24,14 +26,16 @@ const Logo: React.FC<LogoProps> = ({
         md: "text-2xl",
         lg: "text-3xl",
         xl: "text-4xl",
+        xxl: "text-5xl",
+        xxxl: "text-6xl",
     };
 
     return (
         <div className={`flex items-center space-x-3 ${className}`}>
             <motion.img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-06-25%20at%2023.34.30_70e63cda.jpg-IKAmYg9ycQLDlNnobovMrgj2zFWAri.jpeg"
+                src="/assets/compsphere.png"
                 alt="Compsphere Logo"
-                className={`${sizeClasses[size]} rounded-full shadow-2xl shadow-blue-500/20`}
+                className={`${sizeClasses[size]}`}
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
             />

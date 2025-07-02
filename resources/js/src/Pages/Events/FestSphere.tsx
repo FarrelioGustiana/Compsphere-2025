@@ -2,14 +2,14 @@ import React from "react";
 import { User, Participant, Event } from "@/types/models";
 import EventRegistration from "@/src/Components/Events/EventRegistration";
 
-interface FestsphereProps {
+interface FestSphereProps {
     event: Event;
     user?: User;
     participantDetails?: Participant | null;
     isRegistered: boolean;
 }
 
-const Festsphere: React.FC<FestsphereProps> = ({
+const FestSphere: React.FC<FestSphereProps> = ({
     event,
     user,
     participantDetails,
@@ -51,4 +51,4 @@ const Festsphere: React.FC<FestsphereProps> = ({
     );
 };
 
-export default Festsphere;
+export default FestSphere;

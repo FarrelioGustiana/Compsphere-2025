@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Str;
 
 class ParticipantController extends Controller
 {
@@ -36,7 +35,6 @@ class ParticipantController extends Controller
             'phone_number' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'domicile' => 'required|string|max:255',
-            'job_or_institution' => 'string|max:255',
         ]);
 
         $participant = $user->participant;
@@ -76,16 +74,8 @@ class ParticipantController extends Controller
             return back()->with('info', 'You are already registered for this event.');
         }
 
-        // Generate unique verification code
-        $verificationCode = Str::random(20);
-        
-        // Register for the event with verification code
-        $user->events()->attach($eventId, [
-            'registration_date' => now(),
-            'registration_status' => 'registered',
-            'verification_code' => $verificationCode
-        ]);
-        
+        // Register for the event
+        $user->events()->attach($eventId);
         return back()->with('success', 'You have registered for the event!');
     }
 

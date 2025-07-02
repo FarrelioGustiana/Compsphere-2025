@@ -20,15 +20,12 @@ class EventRegistration extends Model
         'payment_amount',
         'payment_date',
         'invoice_id',
-        'verification_code',
-        'attendance_verified_at',
     ];
 
     protected $casts = [
         'registration_date' => 'datetime',
         'payment_date' => 'datetime',
         'payment_amount' => 'decimal:2',
-        'attendance_verified_at' => 'datetime',
     ];
 
     public function user()
