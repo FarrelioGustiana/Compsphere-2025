@@ -42,9 +42,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ participantDetails }) => {
                     disabled={isFilled || processing}
                 >
                     <option value="">Select category</option>
-                    <option value="high_school">Mahasiswa</option>
-                    <option value="university">Umum</option>
-                    <option value="non_academic">Non-Akademik</option>
+                    <option value="high_school">High School</option>
+                    <option value="university">University</option>
+                    <option value="non_academic">Non-Academic</option>
                 </select>
                 {errors.category && (
                     <div className="text-red-400 text-xs mt-1">

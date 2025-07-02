@@ -36,6 +36,7 @@ class ParticipantController extends Controller
             'phone_number' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
             'domicile' => 'required|string|max:255',
+            'job_or_institution' => 'string|max:255',
         ]);
 
         $participant = $user->participant;
