@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventVerificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,5 +30,19 @@ Route::group([
         Route::get('/users', function () {
             return app()->make(AdminController::class)->users(request());
         })->name('admin.users');
+        
+        // Event participants management routes
+        Route::get('/events/{eventCode}/participants', function ($eventCode) {
+            return app()->make(AdminController::class)->eventParticipants(request(), $eventCode);
+        })->name('admin.event.participants');
+        
+        // Event verification routes
+        Route::get('/{eventCode}/re-registration/{verificationCode}', function ($eventCode, $verificationCode) {
+            return app()->make(EventVerificationController::class)->adminVerificationPage(request(), $eventCode, $verificationCode);
+        })->name('admin.event.verification');
+        
+        Route::post('/{eventCode}/re-registration/{verificationCode}/verify', function ($eventCode, $verificationCode) {
+            return app()->make(EventVerificationController::class)->verifyAttendance(request(), $eventCode, $verificationCode);
+        })->name('admin.event.verify-attendance');
     });
 });

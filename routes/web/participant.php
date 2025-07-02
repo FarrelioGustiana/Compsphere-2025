@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ParticipantController;
+use App\Http\Controllers\EventVerificationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,5 +36,10 @@ Route::group([
         })->name('participant.update-nik');
 
         Route::post('/profile/update', [\App\Http\Controllers\ParticipantController::class, 'updateProfile'])->name('participant.profile.update');
+        
+        // Event verification QR code route
+        Route::get('/event/{eventId}/verification', function ($eventId) {
+            return app()->make(EventVerificationController::class)->showVerificationQR(request(), $eventId);
+        })->name('participant.event.verification');
     });
 });

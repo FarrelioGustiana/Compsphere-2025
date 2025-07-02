@@ -20,6 +20,7 @@
     "dependencies": {
         "@inertiajs/react": "^2.0.13",
         "@vitejs/plugin-react": "^4.6.0",
+        "date-fns": "^4.1.0",
         "framer-motion": "^12.19.1",
         "lucide-react": "^0.523.0",
         "path": "^0.12.7",

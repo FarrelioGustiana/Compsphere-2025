@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, QrCode } from "lucide-react";
 import { Event } from "@/types/models";
 
 interface EventCardProps {
@@ -8,6 +8,7 @@ interface EventCardProps {
     index: number;
     icon: any;
     color: string;
+    isRegistered?: boolean;
 }
 
 function formatDate(dateStr: string) {
@@ -19,10 +20,9 @@ function formatDate(dateStr: string) {
     });
 }
 
-const EventCard: React.FC<EventCardProps> = ({ event, index, icon, color }) => {
+const EventCard: React.FC<EventCardProps> = ({ event, index, icon, color, isRegistered = false }) => {
     return (
-        <motion.a
-            href={`/events/${event.event_code.toLowerCase()}`}
+        <motion.div
             whileHover={{ y: -10, scale: 1.02 }}
             transition={{
                 duration: 0.25,
@@ -53,12 +53,28 @@ const EventCard: React.FC<EventCardProps> = ({ event, index, icon, color }) => {
                     <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                     {formatDate(event.start_date)}
                 </div>
-                <button className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group-hover:translate-x-2 transform duration-300 text-sm sm:text-base">
-                    Selengkapnya{" "}
-                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
-                </button>
+                <div className="flex flex-col space-y-2">
+                    <Link 
+                        href={`/events/${event.event_code.toLowerCase()}`}
+                        className="flex items-center text-blue-400 hover:text-blue-300 transition-colors group-hover:translate-x-2 transform duration-300 text-sm sm:text-base"
+                    >
+                        Selengkapnya{" "}
+                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+                    </Link>
+                    
+                    {isRegistered && (
+                        <Link 
+                            href={`/participant/event/${event.id}/verification`}
+                            className="flex items-center text-green-400 hover:text-green-300 transition-colors mt-2 text-sm sm:text-base"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            View QR Code{" "}
+                            <QrCode className="w-3 h-3 sm:w-4 sm:h-4 ml-2" />
+                        </Link>
+                    )}
+                </div>
             </motion.div>
-        </motion.a>
+        </motion.div>
     );
 };
 

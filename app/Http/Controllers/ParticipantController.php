@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class ParticipantController extends Controller
 {
@@ -41,7 +42,7 @@ class ParticipantController extends Controller
         if ($participant) {
             $participant->update($validated);
         } else {
-            $encryption_code = bin2hex(random_bytes(16));
+            $encryption_code = bin2hex(random_bytes(8));
             $user->participant()->create($validated + [
                 'user_id' => $user->id,
                 'encryption_code' => $encryption_code,
@@ -74,8 +75,16 @@ class ParticipantController extends Controller
             return back()->with('info', 'You are already registered for this event.');
         }
 
-        // Register for the event
-        $user->events()->attach($eventId);
+        // Generate unique verification code
+        $verificationCode = Str::random(20);
+        
+        // Register for the event with verification code
+        $user->events()->attach($eventId, [
+            'registration_date' => now(),
+            'registration_status' => 'registered',
+            'verification_code' => $verificationCode
+        ]);
+        
         return back()->with('success', 'You have registered for the event!');
     }
 

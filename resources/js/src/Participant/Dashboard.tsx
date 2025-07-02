@@ -70,6 +70,7 @@ export default function Dashboard({
                                 index={index}
                                 icon={getColorAndIcon(event.event_code).icon}
                                 color={getColorAndIcon(event.event_code).color}
+                                isRegistered={true}
                             />
                         ))}
                     </div>

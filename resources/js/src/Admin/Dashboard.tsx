@@ -2,7 +2,7 @@ import React from "react";
 import { Head } from "@inertiajs/react";
 import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
 import { User } from "@/types/models";
-import { Users, Award, UserCheck } from "lucide-react";
+import { Users, Award, UserCheck, Mic, Music } from "lucide-react";
 import { route } from "ziggy-js";
 
 interface UserStats {
@@ -112,6 +112,54 @@ export default function Dashboard({ user, adminProfile, userStats }: AdminDashbo
                                                 <p className="flex items-center text-sm text-gray-400">
                                                     <Users className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
                                                     View and manage all users in the system
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href={route('admin.event.participants', { eventCode: 'talksphere' })} className="block hover:bg-gray-750">
+                                    <div className="px-4 py-4 sm:px-6">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm font-medium text-cyan-400 truncate">
+                                                Talksphere Participants
+                                            </p>
+                                            <div className="ml-2 flex-shrink-0 flex">
+                                                <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-cyan-100 text-cyan-800">
+                                                    View All
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 sm:flex sm:justify-between">
+                                            <div className="sm:flex">
+                                                <p className="flex items-center text-sm text-gray-400">
+                                                    <Mic className="flex-shrink-0 mr-1.5 h-5 w-5 text-cyan-400" />
+                                                    View and manage Talksphere registrations
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href={route('admin.event.participants', { eventCode: 'festsphere' })} className="block hover:bg-gray-750">
+                                    <div className="px-4 py-4 sm:px-6">
+                                        <div className="flex items-center justify-between">
+                                            <p className="text-sm font-medium text-purple-400 truncate">
+                                                Festsphere Participants
+                                            </p>
+                                            <div className="ml-2 flex-shrink-0 flex">
+                                                <p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                                    View All
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 sm:flex sm:justify-between">
+                                            <div className="sm:flex">
+                                                <p className="flex items-center text-sm text-gray-400">
+                                                    <Music className="flex-shrink-0 mr-1.5 h-5 w-5 text-purple-400" />
+                                                    View and manage Festsphere registrations
                                                 </p>
                                             </div>
                                         </div>
