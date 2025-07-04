@@ -11,15 +11,13 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ participantDetails }) => {
         phone_number: participantDetails?.phone_number || "",
         job_or_institution: participantDetails?.job_or_institution || "",
         date_of_birth: participantDetails?.date_of_birth || "",
-        domicile: participantDetails?.domicile || "",
     });
 
     const isFilled = !!(
         participantDetails &&
         participantDetails.category &&
         participantDetails.phone_number &&
-        participantDetails.date_of_birth &&
-        participantDetails.domicile
+        participantDetails.date_of_birth
     );
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -108,23 +106,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ participantDetails }) => {
                     </div>
                 )}
             </div>
-            <div className="mb-6">
-                <label className="block text-gray-300 mb-1">Domicile</label>
-                <input
-                    type="text"
-                    name="domicile"
-                    value={data.domicile}
-                    onChange={(e) => setData("domicile", e.target.value)}
-                    className="w-full px-3 py-2 rounded bg-gray-900 text-gray-200 border border-gray-700 focus:outline-none"
-                    required
-                    disabled={isFilled || processing}
-                />
-                {errors.domicile && (
-                    <div className="text-red-400 text-xs mt-1">
-                        {errors.domicile}
-                    </div>
-                )}
-            </div>
+
             <button
                 type="submit"
                 className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded disabled:opacity-50"

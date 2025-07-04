@@ -1,25 +1,31 @@
 import React from "react";
 import { useForm } from "@inertiajs/react";
-import { User, Participant } from "@/types/models";
+import { User, Participant, Event } from "@/types/models";
 import { route } from "ziggy-js";
 
 interface EventRegistrationProps {
-    eventId: number;
-    eventName: string;
+    event: Event;
     user?: User;
     participantDetails?: Participant | null;
+    onRegisterClick?: () => void;
 }
 
 const EventRegistration: React.FC<EventRegistrationProps> = ({
-    eventId,
-    eventName,
+    event,
     user,
     participantDetails,
+    onRegisterClick,
 }) => {
     const { post, processing } = useForm({});
 
     const handleRegister = () => {
-        post(route("participant.register-event", eventId));
+        if (onRegisterClick) {
+            // Use custom register handler if provided (for Hacksphere)
+            onRegisterClick();
+        } else {
+            // Default registration behavior
+            post(route("participant.register-event", event.id));
+        }
     };
 
     // Check if user is logged in
@@ -55,8 +61,7 @@ const EventRegistration: React.FC<EventRegistrationProps> = ({
         participantDetails &&
         participantDetails.category &&
         participantDetails.phone_number &&
-        participantDetails.date_of_birth &&
-        participantDetails.domicile;
+        participantDetails.date_of_birth;
 
     if (!isProfileComplete) {
         return (
@@ -81,7 +86,7 @@ const EventRegistration: React.FC<EventRegistrationProps> = ({
                 disabled={processing}
                 className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {processing ? "Registering..." : `Register for ${eventName}`}
+                {processing ? "Registering..." : `Register for ${event.event_name}`}
             </button>
         </div>
     );

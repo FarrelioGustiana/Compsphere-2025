@@ -94,15 +94,22 @@ export default function Profile({
                         registering for events.
                     </p>
                     {/* Only show the form if profile is not completed */}
-                    {(!participantDetails || !participantDetails.category || !participantDetails.phone_number || !participantDetails.job_or_institution || !participantDetails.date_of_birth || !participantDetails.domicile) ? (
+                    {!participantDetails ||
+                    !participantDetails.category ||
+                    !participantDetails.phone_number ||
+                    !participantDetails.date_of_birth ? (
                         <ProfileForm participantDetails={participantDetails} />
                     ) : (
                         <div className="bg-green-900 border-l-4 border-green-500 text-green-200 p-4 rounded text-center">
-                            <div className="font-semibold mb-1">Profile Completed</div>
-                            <div>Your participant profile has already been filled and cannot be changed.</div>
+                            <div className="font-semibold mb-1">
+                                Profile Completed
+                            </div>
+                            <div>
+                                Your participant profile has already been filled
+                                and cannot be changed.
+                            </div>
                         </div>
                     )}
-
                 </div>
             </div>
         </DashboardLayout>

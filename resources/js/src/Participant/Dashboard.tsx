@@ -35,8 +35,7 @@ export default function Dashboard({
                 {(!participantDetails ||
                     !participantDetails.category ||
                     !participantDetails.phone_number ||
-                    !participantDetails.date_of_birth ||
-                    !participantDetails.domicile) && (
+                    !participantDetails.date_of_birth) && (
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6 ">
                         <div className="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-200 p-4 rounded">
                             <div className="font-semibold mb-1">

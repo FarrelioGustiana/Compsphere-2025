@@ -36,4 +36,7 @@ Route::group([
 
         Route::post('/profile/update', [\App\Http\Controllers\ParticipantController::class, 'updateProfile'])->name('participant.profile.update');
     });
+
+    Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])->name('participant.register-hacksphere');
+    Route::post('/validate-team-member-email', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberEmail'])->name('participant.validate-team-member-email');
 });
