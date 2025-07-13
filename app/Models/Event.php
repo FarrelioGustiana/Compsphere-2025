@@ -82,4 +82,12 @@ class Event extends Model
     {
         return $this->hasMany(EventRegistration::class);
     }
+    
+    /**
+     * Get all activities for this event.
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
 }

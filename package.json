@@ -18,12 +18,14 @@
         "vite": "^6.3.5"
     },
     "dependencies": {
+        "@heroicons/react": "^2.2.0",
         "@inertiajs/react": "^2.0.13",
         "@vitejs/plugin-react": "^4.6.0",
         "date-fns": "^4.1.0",
         "framer-motion": "^12.19.1",
         "lucide-react": "^0.523.0",
         "path": "^0.12.7",
+        "qrcode.react": "^4.2.0",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "ziggy-js": "^2.5.3"

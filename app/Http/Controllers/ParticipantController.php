@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Activity;
+use App\Models\ActivityVerification;
+use App\Models\HacksphereTeam;
+use App\Models\HacksphereTeamMember;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ParticipantController extends Controller
@@ -16,11 +22,61 @@ class ParticipantController extends Controller
         $user = $request->user();
         $participantDetails = $user->participant;
         
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+        $hacksphereTeam = null;
+        $activityVerifications = [];
+        
+        // If Hacksphere event exists and user is registered
+        if ($hacksphereEvent && $user->events->contains($hacksphereEvent->id)) {
+            // Check if user is a team leader or member
+            $hacksphereTeam = \App\Models\HacksphereTeam::where('team_leader_id', $user->id)
+                ->orWhereHas('members', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->first();
+            
+            if ($hacksphereTeam) {
+                // Get all activity verifications for the team
+                $activityVerifications = \App\Models\ActivityVerification::with('activity')
+                    ->where('team_id', $hacksphereTeam->id)
+                    ->get()
+                    ->map(function($verification) {
+                        // Generate QR code URL for each verification if not verified
+                        if (!$verification->is_verified) {
+                            $qrCodeGenerator = app(\App\Services\QrCode\QrCodeGeneratorInterface::class);
+                            $qrCodeUrl = $qrCodeGenerator->generate(
+                                $verification->getVerificationUrl(),
+                                200
+                            );
+                        } else {
+                            $qrCodeUrl = null;
+                        }
+                        
+                        return [
+                            'id' => $verification->id,
+                            'activity_id' => $verification->activity->id,
+                            'activity_name' => $verification->activity->name,
+                            'activity_description' => $verification->activity->description,
+                            'is_verified' => $verification->is_verified,
+                            'verified_at' => $verification->verified_at ? $verification->verified_at->format('Y-m-d H:i:s') : null,
+                            'verified_by' => $verification->verified_by ? 
+                                \App\Models\User::find($verification->verified_by)->name : null,
+                            'qr_code_url' => $qrCodeUrl,
+                            'verification_token' => $verification->verification_token,
+                        ];
+                    })
+                    ->toArray();
+            }
+        }
+        
         return Inertia::render('Participant/Dashboard', [
             'user' => $user,
             'participantDetails' => $participantDetails,
             'allEvents' => Event::all(),
             'registeredEvents' => $user->events,
+            'hacksphereTeam' => $hacksphereTeam,
+            'activityVerifications' => $activityVerifications,
         ]);
     }
 
@@ -234,6 +290,48 @@ public function registerHacksphere(Request $request)
     $user->events()->attach($hacksphereEvent->id);
     $member1User->events()->attach($hacksphereEvent->id);
     $member2User->events()->attach($hacksphereEvent->id);
+    
+    // Generate QR codes for all activities related to Hacksphere
+    $hacksphereActivities = \App\Models\Activity::where('event_id', $hacksphereEvent->id)->get();
+    
+    // If no activities exist yet, create default activities for Hacksphere
+    if ($hacksphereActivities->isEmpty()) {
+        $defaultActivities = [
+            ['name' => 're-registration', 'description' => 'Tim registration on event day'],
+            ['name' => 'checkpoint-1', 'description' => 'First checkpoint verification'],
+            ['name' => 'checkpoint-2', 'description' => 'Second checkpoint verification'],
+            ['name' => 'makan-siang-1', 'description' => 'First day lunch'],
+            ['name' => 'makan-malam-1', 'description' => 'First day dinner'],
+            ['name' => 'makan-siang-2', 'description' => 'Second day lunch'],
+            ['name' => 'makan-malam-2', 'description' => 'Second day dinner'],
+            ['name' => 'makan-siang-3', 'description' => 'Third day lunch'],
+        ];
+        
+        foreach ($defaultActivities as $activity) {
+            \App\Models\Activity::create([
+                'name' => $activity['name'],
+                'event_id' => $hacksphereEvent->id,
+                'description' => $activity['description'],
+            ]);
+        }
+        
+        // Refresh activities
+        $hacksphereActivities = \App\Models\Activity::where('event_id', $hacksphereEvent->id)->get();
+    }
+    
+    // Generate verification tokens and create QR codes for each activity
+    foreach ($hacksphereActivities as $activity) {
+        // Generate a unique verification token
+        $verificationToken = \Illuminate\Support\Str::uuid()->toString();
+        
+        // Create activity verification record
+        \App\Models\ActivityVerification::create([
+            'activity_id' => $activity->id,
+            'team_id' => $team->id,
+            'verification_token' => $verificationToken,
+            'is_verified' => false,
+        ]);
+    }
     
     return redirect()->route('participant.dashboard')->with('success', 'Your team has been successfully registered for Hacksphere!');
 }

@@ -29,5 +29,13 @@ Route::group([
         Route::get('/users', function () {
             return app()->make(AdminController::class)->users(request());
         })->name('admin.users');
+        
+        // QR Code Verification Routes
+        Route::get('/hacksphere/{activity}/{teamCode}', [App\Http\Controllers\Admin\VerificationController::class, 'verifyHacksphereActivity'])
+            ->name('admin.hacksphere.verify');
+        
+        Route::get('/{eventCode}/{activity}/{userCode}', [App\Http\Controllers\Admin\VerificationController::class, 'verifyParticipantActivity'])
+            ->name('admin.participant.verify')
+            ->where('eventCode', 'talksphere|festsphere');
     });
 });
