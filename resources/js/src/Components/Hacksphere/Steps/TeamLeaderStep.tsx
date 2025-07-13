@@ -1,5 +1,5 @@
-import React from 'react';
-import { User } from '@/types/models';
+import React from "react";
+import { User } from "@/types/models";
 
 interface TeamLeaderStepProps {
     leaderInfo: {
@@ -7,36 +7,40 @@ interface TeamLeaderStepProps {
         team_leader_category: string;
         team_leader_domicile: string;
     };
-    setLeaderInfo: React.Dispatch<React.SetStateAction<{
-        team_leader_nik: string;
-        team_leader_category: string;
-        team_leader_domicile: string;
-    }>>;
+    setLeaderInfo: React.Dispatch<
+        React.SetStateAction<{
+            team_leader_nik: string;
+            team_leader_category: string;
+            team_leader_domicile: string;
+        }>
+    >;
     nextStep: () => void;
     prevStep: () => void;
     errors: any;
     user?: User;
 }
 
-const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({ 
-    leaderInfo, 
-    setLeaderInfo, 
-    nextStep, 
-    prevStep, 
+const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
+    leaderInfo,
+    setLeaderInfo,
+    nextStep,
+    prevStep,
     errors,
-    user 
+    user,
 }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
-        setLeaderInfo(prev => ({ ...prev, [name]: value }));
+        setLeaderInfo((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (
-            leaderInfo.team_leader_nik.trim() !== '' && 
-            leaderInfo.team_leader_category !== '' &&
-            leaderInfo.team_leader_domicile.trim() !== ''
+            leaderInfo.team_leader_nik.trim() !== "" &&
+            leaderInfo.team_leader_category !== "" &&
+            leaderInfo.team_leader_domicile.trim() !== ""
         ) {
             nextStep();
         }
@@ -45,19 +49,26 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
     return (
         <form onSubmit={handleSubmit}>
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Step 2: Team Leader Information</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">
+                    Step 2: Team Leader Information
+                </h3>
                 <p className="text-gray-300 mb-4">
                     As the team leader, please provide your information below.
                 </p>
-                
+
                 <div className="mb-4 p-3 bg-blue-900/30 rounded border border-blue-700">
                     <p className="text-sm text-blue-300">
-                        <strong>Note:</strong> You ({user?.first_name} {user?.last_name}) will be registered as the team leader.
+                        <strong>Note:</strong> You ({user?.first_name}{" "}
+                        {user?.last_name}) will be registered as the team
+                        leader.
                     </p>
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="team_leader_nik" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label
+                        htmlFor="team_leader_nik"
+                        className="block text-sm font-medium text-gray-300 mb-1"
+                    >
                         NIK (National Identity Number)
                     </label>
                     <input
@@ -66,8 +77,8 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
                         type="text"
                         value={leaderInfo.team_leader_nik}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                        className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400 disabled:border-gray-600"
+                        disabled
                         maxLength={16}
                         minLength={16}
                     />
@@ -76,11 +87,16 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
                             {errors.team_leader_nik}
                         </div>
                     )}
-                    <p className="text-xs text-gray-400 mt-1">Enter your 16-digit NIK without spaces</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                        Enter your 16-digit NIK without spaces
+                    </p>
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="team_leader_category" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label
+                        htmlFor="team_leader_category"
+                        className="block text-sm font-medium text-gray-300 mb-1"
+                    >
                         Category
                     </label>
                     <select
@@ -104,7 +120,10 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="team_leader_domicile" className="block text-sm font-medium text-gray-300 mb-1">
+                    <label
+                        htmlFor="team_leader_domicile"
+                        className="block text-sm font-medium text-gray-300 mb-1"
+                    >
                         Domicile (City/Region)
                     </label>
                     <input

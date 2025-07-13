@@ -17,6 +17,7 @@ type AnyMemberInfo = Record<string, string | number>;
 // Interface for email validation response
 interface ValidationResponse {
     valid: boolean;
+    duplicate?: boolean;
     message?: string;
     user?: {
         name: string;
@@ -395,7 +396,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                 <button
                     type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                    disabled={!emailValidated}
+                    disabled={!emailValidated || isValidating}
                 >
                     Next
                 </button>
