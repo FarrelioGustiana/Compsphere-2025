@@ -82,4 +82,22 @@ class Event extends Model
     {
         return $this->hasMany(EventRegistration::class);
     }
+    
+    /**
+     * Get all activities for this event.
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+    
+    /**
+     * Check if this event is Hacksphere.
+     * 
+     * @return bool
+     */
+    public function isHacksphere(): bool
+    {
+        return $this->event_code === 'hacksphere';
+    }
 }

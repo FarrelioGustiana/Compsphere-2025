@@ -235,6 +235,10 @@ public function registerHacksphere(Request $request)
     $member1User->events()->attach($hacksphereEvent->id);
     $member2User->events()->attach($hacksphereEvent->id);
     
+    // Auto-generate QR codes for all team activities
+    $qrCodeService = app(\App\Services\QRCodeService::class);
+    $qrCodeService->bulkGenerateTeamQRCodes($team->id, $hacksphereEvent->id);
+    
     return redirect()->route('participant.dashboard')->with('success', 'Your team has been successfully registered for Hacksphere!');
 }
 

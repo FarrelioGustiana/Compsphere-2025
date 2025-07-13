@@ -1,5 +1,8 @@
 // Define common types used across the application
 
+// Re-export all types from models.ts
+export * from './models';
+
 export interface User {
     id: number;
     first_name: string;

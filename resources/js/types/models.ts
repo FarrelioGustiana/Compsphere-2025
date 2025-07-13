@@ -63,10 +63,44 @@ export interface AdminProfile {
 
 export interface Team {
     id: number;
-    name: string;
+    team_name: string;
+    team_code: string;
     leader_id: number;
     created_at: string;
     updated_at: string;
-    leader?: Participant;
-    members?: Participant[];
+    leader?: User;
+    members?: User[];
+}
+
+/**
+ * Activity model for events such as Hacksphere
+ */
+export interface Activity {
+    id: number;
+    name: string;
+    event_id: number;
+    description: string;
+    activity_code: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    event?: Event;
+}
+
+/**
+ * TeamActivityVerification model for QR code verifications
+ */
+export interface TeamActivityVerification {
+    id: number;
+    team_id: number;
+    activity_id: number;
+    verification_token: string;
+    status: 'active' | 'used' | 'expired';
+    verified_at: string | null;
+    verified_by: number | null;
+    created_at: string;
+    updated_at: string;
+    team?: Team;
+    activity?: Activity;
+    verifier?: User;
 }

@@ -124,6 +124,14 @@ class User extends Authenticatable
     }
     
     /**
+     * Get all activity verifications this admin has verified.
+     */
+    public function verifiedActivities(): HasMany
+    {
+        return $this->hasMany(TeamActivityVerification::class, 'verified_by');
+    }
+    
+    /**
      * Check if the user is a participant.
      */
     public function isParticipant(): bool

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Participant\TeamQRCodeController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,18 @@ Route::group([
         })->name('participant.update-nik');
 
         Route::post('/profile/update', [\App\Http\Controllers\ParticipantController::class, 'updateProfile'])->name('participant.profile.update');
+        
+        // Team QR Code routes for Hacksphere
+        Route::prefix('teams/{teamId}/qr-codes')->group(function () {
+            Route::get('/', [TeamQRCodeController::class, 'showTeamQRCodes'])
+                ->name('participant.team.qr-codes');
+                
+            Route::post('/regenerate', [TeamQRCodeController::class, 'regenerateQRCode'])
+                ->name('participant.team.qr-codes.regenerate');
+                
+            Route::get('/download/{activityId}', [TeamQRCodeController::class, 'downloadQRCode'])
+                ->name('participant.team.qr-codes.download');
+        });
     });
 
     Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])->name('participant.register-hacksphere');
