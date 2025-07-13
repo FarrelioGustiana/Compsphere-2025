@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Team;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,11 +18,42 @@ class ParticipantController extends Controller
         $user = $request->user();
         $participantDetails = $user->participant;
         
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'HACKSPHERE')->first();
+        
+        // Check if user is part of a Hacksphere team (either as leader or member)
+        $hacksphereTeam = null;
+        if ($hacksphereEvent) {
+            // Check if user is a team leader
+            $hacksphereTeam = Team::where('team_leader_id', $user->id)
+                ->where('event_id', $hacksphereEvent->id)
+                ->first();
+            
+            // If not a leader, check if user is a team member
+            if (!$hacksphereTeam) {
+                $teamMember = TeamMember::where('user_id', $user->id)
+                    ->whereHas('team', function ($query) use ($hacksphereEvent) {
+                        $query->where('event_id', $hacksphereEvent->id);
+                    })
+                    ->first();
+                
+                if ($teamMember) {
+                    $hacksphereTeam = $teamMember->team;
+                }
+            }
+        }
+        
         return Inertia::render('Participant/Dashboard', [
             'user' => $user,
             'participantDetails' => $participantDetails,
             'allEvents' => Event::all(),
             'registeredEvents' => $user->events,
+            'hacksphereTeam' => $hacksphereTeam ? [
+                'id' => $hacksphereTeam->id,
+                'team_name' => $hacksphereTeam->team_name,
+                'team_code' => $hacksphereTeam->team_code,
+                'is_leader' => $hacksphereTeam->team_leader_id === $user->id,
+            ] : null,
         ]);
     }
 
@@ -163,15 +196,15 @@ public function registerHacksphere(Request $request)
     // Generate a unique 8-digit team code
     do {
         $team_code = str_pad(mt_rand(0, 99999999), 8, '0', STR_PAD_LEFT);
-    } while (\App\Models\Team::where('team_code', $team_code)->exists());
+    } while (Team::where('team_code', $team_code)->exists());
     
     // Create the team with the authenticated user as leader
-    $team = \App\Models\Team::create([
+    $hacksphereEvent = \App\Models\Event::where('event_code', 'hacksphere')->first();
+    $team = Team::create([
         'team_name' => $validated['team_name'],
         'team_leader_id' => $user->id,
         'team_code' => $team_code,
-        'created_at' => now(),
-        'updated_at' => now(),
+        'event_id' => $hacksphereEvent->id, // Pastikan event_id diisi
     ]);
     
     // Process member 1
@@ -222,13 +255,6 @@ public function registerHacksphere(Request $request)
     
     // Add members to the team
     $team->members()->attach([$member1Participant->user_id, $member2Participant->user_id]);
-    
-    // Find Hacksphere event
-    $hacksphereEvent = \App\Models\Event::where('event_code', 'hacksphere')->first();
-    
-    if (!$hacksphereEvent) {
-        return back()->with('error', 'Hacksphere event not found.');
-    }
     
     // Register all team members for the Hacksphere event
     $user->events()->attach($hacksphereEvent->id);

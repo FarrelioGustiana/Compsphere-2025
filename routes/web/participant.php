@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Participant\TeamQRCodeController;
+use App\Http\Controllers\Participant\TeamDashboardController;
+use App\Http\Controllers\Participant\ActivityQrController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +50,14 @@ Route::group([
             Route::get('/download/{activityId}', [TeamQRCodeController::class, 'downloadQRCode'])
                 ->name('participant.team.qr-codes.download');
         });
+        
+        // Team Dashboard route for Hacksphere
+        Route::get('/team/{teamId}', [\App\Http\Controllers\Participant\TeamDashboardController::class, 'show'])
+            ->name('participant.team.dashboard');
+            
+        // Activity QR Code route
+        Route::get('/activity-qr/{teamId}/{activityId}', [\App\Http\Controllers\Participant\ActivityQrController::class, 'show'])
+            ->name('participant.activity.qr');
     });
 
     Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])->name('participant.register-hacksphere');

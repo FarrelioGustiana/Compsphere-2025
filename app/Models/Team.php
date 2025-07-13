@@ -22,6 +22,7 @@ class Team extends Model
         'profile_picture',
         'team_leader_id',
         'team_code',
+        'event_id',
     ];
 
     /**
@@ -56,6 +57,14 @@ class Team extends Model
         return $this->belongsToMany(Activity::class, 'team_activity_verifications')
                     ->withPivot(['verification_token', 'status', 'verified_at', 'verified_by'])
                     ->withTimestamps();
+    }
+    
+    /**
+     * Get the event that this team belongs to.
+     */
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
     }
     
     /**
