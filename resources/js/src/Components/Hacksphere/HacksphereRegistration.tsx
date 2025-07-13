@@ -115,6 +115,18 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                         prevStep={prevStep}
                         errors={errors}
                         memberNumber={1}
+                        otherMemberInfos={[
+                            // Cast the types to ensure compatibility
+                            {
+                                ...member2Info
+                            } as any,
+                            {
+                                // Add team_leader properties converted to member format
+                                team_leader_nik: leaderInfo.team_leader_nik,
+                                team_leader_category: leaderInfo.team_leader_category,
+                                team_leader_domicile: leaderInfo.team_leader_domicile
+                            } as any
+                        ]}
                     />
                 );
             case 4:
@@ -126,6 +138,18 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                         prevStep={prevStep}
                         errors={errors}
                         memberNumber={2}
+                        otherMemberInfos={[
+                            // Cast the types to ensure compatibility
+                            {
+                                ...member1Info
+                            } as any,
+                            {
+                                // Add team_leader properties converted to member format
+                                team_leader_nik: leaderInfo.team_leader_nik,
+                                team_leader_category: leaderInfo.team_leader_category,
+                                team_leader_domicile: leaderInfo.team_leader_domicile
+                            } as any
+                        ]}
                     />
                 );
             case 5:

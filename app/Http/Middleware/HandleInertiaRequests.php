@@ -35,17 +35,33 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        
+        // Prepare user data with admin profile if applicable
+        $userData = null;
+        if ($user) {
+            $userData = [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'role' => $user->role,
+            ];
+            
+            // Add admin profile data if user is an admin
+            if ($user->role === 'admin' && $user->adminProfile) {
+                $userData['adminProfile'] = [
+                    'user_id' => $user->adminProfile->user_id,
+                    'admin_level' => $user->adminProfile->admin_level,
+                ];
+            }
+        }
+        
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'first_name' => $request->user()->first_name,
-                    'last_name' => $request->user()->last_name,
-                    'full_name' => $request->user()->full_name,
-                    'email' => $request->user()->email,
-                    'role' => $request->user()->role,
-                ] : null,
+                'user' => $userData,
             ],
             'flash' => [
                 'message' => fn () => $request->session()->get('message'),

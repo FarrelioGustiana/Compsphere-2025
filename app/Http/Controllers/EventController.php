@@ -83,18 +83,5 @@ class EventController extends Controller
         ]);
     }
 
-    public function registerHackSphere(Request $request, $eventId)
-    {
-        $user = $request->user();
-        $participant = $user->participant;
-        
-        if (!$participant) {
-            return redirect()->route('participant.profile')->with('error', 'Please complete your profile before registering.');
-        }
-
-        $validated = $request->validate([
-            'team_name' => 'required|string|max:255',
-            'team_code' => 'required|string|max:255|unique:teams,team_code',
-        ]);
-    }
+   
 }

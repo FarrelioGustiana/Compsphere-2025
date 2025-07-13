@@ -9,9 +9,23 @@ import {
     Users,
     Award,
     Settings,
+    ChevronDown,
+    ChevronUp,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import { route } from "ziggy-js";
+
+interface SubNavItem {
+    name: string;
+    href: string;
+}
+
+interface NavItem {
+    name: string;
+    href?: string;
+    icon: React.ElementType;
+    subNav?: SubNavItem[];
+}
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -20,10 +34,21 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const { auth } = usePage<PageProps>().props;
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openDropdowns, setOpenDropdowns] = useState<{
+        [key: string]: boolean;
+    }>({});
 
     const userRole = auth.user?.role || "participant";
+    const adminProfile = auth.user?.adminProfile;
 
-    const navigation = {
+    const toggleDropdown = (name: string) => {
+        setOpenDropdowns((prev) => ({
+            ...prev,
+            [name]: !prev[name],
+        }));
+    };
+
+    const navigation: Record<string, NavItem[]> = {
         participant: [
             {
                 name: "Dashboard",
@@ -36,6 +61,28 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             { name: "Dashboard", href: route("admin.dashboard"), icon: Home },
             { name: "Users", href: route("admin.users"), icon: Users },
             { name: "Profile", href: route("admin.profile"), icon: User },
+            {
+                name: "Events",
+                icon: Award,
+                subNav: [
+                    {
+                        name: "Hacksphere",
+                        href: "#",
+                    },
+                    {
+                        name: "Talksphere",
+                        href: "#",
+                    },
+                    {
+                        name: "Festsphere",
+                        href: "#",
+                    },
+                    {
+                        name: "Exposphere",
+                        href: "#",
+                    },
+                ],
+            },
         ],
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },
@@ -80,14 +127,60 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         </div>
                         <nav className="mt-5 px-2 space-y-1">
                             {currentNavigation.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
-                                >
-                                    <item.icon className="mr-4 h-6 w-6 text-gray-400" />
-                                    {item.name}
-                                </Link>
+                                <div key={item.name}>
+                                    {item.href ? (
+                                        <Link
+                                            href={item.href}
+                                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
+                                        >
+                                            <item.icon className="mr-4 h-6 w-6 text-gray-400" />
+                                            {item.name}
+                                        </Link>
+                                    ) : (
+                                        <div className="space-y-1">
+                                            <button
+                                                onClick={() =>
+                                                    toggleDropdown(item.name)
+                                                }
+                                                className="w-full group flex items-center justify-between px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
+                                            >
+                                                <div className="flex items-center">
+                                                    <item.icon className="mr-4 h-6 w-6 text-gray-400" />
+                                                    {item.name}
+                                                </div>
+                                                {openDropdowns[item.name] ? (
+                                                    <ChevronUp className="h-5 w-5 text-gray-400" />
+                                                ) : (
+                                                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                                                )}
+                                            </button>
+                                            {openDropdowns[item.name] &&
+                                                item.subNav && (
+                                                    <div className="pl-10 space-y-1">
+                                                        {item.subNav.map(
+                                                            (
+                                                                subItem: SubNavItem
+                                                            ) => (
+                                                                <Link
+                                                                    key={
+                                                                        subItem.name
+                                                                    }
+                                                                    href={
+                                                                        subItem.href
+                                                                    }
+                                                                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:text-white hover:bg-gray-700"
+                                                                >
+                                                                    {
+                                                                        subItem.name
+                                                                    }
+                                                                </Link>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                )}
+                                        </div>
+                                    )}
+                                </div>
                             ))}
 
                             <Link
@@ -115,7 +208,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                         {auth.user?.full_name}
                                     </p>
                                     <p className="text-sm font-medium text-gray-400 capitalize">
-                                        {auth.user?.role}
+                                        {auth.user?.role === "admin" &&
+                                        adminProfile
+                                            ? `${auth.user.role} (Level: ${adminProfile.admin_level})`
+                                            : auth.user?.role}
                                     </p>
                                 </div>
                             </div>
@@ -135,14 +231,60 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         </div>
                         <nav className="mt-5 flex-1 px-2 space-y-1">
                             {currentNavigation.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
-                                >
-                                    <item.icon className="mr-3 h-6 w-6 text-gray-400" />
-                                    {item.name}
-                                </Link>
+                                <div key={item.name}>
+                                    {item.href ? (
+                                        <Link
+                                            href={item.href}
+                                            className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
+                                        >
+                                            <item.icon className="mr-3 h-6 w-6 text-gray-400" />
+                                            {item.name}
+                                        </Link>
+                                    ) : (
+                                        <div className="space-y-1">
+                                            <button
+                                                onClick={() =>
+                                                    toggleDropdown(item.name)
+                                                }
+                                                className="w-full group flex items-center justify-between px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
+                                            >
+                                                <div className="flex items-center">
+                                                    <item.icon className="mr-3 h-6 w-6 text-gray-400" />
+                                                    {item.name}
+                                                </div>
+                                                {openDropdowns[item.name] ? (
+                                                    <ChevronUp className="h-4 w-4 text-gray-400" />
+                                                ) : (
+                                                    <ChevronDown className="h-4 w-4 text-gray-400" />
+                                                )}
+                                            </button>
+                                            {openDropdowns[item.name] &&
+                                                item.subNav && (
+                                                    <div className="pl-9 space-y-1">
+                                                        {item.subNav.map(
+                                                            (
+                                                                subItem: SubNavItem
+                                                            ) => (
+                                                                <Link
+                                                                    key={
+                                                                        subItem.name
+                                                                    }
+                                                                    href={
+                                                                        subItem.href
+                                                                    }
+                                                                    className="group flex items-center px-2 py-2 text-xs font-medium rounded-md text-gray-300 hover:text-white hover:bg-gray-700"
+                                                                >
+                                                                    {
+                                                                        subItem.name
+                                                                    }
+                                                                </Link>
+                                                            )
+                                                        )}
+                                                    </div>
+                                                )}
+                                        </div>
+                                    )}
+                                </div>
                             ))}
 
                             <Link
@@ -170,7 +312,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                         {auth.user?.full_name}
                                     </p>
                                     <p className="text-xs font-medium text-gray-400 capitalize">
-                                        {auth.user?.role}
+                                        {auth.user?.role === "admin" &&
+                                        adminProfile
+                                            ? `${auth.user.role} (Level: ${adminProfile.admin_level})`
+                                            : auth.user?.role}
                                     </p>
                                 </div>
                             </div>
