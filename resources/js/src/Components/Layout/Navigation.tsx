@@ -17,7 +17,6 @@ const Navigation: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const { auth } = usePage().props as any;
-    console.log(auth?.user);
 
     // Handle scroll effect
     useEffect(() => {
@@ -558,7 +557,9 @@ const Navigation: React.FC = () => {
                                                 >
                                                     <motion.span
                                                         onClick={() => {
-                                                            setIsMenuOpen(false);
+                                                            setIsMenuOpen(
+                                                                false
+                                                            );
                                                         }}
                                                         initial={{
                                                             x: -20,

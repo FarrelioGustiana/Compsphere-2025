@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { route } from "ziggy-js";
 import axios from "axios";
 
@@ -9,6 +9,7 @@ interface TeamMemberStepProps<T extends Record<string, string | number>> {
     prevStep: () => void;
     errors: any;
     memberNumber: number;
+    otherMemberInfos?: T[];
 }
 
 // Use a type assertion to make TypeScript happy
@@ -23,6 +24,9 @@ interface ValidationResponse {
         name: string;
         email: string;
         member_user_id: number;
+        nik?: string;
+        category?: string;
+        domicile?: string;
     };
     flash?: {
         valid?: boolean;
@@ -38,6 +42,9 @@ interface ValidationResponse {
             name: string;
             email: string;
             member_user_id: number;
+            nik?: string;
+            category?: string;
+            domicile?: string;
         };
     };
 }
@@ -49,16 +56,22 @@ function TeamMemberStep<T extends AnyMemberInfo>({
     prevStep,
     errors,
     memberNumber,
+    otherMemberInfos = [],
 }: TeamMemberStepProps<T>) {
     const [isValidating, setIsValidating] = useState(false);
+    const [isNikValidating, setIsNikValidating] = useState(false);
     const [emailValidated, setEmailValidated] = useState(false);
+    const [nikValidated, setNikValidated] = useState(false);
     const [emailError, setEmailError] = useState<string>("");
+    const [nikError, setNikError] = useState<string>("");
 
     const prefix = `member${memberNumber}`;
 
     const handleNewstep = () => {
         setEmailError("");
+        setNikError("");
         setEmailValidated(false);
+        setNikValidated(false);
         setMemberInfo((prev: T) => ({
             ...prev,
             [`${prefix}_email`]: memberInfo[`${prefix}_email`],
@@ -75,13 +88,18 @@ function TeamMemberStep<T extends AnyMemberInfo>({
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         const { name, value } = e.target;
-        console.log(name, value, `${prefix}_email`);
         setMemberInfo((prev: T) => ({ ...prev, [name]: value }));
 
         // Reset validation if email changes
         if (name === `${prefix}_email`) {
             setEmailValidated(false);
             setEmailError("");
+        }
+
+        // Reset validation if NIK changes
+        if (name === `${prefix}_nik`) {
+            setNikValidated(false);
+            setNikError("");
         }
     };
 
@@ -111,11 +129,20 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                     // Success case
                     setEmailValidated(true);
                     setEmailError("");
+                    
+                    // If the user already has an NIK in their profile, it's valid
+                    const userNik = data.user.nik || "";
+                    if (userNik && userNik.length === 16) {
+                        setNikValidated(true);
+                        setNikError("");
+                    }
+                    
                     setMemberInfo((prev: T) => ({
                         ...prev,
                         [`${prefix}_name`]: data.user.name || "",
                         [`${prefix}_user_id`]: data.user.member_user_id || 0,
                         [`${prefix}_nik`]: data.user.nik || "",
+                        [`original_${prefix}_nik`]: data.user.nik || "", // Store original NIK to detect changes
                         [`${prefix}_category`]: data.user.category || "",
                         [`${prefix}_domicile`]: data.user.domicile || "",
                         [`${prefix}_email`]: data.user.email || "",
@@ -173,10 +200,138 @@ function TeamMemberStep<T extends AnyMemberInfo>({
             });
     };
 
+    // Collect NIKs from other members to check for duplicates
+    const collectOtherNiks = (): string[] => {
+        const niks: string[] = [];
+
+        // Add NIKs from other member infos if available
+        if (otherMemberInfos && otherMemberInfos.length > 0) {
+            otherMemberInfos.forEach((info, index) => {
+                // Skip current member
+                if (index + 1 !== memberNumber) {
+                    const otherNikKey = `member${index + 1}_nik`;
+                    const otherNik = info[otherNikKey] as string;
+                    if (otherNik) {
+                        niks.push(otherNik);
+                    }
+                }
+            });
+        }
+
+        return niks;
+    };
+
+    const validateNik = () => {
+        const nik = memberInfo[`${prefix}_nik`] as string;
+        const email = memberInfo[`${prefix}_email`] as string;
+        const originalNik = memberInfo[`original_${prefix}_nik`];
+
+        // If this is the same NIK as in the user's profile, no need to validate
+        if (nik && originalNik && nik === originalNik) {
+            setNikValidated(true);
+            setNikError("");
+            return;
+        }
+
+        if (!nik) {
+            setNikError("NIK is required");
+            return;
+        }
+
+        if (nik.length !== 16) {
+            setNikError("NIK must be exactly 16 digits");
+            return;
+        }
+
+        // Need valid email before validating NIK
+        if (!email) {
+            setNikError("Email validation required first");
+            return;
+        }
+
+        setIsNikValidating(true);
+        setNikError("");
+
+        console.log(`Validating NIK for ${prefix}:`, nik);
+
+        const otherNiks = collectOtherNiks();
+
+        axios
+            .post(route("participant.validate-team-member-nik"), {
+                nik: nik,
+                current_member_email: email,
+                other_niks: otherNiks,
+            })
+            .then((response) => {
+                console.log(
+                    `NIK validation response for ${prefix}:`,
+                    response.data
+                );
+                const data = response.data;
+
+                if (data && data.valid === true) {
+                    // Success case
+                    setNikValidated(true);
+                    setNikError("");
+                    console.log(`NIK validated successfully for ${prefix}`);
+                } else {
+                    // Error case
+                    setNikValidated(false);
+                    setNikError(data.message || "Failed to validate NIK");
+                    console.log(
+                        `NIK validation failed for ${prefix}:`,
+                        data.message
+                    );
+                }
+            })
+            .catch((error) => {
+                console.error(`NIK validation error for ${prefix}:`, error);
+                setNikValidated(false);
+
+                let errorMessage =
+                    "Failed to connect to the server. Please try again.";
+
+                if (error.response && error.response.data) {
+                    if (error.response.data.message) {
+                        errorMessage = error.response.data.message;
+                    }
+                }
+
+                setNikError(errorMessage);
+            })
+            .finally(() => {
+                setIsNikValidating(false);
+            });
+    };
+
+    // Validate NIK when it changes to 16 digits
+    useEffect(() => {
+        const nik = memberInfo[`${prefix}_nik`] as string;
+        if (
+            nik &&
+            nik.length === 16 &&
+            emailValidated &&
+            !nikValidated &&
+            !isNikValidating
+        ) {
+            // Only validate if the NIK was manually changed
+            // If the NIK was automatically filled from the profile, it's already valid
+            const originalNik = memberInfo[`original_${prefix}_nik`];
+            if (originalNik !== nik) {
+                validateNik();
+            }
+        }
+    }, [memberInfo[`${prefix}_nik`]]);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!emailValidated) {
             setEmailError("Please validate the email first");
+            return;
+        }
+
+        if (!nikValidated) {
+            validateNik();
             return;
         }
 
@@ -185,7 +340,8 @@ function TeamMemberStep<T extends AnyMemberInfo>({
             memberInfo[`${prefix}_nik`] &&
             memberInfo[`${prefix}_category`] &&
             memberInfo[`${prefix}_domicile`] &&
-            emailValidated
+            emailValidated &&
+            nikValidated
         ) {
             handleNewstep();
         }
@@ -267,7 +423,13 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                                         [`${prefix}_email`]: "",
                                         [`${prefix}_name`]: "",
                                         [`${prefix}_user_id`]: 0,
+                                        [`${prefix}_nik`]: "",
+                                        [`original_${prefix}_nik`]: "", // Also clear original NIK
+                                        [`${prefix}_category`]: "",
+                                        [`${prefix}_domicile`]: "",
                                     }));
+                                    setNikValidated(false);
+                                    setNikError("");
                                 }}
                                 className="text-xs text-blue-400 hover:text-blue-500"
                             >
@@ -321,10 +483,31 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                         maxLength={16}
                         minLength={16}
                         disabled={!emailValidated}
+                        onBlur={() => {
+                            const nik = memberInfo[`${prefix}_nik`] as string;
+                            if (
+                                nik &&
+                                nik.length === 16 &&
+                                !nikValidated &&
+                                !isNikValidating
+                            ) {
+                                validateNik();
+                            }
+                        }}
                     />
+                    {nikError && (
+                        <div className="text-red-500 text-sm mt-1">
+                            {nikError}
+                        </div>
+                    )}
                     {errors[`${prefix}_nik`] && (
                         <div className="text-red-500 text-sm mt-1">
                             {errors[`${prefix}_nik`]}
+                        </div>
+                    )}
+                    {nikValidated && (
+                        <div className="text-green-500 text-sm mt-1">
+                            NIK is valid and unique
                         </div>
                     )}
                     <p className="text-xs text-gray-400 mt-1">
@@ -396,7 +579,12 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                 <button
                     type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                    disabled={!emailValidated || isValidating}
+                    disabled={
+                        !emailValidated ||
+                        isValidating ||
+                        !nikValidated ||
+                        isNikValidating
+                    }
                 >
                     Next
                 </button>

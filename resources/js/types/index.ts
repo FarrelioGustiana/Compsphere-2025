@@ -1,5 +1,10 @@
 // Define common types used across the application
 
+export interface AdminProfile {
+    user_id: number;
+    admin_level: number;
+}
+
 export interface User {
     id: number;
     first_name: string;
@@ -10,6 +15,7 @@ export interface User {
     email_verified_at?: string;
     created_at?: string;
     updated_at?: string;
+    adminProfile?: AdminProfile;
 }
 
 export interface PageProps {

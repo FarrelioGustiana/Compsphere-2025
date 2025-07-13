@@ -282,4 +282,65 @@ public function validateTeamMemberEmail(Request $request)
         ]
     ]);
 }
+
+    /**
+     * Validate team member NIK.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function validateTeamMemberNik(Request $request)
+    {
+        $validated = $request->validate([
+            'nik' => 'required|string|size:16',
+            'current_member_email' => 'required|string|email',
+            'other_niks' => 'nullable|array'
+        ]);
+
+        // First, check if the email belongs to an existing user
+        $memberUser = \App\Models\User::where('email', $validated['current_member_email'])->first();
+        
+        // If we found a user, check if they have a participant profile with this NIK
+        if ($memberUser) {
+            $memberParticipant = \App\Models\Participant::where('user_id', $memberUser->id)->first();
+            
+            // If this member already has this NIK in their profile, it's valid for them to use
+            if ($memberParticipant && $memberParticipant->nik === $validated['nik']) {
+                return response()->json([
+                    'valid' => true,
+                    'message' => 'This NIK matches your existing profile.'
+                ]);
+            }
+        }
+        
+        // Check if the NIK already exists in the participants table (but not owned by this member)
+        $existingParticipant = \App\Models\Participant::where('nik', $validated['nik'])->first();
+        
+        if ($existingParticipant) {
+            // If this participant exists but has a different user_id than the current member
+            if (!$memberUser || $existingParticipant->user_id !== $memberUser->id) {
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'This NIK is already registered for Hacksphere.'
+                ]);
+            }
+        }
+        
+        // Check if the NIK exists in the other team members in current form
+        if (isset($validated['other_niks']) && is_array($validated['other_niks'])) {
+            foreach ($validated['other_niks'] as $otherNik) {
+                if ($otherNik === $validated['nik']) {
+                    return response()->json([
+                        'valid' => false,
+                        'message' => 'This NIK is already being used by another team member in this form.'
+                    ]);
+                }
+            }
+        }
+        
+        return response()->json([
+            'valid' => true,
+            'message' => 'NIK is valid and unique.'
+        ]);
+    }
 }
