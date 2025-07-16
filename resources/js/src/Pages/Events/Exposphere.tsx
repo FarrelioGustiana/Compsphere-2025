@@ -41,8 +41,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                 </div>
             ) : (
                 <EventRegistration
-                    eventId={event.id}
-                    eventName={event.event_name}
+                    event={event}
                     user={user}
                     participantDetails={participantDetails}
                 />

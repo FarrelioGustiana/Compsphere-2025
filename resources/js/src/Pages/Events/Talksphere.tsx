@@ -41,8 +41,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                 </div>
             ) : (
                 <EventRegistration
-                    eventId={event.id}
-                    eventName={event.event_name}
+                    event={event}
                     user={user}
                     participantDetails={participantDetails}
                 />
