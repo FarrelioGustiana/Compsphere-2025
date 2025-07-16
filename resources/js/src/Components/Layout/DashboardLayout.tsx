@@ -72,9 +72,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     { name: "Teams", href: route("admin.hacksphere.teams") },
                 ],
             },
-            { name: "Talksphere", href: "#", icon: Users },
-            { name: "Exposphere", href: "#", icon: Globe },
-            { name: "Festsphere", href: "#", icon: Lightbulb },
+            { name: "Talksphere", href: route("admin.talksphere.participants"), icon: Users },
+            { name: "Exposphere", href: route("admin.exposphere.participants"), icon: Globe },
+            { name: "Festsphere", href: route("admin.festsphere.participants"), icon: Lightbulb },
         ],
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },
