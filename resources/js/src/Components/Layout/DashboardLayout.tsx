@@ -11,6 +11,9 @@ import {
     Settings,
     ChevronDown,
     ChevronUp,
+    Zap,
+    Globe,
+    Lightbulb,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import { route } from "ziggy-js";
@@ -62,27 +65,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             { name: "Users", href: route("admin.users"), icon: Users },
             { name: "Profile", href: route("admin.profile"), icon: User },
             {
-                name: "Events",
-                icon: Award,
+                name: "Hacksphere",
+                icon: Zap,
                 subNav: [
-                    {
-                        name: "Hacksphere",
-                        href: "#",
-                    },
-                    {
-                        name: "Talksphere",
-                        href: "#",
-                    },
-                    {
-                        name: "Festsphere",
-                        href: "#",
-                    },
-                    {
-                        name: "Exposphere",
-                        href: "#",
-                    },
+                    { name: "Activities", href: route("admin.hacksphere.activities") },
+                    { name: "Teams", href: route("admin.hacksphere.teams") },
                 ],
             },
+            { name: "Talksphere", href: "#", icon: Users },
+            { name: "Exposphere", href: "#", icon: Globe },
+            { name: "Festsphere", href: "#", icon: Lightbulb },
         ],
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },

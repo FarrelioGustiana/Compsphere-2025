@@ -45,5 +45,12 @@ Route::group([
         // New descriptive URL format for QR Code scanning
         Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])
             ->name('admin.qr-verification.team-code');
+            
+        // Hacksphere Admin Routes
+        Route::prefix('hacksphere')->group(function () {
+            Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
+            Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
+            Route::get('/team/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
+        });
     });
 });

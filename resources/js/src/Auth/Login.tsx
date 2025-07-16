@@ -16,11 +16,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
     const { data, setData, post, processing, errors, reset } = useForm<{
         email: string;
         password: string;
-        remember: boolean;
     }>({
         email: "",
         password: "",
-        remember: false,
     });
 
     useEffect(() => {
@@ -67,32 +65,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     showPasswordToggle
                     required
                 />
-
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="remember"
-                            checked={data.remember}
-                            className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
-                            onChange={(e) =>
-                                setData("remember", e.target.checked)
-                            }
-                        />
-                        <span className="ml-2 text-sm text-gray-400">
-                            Remember me
-                        </span>
-                    </label>
-
-                    {canResetPassword && (
-                        <Link
-                            href={route("password.request")}
-                            className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                        >
-                            Forgot password?
-                        </Link>
-                    )}
-                </div>
 
                 <Button
                     type="submit"
