@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -7,67 +8,55 @@
 @source '../**/*.tsx';
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-Regular.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: normal; /* 400 */
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-Medium.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-SemiBold.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-Bold.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: bold; /* 700 */
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-ExtraBold.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: 800;
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Orbitron";
-    src: url("/fonts/orbitron/Orbitron-Black.ttf") format("truetype");
+    font-family: "Airborne";
+    src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
     font-weight: 900;
     font-style: normal;
 }
 
-/* Helvetica Font */
-@font-face {
-    font-family: "Helvetica";
-    src: url("/fonts/helvetica/Helvetica.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Helvetica";
-    src: url("/fonts/helvetica/Helvetica-Bold.ttf") format("truetype");
-    font-weight: bold;
-    font-style: normal;
-}
+/* Poppins Font is imported from Google Fonts */
+/* The @import statement at the top of this file handles Poppins */
 
 @theme {
-    --font-sans: "Helvetica", ui-sans-serif, system-ui, sans-serif,
+    --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif,
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
-    --font-orbitron: "Orbitron", var(--font-sans);
+    --font-airborne: "Airborne", var(--font-sans);
 }
 
 @layer base {

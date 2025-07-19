@@ -13,53 +13,53 @@ const HeroSection: React.FC = () => {
     };
 
     return (
-        <section className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 z-10 pt-20 pb-16">
+        <section className="relative min-h-screen flex flex-col justify-center items-center px-0 z-10 pb-16">
             {/* Decorative elements */}
             <div className="absolute top-20 left-10 w-32 h-32 bg-[#1E88E5]/10 rounded-full blur-3xl"></div>
             <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#D32F2F]/10 rounded-full blur-3xl"></div>
             
-            <div className="max-w-7xl mx-auto text-center relative">
+            <div className="max-w-7xl w-full mx-auto text-center relative px-4 sm:px-6">
                 {/* Animated logo with glow effect */}
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.2 }}
-                    className="mb-6 sm:mb-8 relative"
+                    className="mb-4 sm:mb-6 relative"
                 >
-                    <div className="absolute inset-0 bg-[#1E88E5]/20 blur-xl rounded-full transform scale-150"></div>
+                    {/* <div className="absolute inset-0 bg-[#1E88E5]/20 blur-xl rounded-full transform scale-150"></div> */}
                     <Logo
                         size="xxxl"
                         showText={false}
-                        className="justify-center mb-6 sm:mb-8 relative z-10"
+                        className="justify-center sm:mb-6 relative z-10"
                     />
                 </motion.div>
 
                 {/* Modern animated heading with enhanced gradient */}
                 <motion.h1
-                    className="text-5xl sm:text-7xl lg:text-9xl font-bold mb-4 sm:mb-6 tracking-tight"
+                    className="text-4xl sm:text-5xl md:text-7xl lg:text-9xl font-bold mb-3 sm:mb-4 tracking-tight"
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                    <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron inline-block relative">
-                        Compsphere
+                    <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-airborne inline-block relative">
+                        COMPSPHERE
                     </span>
                 </motion.h1>
 
                 {/* Animated tagline with enhanced styling */}
                 <motion.div
-                    className="relative mb-6 sm:mb-8"
+                    className="relative mb-4 sm:mb-6"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
                 >
-                    <p className="text-xl sm:text-3xl lg:text-4xl text-gray-200 font-light px-4 tracking-wide">
+                    <p className="text-lg sm:text-xl md:text-3xl lg:text-4xl text-gray-200 font-light tracking-wide">
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5]">Accelerating</span> Innovation Through <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1E88E5] to-[#D32F2F]">Intelligent</span> Technology
                     </p>
                 </motion.div>
 
                 {/* Description with enhanced typography */}
-                <motion.p
+                {/* <motion.p
                     className="text-base sm:text-lg lg:text-xl mb-10 sm:mb-14 text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -68,10 +68,10 @@ const HeroSection: React.FC = () => {
                     Bergabunglah dengan para inovator, developer, dan teknolog
                     terdepan dalam event teknologi terbesar tahun ini. Wujudkan
                     masa depan melalui kolaborasi dan inovasi yang tak terbatas.
-                </motion.p>
+                </motion.p> */}
 
                 {/* Modern button group with hover effects */}
-                <motion.div
+                {/* <motion.div
                     className="flex flex-col sm:flex-row gap-5 justify-center px-4"
                     initial={{ y: 30, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -95,7 +95,7 @@ const HeroSection: React.FC = () => {
                     >
                         Pelajari Lebih Lanjut
                     </Button>
-                </motion.div>
+                </motion.div> */}
             </div>
             
             {/* Scroll indicator */}

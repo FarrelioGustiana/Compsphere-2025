@@ -73,14 +73,13 @@ const Home: React.FC = () => {
                         >
                             
                             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight">
-                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
+                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-airborne">
                                     OUR SUB-EVENTS
                                 </span>
                             </h2>
                             
                             <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 leading-relaxed">
-                                Empat event utama yang akan menghadirkan
-                                pengalaman teknologi tak terlupakan dengan inovasi terkini
+                                Check out our sub-events and join us in celebrating the latest in technology and innovation.
                             </p>
                         </motion.div>
 
@@ -262,7 +261,7 @@ const Home: React.FC = () => {
                         >
                             
                             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
+                                <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-airborne">
                                     EVENT INFORMATION
                                 </span>
                             </h2>
@@ -355,7 +354,7 @@ const Home: React.FC = () => {
                                             />
                                         </div>
                                         
-                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-orbitron">
+                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-airborne">
                                             Ready to Join?
                                         </h3>
                                         
@@ -410,7 +409,7 @@ const Home: React.FC = () => {
                                         transition={{ duration: 0.6, delay: 0.3 }}
                                         viewport={{ once: true }}
                                     >
-                                        <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-orbitron">
+                                        <span className="bg-gradient-to-r from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] bg-clip-text text-transparent font-airborne">
                                             Ready to Transform Your Tech Journey?
                                         </span>
                                     </motion.h2>

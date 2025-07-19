@@ -39,13 +39,6 @@ const Logo: React.FC<LogoProps> = ({
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: "spring", stiffness: 300 }}
             />
-            {showText && (
-                <span
-                    className={`${textSizeClasses[size]} font-bold bg-gradient-to-r from-blue-400 to-red-400 bg-clip-text text-transparent font-orbitron`}
-                >
-                    Compsphere
-                </span>
-            )}
         </div>
     );
 };
