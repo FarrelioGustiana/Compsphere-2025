@@ -45,5 +45,21 @@ Route::group([
         // New descriptive URL format for QR Code scanning
         Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])
             ->name('admin.qr-verification.team-code');
+            
+        // Hacksphere Admin Routes
+        Route::prefix('hacksphere')->group(function () {
+            Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
+            Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
+            Route::get('/team/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
+        });
+        
+        // Talksphere Admin Routes
+        Route::get('/talksphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.talksphere.participants')->defaults('eventCode', 'talksphere');
+        
+        // Festsphere Admin Routes
+        Route::get('/festsphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.festsphere.participants')->defaults('eventCode', 'festsphere');
+        
+        // Exposphere Admin Routes
+        Route::get('/exposphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.exposphere.participants')->defaults('eventCode', 'exposphere');
     });
 });

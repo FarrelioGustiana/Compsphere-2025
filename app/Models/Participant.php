@@ -91,4 +91,9 @@ class Participant extends Model
     {
         return $this->hasMany(Team::class, 'team_leader_id', 'user_id');
     }
+
+    public function eventRegistrations(): HasMany
+    {
+        return $this->hasMany(EventRegistration::class, 'user_id', 'user_id');
+    }
 }

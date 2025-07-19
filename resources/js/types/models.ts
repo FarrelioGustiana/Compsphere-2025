@@ -20,6 +20,8 @@ export interface Participant {
     domicile: string;
     created_at: string;
     updated_at: string;
+    user?: User;
+    eventRegistration?: EventRegistration;
 }
 
 export interface Event {
@@ -72,6 +74,22 @@ export interface Team {
     members?: User[];
 }
 
+export interface EventRegistration {
+    id: number;
+    user_id: number;
+    event_id: number;
+    registration_date: string;
+    registration_status: "pending" | "registered" | "cancelled";
+    payment_status: "pending" | "paid" | "failed" | null;
+    payment_amount: number | null;
+    payment_date: string | null;
+    invoice_id: string | null;
+    created_at: string;
+    updated_at: string;
+    event?: Event;
+    participant?: Participant;
+}
+
 /**
  * Activity model for events such as Hacksphere
  */
@@ -95,7 +113,7 @@ export interface TeamActivityVerification {
     team_id: number;
     activity_id: number;
     verification_token: string;
-    status: 'active' | 'used' | 'expired';
+    status: "active" | "used" | "expired";
     verified_at: string | null;
     verified_by: number | null;
     created_at: string;
