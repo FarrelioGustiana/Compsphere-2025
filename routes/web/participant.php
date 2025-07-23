@@ -3,6 +3,7 @@
 use App\Http\Controllers\Participant\TeamQRCodeController;
 use App\Http\Controllers\Participant\TeamDashboardController;
 use App\Http\Controllers\Participant\ActivityQrController;
+use App\Http\Controllers\Participant\EventRegistrationQRController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,9 +30,8 @@ Route::group([
             return app()->make(ParticipantController::class)->profile(request());
         })->name('participant.profile');
         
-        Route::post('/register-event/{eventId}', function ($eventId) {
-            return app()->make(ParticipantController::class)->registerEvent(request(), $eventId);
-        })->name('participant.register-event');
+        Route::post('/register-event/{eventId}', [ParticipantController::class, 'registerEvent'])
+            ->name('participant.register-event');
         
         Route::post('/update-nik', function () {
             return app()->make(ParticipantController::class)->updateNik(request());
@@ -58,6 +58,18 @@ Route::group([
         // Activity QR Code route
         Route::get('/activity-qr/{teamId}/{activityId}', [\App\Http\Controllers\Participant\ActivityQrController::class, 'show'])
             ->name('participant.activity.qr');
+            
+        // Event Registration QR Code routes for Talksphere and Festsphere
+        Route::prefix('event-registration')->group(function () {
+            Route::get('/qr-code/{eventCode}', [EventRegistrationQRController::class, 'showQRCode'])
+                ->name('participant.event-registration.qr-code');
+                
+            Route::post('/qr-code/regenerate', [EventRegistrationQRController::class, 'regenerateQRCode'])
+                ->name('participant.event-registration.qr-code.regenerate');
+                
+            Route::get('/qr-code/download/{eventCode}', [EventRegistrationQRController::class, 'downloadQRCode'])
+                ->name('participant.event-registration.qr-code.download');
+        });
     });
 
     Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])->name('participant.register-hacksphere');

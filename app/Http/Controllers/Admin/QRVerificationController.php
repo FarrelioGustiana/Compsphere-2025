@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Event;
+use App\Models\EventRegistration;
+use App\Models\EventRegistrationVerification;
 use App\Models\Team;
 use App\Models\TeamActivityVerification;
 use App\Services\QRCodeService;
@@ -232,5 +234,113 @@ class QRVerificationController extends Controller
             'verificationToken' => $verification->verification_token,
             'team' => $team
         ]);
+    }
+
+    /**
+     * Show the verification page for event registration QR code
+     */
+    public function showEventRegistrationVerificationPage(string $eventCode, int $userId, string $token)
+    {
+        // Get the event
+        $event = Event::where('event_code', $eventCode)->firstOrFail();
+        
+        // Validate the token (but don't mark as used yet)
+        $isValid = $this->qrCodeService->isValidEventRegistrationToken($token);
+        
+        if (!$isValid) {
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'Invalid or expired QR code',
+                'event' => $event
+            ]);
+        }
+        
+        // Get verification record to check if already used
+        $verification = EventRegistrationVerification::where('verification_token', $token)->first();
+        
+        if (!$verification) {
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'Verification record not found',
+                'event' => $event
+            ]);
+        }
+        
+        if ($verification->status !== 'active') {
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'QR code has already been used or expired',
+                'event' => $event,
+                'verification' => $verification
+            ]);
+        }
+        
+        // Get event registration and user data
+        $eventRegistration = $verification->eventRegistration;
+        $participant = $eventRegistration->user;
+        $user = $participant->user;
+        
+        // Check if user is already registered (verified)
+        if ($eventRegistration->registration_status === 'registered') {
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'This participant has already been verified and registered for the event.',
+                'event' => $event,
+                'eventRegistration' => $eventRegistration,
+                'participant' => $participant,
+                'user' => $user,
+                'type' => 'event_registration'
+            ]);
+        }
+        
+        // Show verification confirmation page
+        return Inertia::render('Admin/EventRegistrationVerificationConfirm', [
+            'event' => $event,
+            'eventRegistration' => $eventRegistration,
+            'participant' => $participant,
+            'user' => $user,
+            'verificationToken' => $token
+        ]);
+    }
+
+    /**
+     * Process the event registration QR code verification
+     */
+    public function verifyEventRegistrationQR(Request $request)
+    {
+        $request->validate([
+            'verification_token' => 'required|string'
+        ]);
+        
+        try {
+            $result = $this->qrCodeService->verifyEventRegistrationQR(
+                $request->verification_token, 
+                Auth::id()
+            );
+            
+            if ($result['success']) {
+                return Inertia::render('Admin/QRVerificationResult', [
+                    'success' => true,
+                    'message' => 'Event registration successfully verified',
+                    'data' => $result['data'],
+                    'type' => 'event_registration'
+                ]);
+            } else {
+                return Inertia::render('Admin/QRVerificationResult', [
+                    'success' => false,
+                    'message' => $result['message'],
+                    'data' => $result['data'] ?? null,
+                    'type' => 'event_registration'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Event registration QR verification error: ' . $e->getMessage());
+            
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'An error occurred during verification: ' . $e->getMessage(),
+                'type' => 'event_registration'
+            ]);
+        }
     }
 }

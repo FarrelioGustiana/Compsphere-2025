@@ -3,9 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\EventRegistration;
+use App\Models\HacksphereRegistration;
+use App\Models\HacksphereTeam;
+use App\Models\HacksphereTeamMember;
+use App\Models\Participant;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\User;
+use App\Services\QRCodeService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ParticipantController extends Controller
@@ -86,10 +96,11 @@ class ParticipantController extends Controller
         /**
      * Register participant for an event.
      */
-    public function registerEvent(Request $request, $eventId)
+    public function registerEvent(Request $request, $eventId, QRCodeService $qrCodeService)
     {
         $user = $request->user();
         $participant = $user->participant;
+        
         // Check if participant profile is complete
         if (
             !$participant ||
@@ -101,13 +112,58 @@ class ParticipantController extends Controller
         }
 
         // Prevent duplicate registration
-        if ($user->events()->where('events.id', $eventId)->exists()) {
+        $existingRegistration = EventRegistration::where('user_id', $participant->user_id)
+            ->where('event_id', $eventId)
+            ->first();
+            
+        if ($existingRegistration) {
             return back()->with('info', 'You are already registered for this event.');
         }
 
-        // Register for the event
-        $user->events()->attach($eventId);
-        return back()->with('success', 'You have registered for the event!');
+        $event = Event::findOrFail($eventId);
+
+        try {
+            DB::beginTransaction();
+
+            // Create EventRegistration record
+            $eventRegistration = EventRegistration::create([
+                'user_id' => $participant->user_id,
+                'event_id' => $event->id,
+                'registration_date' => now(),
+                'registration_status' => 'pending', // Will be updated to 'registered' after QR verification
+                'payment_status' => $event->is_paid_event ? 'pending' : null,
+                'payment_amount' => $event->is_paid_event ? 0 : null,
+            ]);
+
+            // Also maintain the pivot table relationship for backward compatibility
+            if (!$user->events()->where('events.id', $eventId)->exists()) {
+                $user->events()->attach($eventId, [
+                    'registration_date' => now(),
+                    'registration_status' => 'pending'
+                ]);
+            }
+
+            // Generate QR code for Talksphere and Festsphere events
+            if (in_array($event->event_code, ['talksphere', 'festsphere'])) {
+                $qrCodeData = $qrCodeService->generateEventRegistrationQR($participant->user_id, $event->id);
+                
+                if ($qrCodeData) {
+                    DB::commit();
+                    return back()->with([
+                        'success' => 'You have registered for the event! Your QR code has been generated.',
+                        'qr_code_data' => $qrCodeData
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return back()->with('success', 'You have registered for the event!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Event registration error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred during registration. Please try again.');
+        }
     }
 
     /**

@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Activity;
 use App\Models\Event;
+use App\Models\EventRegistration;
+use App\Models\EventRegistrationVerification;
 use App\Models\Team;
 use App\Models\TeamActivityVerification;
 use App\Models\User;
@@ -253,5 +255,265 @@ class QRCodeService
         
         // Format URL yang lebih deskriptif
         return url("/admin/{$eventCode}/{$activityCode}/{$teamCode}");
+    }
+
+    /**
+     * Generate a QR code for an event registration
+     * 
+     * @param int $userId
+     * @param int $eventId
+     * @return array|null QR code data or null if error
+     */
+    public function generateEventRegistrationQR(int $userId, int $eventId): ?array
+    {
+        try {
+            // Find the event registration
+            $eventRegistration = EventRegistration::where('user_id', $userId)
+                ->where('event_id', $eventId)
+                ->first();
+
+            if (!$eventRegistration) {
+                Log::error('Event registration not found for user_id: ' . $userId . ', event_id: ' . $eventId);
+                return null;
+            }
+
+            $event = Event::findOrFail($eventId);
+            $participant = $eventRegistration->user;
+            $user = $participant->user;
+
+            // Check if user is already registered (verified)
+            if ($eventRegistration->registration_status === 'registered') {
+                // Return existing verification data even if used, for display purposes
+                $verification = EventRegistrationVerification::where('event_registration_id', $eventRegistration->id)
+                    ->orderBy('verified_at', 'desc')
+                    ->first();
+                    
+                if ($verification) {
+                    // Generate the verification URL
+                    $verificationUrl = $verification->getVerificationUrl();
+                    
+                    return [
+                        'verification_id' => $verification->id,
+                        'event_registration_id' => $eventRegistration->id,
+                        'event_id' => $event->id,
+                        'event_name' => $event->event_name,
+                        'event_code' => $event->event_code,
+                        'user_id' => $user->id,
+                        'user_name' => $user->full_name,
+                        'verification_token' => $verification->verification_token,
+                        'verification_url' => $verificationUrl,
+                        'status' => 'verified' // Show as verified instead of used
+                    ];
+                }
+            }
+
+            // Check if a verification already exists and is still active
+            $verification = EventRegistrationVerification::where('event_registration_id', $eventRegistration->id)
+                ->where('status', 'active')
+                ->first();
+
+            // If no active verification exists, create a new one
+            if (!$verification) {
+                $verification = new EventRegistrationVerification();
+                $verification->event_registration_id = $eventRegistration->id;
+                $verification->verification_token = $this->generateUniqueRegistrationToken();
+                $verification->status = 'active';
+                $verification->save();
+            }
+
+            // Generate the verification URL
+            $verificationUrl = $verification->getVerificationUrl();
+            
+            return [
+                'verification_id' => $verification->id,
+                'event_registration_id' => $eventRegistration->id,
+                'event_id' => $event->id,
+                'event_name' => $event->event_name,
+                'event_code' => $event->event_code,
+                'user_id' => $user->id,
+                'user_name' => $user->full_name,
+                'verification_token' => $verification->verification_token,
+                'verification_url' => $verificationUrl,
+                'status' => $verification->status
+            ];
+        } catch (\Exception $e) {
+            Log::error('Error generating event registration QR code: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Verify an event registration QR code using its token
+     * 
+     * @param string $token
+     * @param int $adminId
+     * @return array
+     */
+    public function verifyEventRegistrationQR(string $token, int $adminId): array
+    {
+        try {
+            DB::beginTransaction();
+            
+            // Find the verification record
+            $verification = EventRegistrationVerification::where('verification_token', $token)
+                ->where('status', 'active')
+                ->lockForUpdate()
+                ->first();
+            
+            if (!$verification) {
+                // Check if it exists but is not active
+                $inactiveVerification = EventRegistrationVerification::where('verification_token', $token)
+                    ->where('status', '!=', 'active')
+                    ->first();
+                
+                if ($inactiveVerification) {
+                    $status = $inactiveVerification->status === 'used' ? 'already verified' : 'expired';
+                    
+                    DB::commit();
+                    return [
+                        'success' => false,
+                        'message' => 'This QR code has been ' . $status . '.',
+                        'data' => [
+                            'verification' => $inactiveVerification,
+                            'event_registration' => $inactiveVerification->eventRegistration,
+                            'event' => $inactiveVerification->eventRegistration->event,
+                            'user' => $inactiveVerification->eventRegistration->user->user
+                        ]
+                    ];
+                }
+                
+                DB::commit();
+                return [
+                    'success' => false,
+                    'message' => 'Invalid verification token.'
+                ];
+            }
+            
+            // Mark as verified
+            $verification->status = 'used';
+            $verification->verified_at = now();
+            $verification->verified_by = $adminId;
+            $verification->save();
+            
+            // Get related data
+            $eventRegistration = EventRegistration::find($verification->event_registration_id);
+            $event = $eventRegistration ? Event::find($eventRegistration->event_id) : null;
+            $participant = $eventRegistration ? $eventRegistration->user : null;
+            $user = $participant ? $participant->user : null;
+            $admin = User::find($adminId);
+            
+            // Double check: prevent verification if user is already registered
+            if ($eventRegistration && $eventRegistration->registration_status === 'registered') {
+                return [
+                    'success' => false,
+                    'message' => 'This participant has already been verified and registered for the event.',
+                    'data' => [
+                        'event' => $event,
+                        'participant' => $participant,
+                        'user' => $user,
+                        'verification' => $verification
+                    ]
+                ];
+            }
+            
+            // Update EventRegistration status to 'registered' after successful verification
+            if ($eventRegistration) {
+                $eventRegistration->registration_status = 'registered';
+                $eventRegistration->save();
+                
+                // Also update pivot table for backward compatibility
+                if ($user) {
+                    $user->events()->updateExistingPivot($event->id, [
+                        'registration_status' => 'registered'
+                    ]);
+                }
+            }
+            
+            DB::commit();
+            
+            return [
+                'success' => true,
+                'message' => 'Event registration verification successful.',
+                'data' => [
+                    'verification' => $verification,
+                    'event_registration' => $eventRegistration,
+                    'event' => $event,
+                    'participant' => $participant,
+                    'user' => $user,
+                    'admin' => $admin
+                ]
+            ];
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error verifying event registration QR code: ' . $e->getMessage());
+            
+            return [
+                'success' => false,
+                'message' => 'An error occurred during verification: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Regenerate a QR code for an event registration
+     * 
+     * @param int $userId
+     * @param int $eventId
+     * @return array|null
+     */
+    public function regenerateEventRegistrationQR(int $userId, int $eventId): ?array
+    {
+        try {
+            // Find the event registration
+            $eventRegistration = EventRegistration::where('user_id', $userId)
+                ->where('event_id', $eventId)
+                ->first();
+
+            if (!$eventRegistration) {
+                return null;
+            }
+
+            // Invalidate any existing active QR codes
+            EventRegistrationVerification::where('event_registration_id', $eventRegistration->id)
+                ->where('status', 'active')
+                ->update(['status' => 'expired']);
+            
+            // Generate a new QR code
+            return $this->generateEventRegistrationQR($userId, $eventId);
+        } catch (\Exception $e) {
+            Log::error('Error regenerating event registration QR code: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Check if an event registration verification token is valid
+     * 
+     * @param string $token
+     * @return bool
+     */
+    public function isValidEventRegistrationToken(string $token): bool
+    {
+        return EventRegistrationVerification::where('verification_token', $token)
+            ->where('status', 'active')
+            ->exists();
+    }
+
+    /**
+     * Generate a unique verification token for event registrations
+     * 
+     * @return string
+     */
+    protected function generateUniqueRegistrationToken(): string
+    {
+        $token = Str::random(32);
+        
+        // Ensure token is unique
+        while (EventRegistrationVerification::where('verification_token', $token)->exists()) {
+            $token = Str::random(32);
+        }
+        
+        return $token;
     }
 }

@@ -46,6 +46,12 @@ Route::group([
         Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])
             ->name('admin.qr-verification.team-code');
             
+        // Event Registration QR Code Verification Routes
+        Route::get('/verify-registration/{eventCode}/{userId}/{token}', [QRVerificationController::class, 'showEventRegistrationVerificationPage'])
+            ->name('admin.qr-verification.event-registration');
+        Route::post('/verify-registration', [QRVerificationController::class, 'verifyEventRegistrationQR'])
+            ->name('admin.qr-verification.event-registration.process');
+            
         // Hacksphere Admin Routes
         Route::prefix('hacksphere')->group(function () {
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
