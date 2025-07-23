@@ -14,9 +14,6 @@ const HeroSection: React.FC = () => {
 
     return (
         <section className="relative min-h-screen flex flex-col justify-center items-center px-0 z-10 pb-16">
-            {/* Decorative elements */}
-            <div className="absolute top-20 left-10 w-32 h-32 bg-[#1E88E5]/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-10 w-40 h-40 bg-[#D32F2F]/10 rounded-full blur-3xl"></div>
             
             <div className="max-w-7xl w-full mx-auto text-center relative px-4 sm:px-6">
                 {/* Animated logo with glow effect */}

@@ -1,13 +1,15 @@
 import React from "react";
-import { useForm } from "@inertiajs/react";
+import { useForm, Link } from "@inertiajs/react";
 import { User, Participant, Event } from "@/types/models";
 import { route } from "ziggy-js";
+import { QrCode } from "lucide-react";
 
 interface EventRegistrationProps {
     event: Event;
     user?: User;
     participantDetails?: Participant | null;
     onRegisterClick?: () => void;
+    isRegistered?: boolean;
 }
 
 const EventRegistration: React.FC<EventRegistrationProps> = ({
@@ -15,6 +17,7 @@ const EventRegistration: React.FC<EventRegistrationProps> = ({
     user,
     participantDetails,
     onRegisterClick,
+    isRegistered = false,
 }) => {
     const { post, processing } = useForm({});
 
@@ -75,6 +78,35 @@ const EventRegistration: React.FC<EventRegistrationProps> = ({
                 >
                     Complete Profile
                 </a>
+            </div>
+        );
+    }
+
+    // If user is registered, show different content based on event type
+    if (isRegistered) {
+        return (
+            <div className="mt-8 text-center">
+                <div className="mb-4">
+                    <div className="px-6 py-3 bg-green-600 text-white font-medium rounded-lg inline-block">
+                        ✓ You are registered for this event!
+                    </div>
+                </div>
+                
+                {/* Show QR code link for Talksphere and Festsphere */}
+                {(event.event_code === 'talksphere' || event.event_code === 'festsphere') && (
+                    <div className="mt-4">
+                        <Link
+                            href={route('participant.event-registration.qr-code', event.event_code)}
+                            className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                        >
+                            <QrCode className="w-5 h-5 mr-2" />
+                            View Registration QR Code
+                        </Link>
+                        <p className="text-gray-400 text-sm mt-2">
+                            Present this QR code during event check-in
+                        </p>
+                    </div>
+                )}
             </div>
         );
     }
