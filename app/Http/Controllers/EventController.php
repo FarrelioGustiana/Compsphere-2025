@@ -71,6 +71,12 @@ class EventController extends Controller
         if ($user) {
             $isRegistered = $user->events()->where('events.id', $event->id)->exists();
         }
+
+        // Get event registration if user is registered
+        $eventRegistration = null;
+        if ($isRegistered) {
+            $eventRegistration = $user->eventRegistrations()->where('event_id', $event->id)->first();
+        }
         
         // Determine the component name based on the event code
         $componentName = 'Pages/Events/' . ucfirst($slug);
@@ -79,7 +85,8 @@ class EventController extends Controller
             'event' => $event,
             'user' => $user,
             'participantDetails' => $participantDetails,
-            'isRegistered' => $isRegistered
+            'isRegistered' => $isRegistered,
+            'eventRegistration' => $eventRegistration,
         ]);
     }
 

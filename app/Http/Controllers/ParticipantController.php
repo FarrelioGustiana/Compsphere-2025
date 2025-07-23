@@ -177,6 +177,11 @@ public function registerHacksphere(Request $request)
         'member2_nik' => 'required|string|max:16',
         'member2_category' => 'required|string|in:high_school,university,non_academic',
         'member2_domicile' => 'required|string|max:255',
+        'payment_initiated' => 'boolean',
+        'payment_amount' => 'numeric',
+        'twibbon_leader_link' => 'nullable|url|max:255',
+        'twibbon_member1_link' => 'nullable|url|max:255',
+        'twibbon_member2_link' => 'nullable|url|max:255',
     ]);
     
     // Check if the team leader is the authenticated user
@@ -261,11 +266,54 @@ public function registerHacksphere(Request $request)
     $member1User->events()->attach($hacksphereEvent->id);
     $member2User->events()->attach($hacksphereEvent->id);
     
+    // Get payment information
+    $paymentStatus = (isset($validated['payment_initiated']) && $validated['payment_initiated']) ? 'pending' : null;
+    $paymentAmount = isset($validated['payment_amount']) ? $validated['payment_amount'] : 150000; // Default to 150,000 IDR
+    
+    // Get Twibbon links
+    $leaderTwibbonLink = $validated['twibbon_leader_link'] ?? null;
+    $member1TwibbonLink = $validated['twibbon_member1_link'] ?? null;
+    $member2TwibbonLink = $validated['twibbon_member2_link'] ?? null;
+    
+    // Create or update event registration records with payment status and twibbon links
+    $this->updateEventRegistration($user->id, $hacksphereEvent->id, $paymentStatus, $paymentAmount, $leaderTwibbonLink);
+    $this->updateEventRegistration($member1User->id, $hacksphereEvent->id, $paymentStatus, $paymentAmount, $member1TwibbonLink);
+    $this->updateEventRegistration($member2User->id, $hacksphereEvent->id, $paymentStatus, $paymentAmount, $member2TwibbonLink);
+    
     // Auto-generate QR codes for all team activities
     $qrCodeService = app(\App\Services\QRCodeService::class);
     $qrCodeService->bulkGenerateTeamQRCodes($team->id, $hacksphereEvent->id);
     
-    return redirect()->route('participant.dashboard')->with('success', 'Your team has been successfully registered for Hacksphere!');
+    $successMessage = 'Your team has been successfully registered for Hacksphere!';
+    if (isset($validated['payment_initiated']) && $validated['payment_initiated']) {
+        $successMessage .= ' Your payment status is currently pending verification.';
+    }
+    
+    return redirect()->route('participant.dashboard')->with('success', $successMessage);
+}
+
+/**
+ * Update or create event registration record with payment information and twibbon link
+ *
+ * @param int $userId
+ * @param int $eventId
+ * @param string $paymentStatus
+ * @param float $paymentAmount
+ * @param string|null $twibbonLink
+ * @return void
+ */
+protected function updateEventRegistration($userId, $eventId, $paymentStatus, $paymentAmount, $twibbonLink = null)
+{
+    $registration = \App\Models\EventRegistration::updateOrCreate(
+        ['user_id' => $userId, 'event_id' => $eventId],
+        [
+            'registration_status' => 'registered',
+            'payment_status' => $paymentStatus,
+            'payment_amount' => $paymentAmount,
+            'payment_date' => now(),
+            'twibbon_link' => $twibbonLink,
+        ]
+    );
 }
 
 /**

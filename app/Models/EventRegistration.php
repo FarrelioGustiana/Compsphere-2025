@@ -21,6 +21,7 @@ class EventRegistration extends Model
         'payment_amount',
         'payment_date',
         'invoice_id',
+        'twibbon_link',
     ];
 
     protected $casts = [
