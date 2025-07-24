@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -8,9 +7,72 @@
 @source '../**/*.tsx';
 
 @font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-ExtraBold.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-Black.ttf") format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-Italic.ttf") format("truetype");
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-BoldItalic.ttf") format("truetype");
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("/fonts/poppins/Poppins-ExtraBoldItalic.ttf") format("truetype");
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
     font-family: "Airborne";
     src: url("/fonts/airborne/AIRBORNE GP.ttf") format("truetype");
-    font-weight: normal; /* 400 */
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -57,6 +119,7 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
     --font-airborne: "Airborne", var(--font-sans);
+    --font-poppins: "Poppins", var(--font-sans);
 }
 
 @layer base {

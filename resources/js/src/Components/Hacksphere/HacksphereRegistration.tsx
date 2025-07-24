@@ -1,7 +1,10 @@
+"use client";
+
 import React, { useState } from "react";
-import { User, Participant } from "@/types/models";
+import type { User, Participant } from "@/types/models";
 import { useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
+import { motion } from "framer-motion";
 import TeamInfoStep from "@/src/Components/Hacksphere/Steps/TeamInfoStep";
 import TeamLeaderStep from "@/src/Components/Hacksphere/Steps/TeamLeaderStep";
 import TeamMemberStep from "@/src/Components/Hacksphere/Steps/TeamMemberStep";
@@ -137,8 +140,8 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         });
     };
 
-    const renderStep = () => {
-        switch (currentStep) {
+    const renderStep = (stepss: number) => {
+        switch (stepss) {
             case 1:
                 return (
                     <TeamInfoStep
@@ -255,49 +258,206 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         }
     };
 
+    // Animation variants for form elements with proper TypeScript typing
+    const containerVariant = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+            },
+        },
+    };
+
+    const itemVariant = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { type: "spring" as const, stiffness: 100 },
+        },
+    };
+
+    // Step titles for the stepper
+    const stepTitles = [
+        "Team Info",
+        "Leader",
+        "Member 1",
+        "Member 2",
+        "Payment",
+        "Twibbon",
+        "Summary",
+    ];
+
     return (
-        <div className="mt-8 w-full max-w-2xl mx-auto">
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-                <div className="mb-6">
-                    <h2 className="text-xl font-bold text-white mb-2">
+        <motion.div
+            className="mt-4 sm:mt-6 lg:mt-8 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariant}
+        >
+            <motion.div
+                className="bg-gradient-to-br from-gray-900 to-gray-800 p-4 sm:p-6 lg:p-8 rounded-xl shadow-2xl border border-blue-500/30"
+                variants={itemVariant}
+            >
+                <motion.div className="mb-6 lg:mb-8" variants={itemVariant}>
+                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-4 sm:mb-6 text-center sm:text-left">
                         Hacksphere Team Registration
                     </h2>
-                    <div className="flex justify-between items-center">
-                        {[1, 2, 3, 4, 5, 6, 7].map((step) => (
-                            <div
-                                key={step}
-                                className={`flex flex-col items-center ${
-                                    currentStep >= step
-                                        ? "text-blue-400"
-                                        : "text-gray-500"
-                                }`}
-                            >
-                                <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center mb-1 ${
-                                        currentStep >= step
-                                            ? "bg-blue-600"
-                                            : "bg-gray-700"
-                                    }`}
-                                >
-                                    {step}
-                                </div>
-                                <div className="text-xs">
-                                    {step === 1 && "Team Info"}
-                                    {step === 2 && "Leader"}
-                                    {step === 3 && "Member 1"}
-                                    {step === 4 && "Member 2"}
-                                    {step === 5 && "Payment"}
-                                    {step === 6 && "Twibbon"}
-                                    {step === 7 && "Summary"}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
 
-                {renderStep()}
-            </div>
-        </div>
+                    {/* Mobile Vertical Stepper - Only visible on small screens */}
+                    <div className="lg:hidden mb-6">
+                        <div className="flex flex-col space-y-3">
+                            {[1, 2, 3, 4, 5, 6, 7].map((step) => (
+                                <div key={step} className="w-full">
+                                    <motion.div
+                                        className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ${
+                                            currentStep === step
+                                                ? "bg-blue-900/30 border border-blue-500/30"
+                                                : "hover:bg-gray-800/50"
+                                        }`}
+                                        variants={itemVariant}
+                                    >
+                                        <motion.div
+                                            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shadow-lg text-xs sm:text-sm font-medium ${
+                                                currentStep > step
+                                                    ? "bg-gradient-to-br from-blue-500 to-purple-500 text-white"
+                                                    : currentStep === step
+                                                    ? "bg-gradient-to-br from-blue-400 to-purple-600 ring-2 ring-blue-400 text-white"
+                                                    : "bg-gray-800 border border-gray-600 text-gray-400"
+                                            }`}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            {currentStep > step ? (
+                                                <svg
+                                                    className="w-3 h-3 sm:w-4 sm:h-4"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth={2}
+                                                        d="M5 13l4 4L19 7"
+                                                    />
+                                                </svg>
+                                            ) : (
+                                                step
+                                            )}
+                                        </motion.div>
+
+                                        <div
+                                            className={`text-sm font-medium ${
+                                                currentStep >= step
+                                                    ? "text-blue-400"
+                                                    : "text-gray-500"
+                                            }`}
+                                        >
+                                            {stepTitles[step - 1]}
+                                        </div>
+                                    </motion.div>
+
+                                    {currentStep === step && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="mt-3 bg-gradient-to-br from-gray-800 to-gray-900 p-3 sm:p-4 rounded-lg border border-blue-500/20 shadow-inner overflow-hidden lg:hidden"
+                                        >
+                                            <div className="w-full max-w-full overflow-x-hidden">
+                                                {renderStep(step)}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Desktop Horizontal Stepper - Only visible on large screens */}
+                    <div className="relative hidden lg:block">
+                        {/* Progress bar */}
+                        <div className="absolute top-4 left-0 h-1 bg-gray-700 w-full rounded-full">
+                            <motion.div
+                                className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
+                                initial={{ width: 0 }}
+                                animate={{
+                                    width: `${(currentStep / 7) * 100}%`,
+                                }}
+                                transition={{ duration: 0.5 }}
+                            />
+                        </div>
+
+                        {/* Step indicators */}
+                        <div className="flex justify-between items-center relative z-10">
+                            {[1, 2, 3, 4, 5, 6, 7].map((step) => (
+                                <motion.div
+                                    key={step}
+                                    className="flex flex-col items-center"
+                                    whileHover={{ scale: 1.05 }}
+                                    variants={itemVariant}
+                                >
+                                    <motion.div
+                                        className={`w-8 h-8 xl:w-9 xl:h-9 rounded-full flex items-center justify-center mb-2 shadow-lg text-sm font-medium ${
+                                            currentStep > step
+                                                ? "bg-gradient-to-br from-blue-500 to-purple-500 text-white"
+                                                : currentStep === step
+                                                ? "bg-gradient-to-br from-blue-400 to-purple-600 ring-2 ring-blue-400 text-white"
+                                                : "bg-gray-800 border border-gray-600 text-gray-400"
+                                        }`}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        {currentStep > step ? (
+                                            <svg
+                                                className="w-4 h-4 xl:w-5 xl:h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M5 13l4 4L19 7"
+                                                />
+                                            </svg>
+                                        ) : (
+                                            step
+                                        )}
+                                    </motion.div>
+                                    <div
+                                        className={`text-xs xl:text-sm font-medium text-center ${
+                                            currentStep >= step
+                                                ? "text-blue-400"
+                                                : "text-gray-500"
+                                        }`}
+                                    >
+                                        {stepTitles[step - 1]}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    key={currentStep}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="bg-gradient-to-br from-gray-800 to-gray-900 p-4 sm:p-6 lg:p-8 rounded-lg border border-blue-500/20 shadow-inner overflow-hidden hidden lg:block"
+                >
+                    <div className="w-full max-w-full overflow-x-hidden">
+                        {renderStep(currentStep)}
+                    </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     );
 };
 

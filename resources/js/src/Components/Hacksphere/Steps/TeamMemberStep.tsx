@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { route } from "ziggy-js";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 interface TeamMemberStepProps<T extends Record<string, string | number>> {
     memberInfo: T;
@@ -129,14 +130,14 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                     // Success case
                     setEmailValidated(true);
                     setEmailError("");
-                    
+
                     // If the user already has an NIK in their profile, it's valid
                     const userNik = data.user.nik || "";
                     if (userNik && userNik.length === 16) {
                         setNikValidated(true);
                         setNikError("");
                     }
-                    
+
                     setMemberInfo((prev: T) => ({
                         ...prev,
                         [`${prefix}_name`]: data.user.name || "",
@@ -347,39 +348,86 @@ function TeamMemberStep<T extends AnyMemberInfo>({
         }
     };
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                    Step {memberNumber + 1}: Team Member {memberNumber}{" "}
-                    Information
-                </h3>
-                <p className="text-gray-300 mb-4">
-                    Please provide information for team member {memberNumber}.
-                </p>
+    // Animation variants for framer-motion
+    const formVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+            },
+        },
+    };
 
-                <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-300 mb-1">
-                        Email Address
+    const itemVariants = {
+        hidden: { opacity: 0, y: 10 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: { type: "spring" as const, stiffness: 100 },
+        },
+    };
+
+    return (
+        <motion.form
+            onSubmit={handleSubmit}
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-2xl mx-auto w-full px-4 sm:px-6 overflow-hidden"
+        >
+            <motion.div className="mb-6 sm:mb-8" variants={itemVariants}>
+                <motion.h3
+                    className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-2"
+                    variants={itemVariants}
+                >
+                    Team Member {memberNumber} Information
+                </motion.h3>
+                <motion.div
+                    className="h-1 w-16 bg-gradient-to-r from-blue-400 to-purple-500 rounded mb-4"
+                    variants={itemVariants}
+                />
+                <motion.p
+                    className="text-gray-300 mb-6"
+                    variants={itemVariants}
+                >
+                    Please provide information for team member {memberNumber}.
+                </motion.p>
+
+                <motion.div
+                    className="mb-6 relative group"
+                    variants={itemVariants}
+                >
+                    <label
+                        htmlFor={`${prefix}_email`}
+                        className="block text-sm font-medium text-blue-300 mb-2"
+                    >
+                        Email
                     </label>
-                    <div className="flex">
-                        <input
-                            type="email"
-                            name={`${prefix}_email`}
-                            value={memberInfo[`${prefix}_email`] as string}
-                            onChange={handleChange}
-                            className={`flex-1 px-3 py-2 rounded-l bg-gray-700 text-white border ${
-                                emailError
-                                    ? "border-red-500"
-                                    : emailValidated
-                                    ? "border-green-500"
-                                    : "border-gray-600"
-                            } focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                            disabled={emailValidated}
-                            required
-                            placeholder="Enter team member's email"
-                        />
-                        <button
+                    <div className="flex flex-col sm:flex-row mb-1 gap-2">
+                        <div className="relative flex-grow mb-2 sm:mb-0">
+                            <input
+                                id={`${prefix}_email`}
+                                name={`${prefix}_email`}
+                                type="email"
+                                value={memberInfo[`${prefix}_email`] as string}
+                                onChange={handleChange}
+                                className={`w-full px-4 py-3 rounded-lg ${
+                                    !emailValidated ? "sm:rounded-r-none" : ""
+                                } bg-gray-800/60 text-white border ${
+                                    emailError
+                                        ? "border-red-400"
+                                        : emailValidated
+                                        ? "border-green-500"
+                                        : "border-gray-700"
+                                } focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 disabled:opacity-70`}
+                                disabled={emailValidated}
+                                required
+                                placeholder="Enter team member's email"
+                            />
+                            <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity duration-300" />
+                        </div>
+                        <motion.button
                             type="button"
                             onClick={validateEmail}
                             disabled={
@@ -387,33 +435,93 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                                 emailValidated ||
                                 !memberInfo[`${prefix}_email`]
                             }
-                            className={`px-4 py-2 ${
+                            className={`px-3 sm:px-4 py-3 ${
                                 emailValidated
-                                    ? "bg-green-600 hover:bg-green-700"
-                                    : "bg-blue-600 hover:bg-blue-700"
-                            } text-white rounded-r transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                                    ? "bg-gradient-to-r from-green-500 to-green-600"
+                                    : "bg-gradient-to-r from-blue-500 to-purple-600"
+                            } text-white rounded-lg ${
+                                !emailValidated ? "sm:rounded-l-none" : ""
+                            } shadow-lg transition-all duration-300 flex items-center justify-center hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed min-w-[80px] sm:min-w-[100px]`}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.98 }}
                         >
                             {isValidating ? (
                                 <>
-                                    <span className="inline-block animate-spin mr-1">
-                                        ⟳
-                                    </span>
-                                    Verifying...
+                                    <svg
+                                        className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <circle
+                                            className="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            strokeWidth="4"
+                                        ></circle>
+                                        <path
+                                            className="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                    </svg>
+                                    Verifying
                                 </>
                             ) : emailValidated ? (
-                                "Verified"
+                                <>
+                                    <svg
+                                        className="w-5 h-5 mr-1"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M5 13l4 4L19 7"
+                                        />
+                                    </svg>
+                                    Verified
+                                </>
                             ) : (
                                 "Verify"
                             )}
-                        </button>
+                        </motion.button>
                     </div>
+
                     {emailValidated && (
-                        <div className="flex items-center justify-between">
-                            <div className="text-green-500 text-sm mt-1">
+                        <motion.div
+                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-2 gap-2"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <div className="text-green-400 text-sm flex items-center">
+                                <svg
+                                    className="w-4 h-4 mr-1"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clipRule="evenodd"
+                                    />
+                                </svg>
                                 Email verified! User:{" "}
-                                {memberInfo[`${prefix}_name`] as string}
+                                <span className="font-medium ml-1">
+                                    {memberInfo[`${prefix}_name`] as string}
+                                </span>
                             </div>
-                            <button
+                            <motion.button
                                 type="button"
                                 onClick={() => {
                                     setEmailValidated(false);
@@ -424,161 +532,505 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                                         [`${prefix}_name`]: "",
                                         [`${prefix}_user_id`]: 0,
                                         [`${prefix}_nik`]: "",
-                                        [`original_${prefix}_nik`]: "", // Also clear original NIK
+                                        [`original_${prefix}_nik`]: "",
                                         [`${prefix}_category`]: "",
                                         [`${prefix}_domicile`]: "",
                                     }));
                                     setNikValidated(false);
                                     setNikError("");
                                 }}
-                                className="text-xs text-blue-400 hover:text-blue-500"
+                                className="text-sm text-blue-400 hover:text-blue-300 flex items-center transition-colors duration-200 justify-center sm:justify-start"
+                                whileHover={{ scale: 1.03 }}
+                                whileTap={{ scale: 0.98 }}
                             >
+                                <svg
+                                    className="w-4 h-4 mr-1"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
                                 Change email
-                            </button>
-                        </div>
+                            </motion.button>
+                        </motion.div>
                     )}
+
                     {emailError && (
-                        <div className="text-red-500 text-sm mt-1">
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
                             {emailError}
-                        </div>
+                        </motion.div>
                     )}
+
                     {errors[`${prefix}_email`] && (
-                        <div className="text-red-500 text-sm mt-1">
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
                             {errors[`${prefix}_email`]}
-                        </div>
+                        </motion.div>
                     )}
+
                     {!emailValidated && !emailError && (
-                        <div className="text-gray-400 text-xs mt-1">
+                        <div className="text-gray-400 text-xs mt-2 flex items-center">
+                            <svg
+                                className="w-3 h-3 mr-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                            </svg>
                             The team member must have an existing account on our
                             platform. They cannot be already registered for
                             Hacksphere and cannot be you.
                         </div>
                     )}
-                </div>
+                </motion.div>
 
                 {emailValidated && (
-                    <div className="mb-4 p-3 bg-green-900/30 rounded border border-green-700">
-                        <p className="text-sm text-green-300">
-                            <strong>Verified:</strong>{" "}
-                            {memberInfo[`${prefix}_name`] as string}
+                    <motion.div
+                        className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-green-900/30 to-teal-900/30 rounded-lg border border-green-700/50 shadow-lg relative overflow-hidden"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ type: "spring", stiffness: 100 }}
+                    >
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-b from-green-500/20 to-transparent rounded-full -mr-12 -mt-12 opacity-30" />
+                        <p className="text-sm text-green-300 flex items-center">
+                            <svg
+                                className="w-5 h-5 mr-2"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            <strong className="mr-1">Verified Member:</strong>
+                            <span className="font-medium text-white">
+                                {memberInfo[`${prefix}_name`] as string}
+                            </span>
                         </p>
-                    </div>
+                    </motion.div>
                 )}
 
-                <div className="mb-4">
+                <motion.div
+                    className="mb-6 relative group"
+                    variants={itemVariants}
+                >
                     <label
                         htmlFor={`${prefix}_nik`}
-                        className="block text-sm font-medium text-gray-300 mb-1"
+                        className="block text-sm font-medium text-blue-300 mb-2"
                     >
                         NIK (National Identity Number)
                     </label>
-                    <input
-                        id={`${prefix}_nik`}
-                        name={`${prefix}_nik`}
-                        type="text"
-                        value={memberInfo[`${prefix}_nik`] as string}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                        maxLength={16}
-                        minLength={16}
-                        disabled={!emailValidated}
-                        onBlur={() => {
-                            const nik = memberInfo[`${prefix}_nik`] as string;
-                            if (
-                                nik &&
-                                nik.length === 16 &&
-                                !nikValidated &&
-                                !isNikValidating
-                            ) {
-                                validateNik();
-                            }
-                        }}
-                    />
-                    {nikError && (
-                        <div className="text-red-500 text-sm mt-1">
-                            {nikError}
-                        </div>
-                    )}
-                    {errors[`${prefix}_nik`] && (
-                        <div className="text-red-500 text-sm mt-1">
-                            {errors[`${prefix}_nik`]}
-                        </div>
-                    )}
-                    {nikValidated && (
-                        <div className="text-green-500 text-sm mt-1">
-                            NIK is valid and unique
-                        </div>
-                    )}
-                    <p className="text-xs text-gray-400 mt-1">
-                        Enter the 16-digit NIK without spaces
-                    </p>
-                </div>
+                    <div className="relative px-0 sm:px-0">
+                        <input
+                            id={`${prefix}_nik`}
+                            name={`${prefix}_nik`}
+                            type="text"
+                            value={memberInfo[`${prefix}_nik`] as string}
+                            onChange={handleChange}
+                            className={`w-full px-4 py-3 rounded-lg bg-gray-800/60 text-white border ${
+                                nikError
+                                    ? "border-red-400"
+                                    : nikValidated
+                                    ? "border-green-500"
+                                    : "border-gray-700"
+                            } focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 disabled:opacity-70`}
+                            required
+                            maxLength={16}
+                            minLength={16}
+                            disabled={!emailValidated}
+                            placeholder="16-digit NIK"
+                            onBlur={() => {
+                                const nik = memberInfo[
+                                    `${prefix}_nik`
+                                ] as string;
+                                if (
+                                    nik &&
+                                    nik.length === 16 &&
+                                    !nikValidated &&
+                                    !isNikValidating
+                                ) {
+                                    validateNik();
+                                }
+                            }}
+                        />
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity duration-300" />
 
-                <div className="mb-4">
+                        {isNikValidating && (
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                <svg
+                                    className="animate-spin h-5 w-5 text-blue-400"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        className="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                    ></circle>
+                                    <path
+                                        className="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        )}
+
+                        {nikValidated && !isNikValidating && (
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500">
+                                <svg
+                                    className="h-5 w-5"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clipRule="evenodd"
+                                    ></path>
+                                </svg>
+                            </div>
+                        )}
+                    </div>
+
+                    {nikError && (
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {nikError}
+                        </motion.div>
+                    )}
+
+                    {errors[`${prefix}_nik`] && (
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors[`${prefix}_nik`]}
+                        </motion.div>
+                    )}
+
+                    {nikValidated && (
+                        <motion.div
+                            className="text-green-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            NIK is valid and unique
+                        </motion.div>
+                    )}
+
+                    <div className="text-xs text-gray-400 mt-2 flex items-center">
+                        <svg
+                            className="w-3 h-3 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        Enter the 16-digit NIK without spaces
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    className="mb-6 relative group"
+                    variants={itemVariants}
+                >
                     <label
                         htmlFor={`${prefix}_category`}
-                        className="block text-sm font-medium text-gray-300 mb-1"
+                        className="block text-sm font-medium text-blue-300 mb-2"
                     >
                         Category
                     </label>
-                    <select
-                        id={`${prefix}_category`}
-                        name={`${prefix}_category`}
-                        value={memberInfo[`${prefix}_category`] as string}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                        disabled={!emailValidated}
-                    >
-                        <option value="">Select category</option>
-                        <option value="high_school">High School</option>
-                        <option value="university">University</option>
-                        <option value="non_academic">Non-Academic</option>
-                    </select>
-                    {errors[`${prefix}_category`] && (
-                        <div className="text-red-500 text-sm mt-1">
-                            {errors[`${prefix}_category`]}
-                        </div>
-                    )}
-                </div>
+                    <div className="relative">
+                        <select
+                            id={`${prefix}_category`}
+                            name={`${prefix}_category`}
+                            value={memberInfo[`${prefix}_category`] as string}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 rounded-lg appearance-none bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 disabled:opacity-70"
+                            required
+                            disabled={!emailValidated}
+                        >
+                            <option value="">Select category</option>
+                            <option value="high_school">High School</option>
+                            <option value="university">University</option>
+                            <option value="non_academic">Non-Academic</option>
+                        </select>
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity duration-300" />
 
-                <div className="mb-4">
+                        {/* Dropdown arrow */}
+                        <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                            <svg
+                                className="w-5 h-5 text-blue-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 9l-7 7-7-7"
+                                ></path>
+                            </svg>
+                        </div>
+                    </div>
+
+                    {errors[`${prefix}_category`] && (
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors[`${prefix}_category`]}
+                        </motion.div>
+                    )}
+                </motion.div>
+
+                <motion.div
+                    className="mb-8 relative group"
+                    variants={itemVariants}
+                >
                     <label
                         htmlFor={`${prefix}_domicile`}
-                        className="block text-sm font-medium text-gray-300 mb-1"
+                        className="block text-sm font-medium text-blue-300 mb-2"
                     >
                         Domicile (City/Region)
                     </label>
-                    <input
-                        id={`${prefix}_domicile`}
-                        name={`${prefix}_domicile`}
-                        type="text"
-                        value={memberInfo[`${prefix}_domicile`] as string}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                        disabled={!emailValidated}
-                    />
-                    {errors[`${prefix}_domicile`] && (
-                        <div className="text-red-500 text-sm mt-1">
-                            {errors[`${prefix}_domicile`]}
-                        </div>
-                    )}
-                </div>
-            </div>
+                    <div className="relative">
+                        <input
+                            id={`${prefix}_domicile`}
+                            name={`${prefix}_domicile`}
+                            type="text"
+                            value={memberInfo[`${prefix}_domicile`] as string}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 disabled:opacity-70"
+                            placeholder="Enter city or region"
+                            required
+                            disabled={!emailValidated}
+                        />
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity duration-300" />
+                    </div>
 
-            <div className="flex justify-between">
-                <button
+                    {errors[`${prefix}_domicile`] && (
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors[`${prefix}_domicile`]}
+                        </motion.div>
+                    )}
+                </motion.div>
+            </motion.div>
+
+            <motion.div
+                className="flex flex-col sm:flex-row justify-between gap-4 mt-8 sm:mt-6"
+                variants={itemVariants}
+            >
+                <motion.button
                     type="button"
                     onClick={prevStep}
-                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 order-2 sm:order-1"
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.98 }}
                 >
+                    <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 19l-7-7 7-7"
+                        />
+                    </svg>
                     Previous
-                </button>
-                <button
+                </motion.button>
+
+                <motion.button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                    className={`px-6 py-3 text-white rounded-lg shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-300 order-1 sm:order-2 ${
+                        !emailValidated ||
+                        isValidating ||
+                        !nikValidated ||
+                        isNikValidating
+                            ? "bg-gray-600 opacity-70 cursor-not-allowed"
+                            : "bg-gradient-to-r from-blue-500 to-purple-600"
+                    }`}
+                    whileHover={
+                        !emailValidated ||
+                        isValidating ||
+                        !nikValidated ||
+                        isNikValidating
+                            ? {}
+                            : { scale: 1.03 }
+                    }
+                    whileTap={
+                        !emailValidated ||
+                        isValidating ||
+                        !nikValidated ||
+                        isNikValidating
+                            ? {}
+                            : { scale: 0.98 }
+                    }
                     disabled={
                         !emailValidated ||
                         isValidating ||
@@ -587,9 +1039,23 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                     }
                 >
                     Next
-                </button>
-            </div>
-        </form>
+                    <svg
+                        className="w-5 h-5 ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                        />
+                    </svg>
+                </motion.button>
+            </motion.div>
+        </motion.form>
     );
 }
 
