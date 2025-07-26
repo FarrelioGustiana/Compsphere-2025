@@ -143,7 +143,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     Registration Fee:
                                 </p>
                                 <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                                    IDR 150,000
+                                    IDR 100,000
                                     <span className="text-xs sm:text-sm ml-2 font-normal text-gray-400">
                                         (per person)
                                     </span>
@@ -166,7 +166,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                 </svg>
                                 <p className="text-sm">
                                     <strong>Important:</strong> Each team member
-                                    must pay IDR 150,000 individually.
+                                    must pay IDR 100,000 individually.
                                 </p>
                             </div>
                         </motion.div>
@@ -191,7 +191,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                             </h5>
                             <ol className="list-none space-y-3 text-gray-300">
                                 {[
-                                    "Make a payment of IDR 150,000 to our account",
+                                    "Make a payment of IDR 100,000 to our account",
                                     "Take a screenshot or photo of your payment proof",
                                     "Send the proof through WhatsApp using the button below",
                                     "Include your team name and member name in the WhatsApp message",

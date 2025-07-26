@@ -90,7 +90,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
             ...member2Info,
             ...paymentInfo,
             ...twibbonInfo,
-            payment_amount: 150000, // Fixed payment amount for Hacksphere
+            payment_amount: 100000, // Fixed payment amount for Hacksphere
             payment_status: null,
         });
 
@@ -104,7 +104,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
             ...member2Info,
             ...paymentInfo,
             ...twibbonInfo,
-            payment_amount: 150000, // Fixed payment amount for Hacksphere
+            payment_amount: 100000, // Fixed payment amount for Hacksphere
             payment_status: paymentInfo.payment_initiated ? "pending" : null,
         }));
     }, [

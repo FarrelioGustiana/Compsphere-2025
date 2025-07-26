@@ -68,38 +68,72 @@ function RegistrationSection({
             <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-10 text-center bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text">
                 Registration
             </h2>
-            {isRegistered ? (
+            {eventRegistration?.registration_status === "pending" ||
+            eventRegistration?.registration_status === "registered" ? (
                 <motion.div
-                    className="bg-gradient-to-br from-green-900/30 to-blue-900/30 border border-green-700/50 rounded-xl p-6 sm:p-8 shadow-lg"
+                    className={`bg-gradient-to-br ${
+                        eventRegistration?.registration_status === "registered"
+                            ? "from-green-900/30 to-blue-900/30 border border-green-700/50"
+                            : "from-yellow-900/30 to-blue-900/30 border border-yellow-700/50"
+                    } rounded-xl p-6 sm:p-8 shadow-lg gap-6`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-6">
-                        <div className="bg-green-500/20 p-3 sm:p-4 rounded-full flex-shrink-0">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-10 w-10 sm:h-12 sm:w-12 text-green-400"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
+                    <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                        <div
+                            className={`${
+                                eventRegistration?.registration_status ===
+                                "registered"
+                                    ? "bg-green-500/20"
+                                    : "bg-yellow-500/20"
+                            } p-3 sm:p-4 rounded-full flex-shrink-0`}
+                        >
+                            {eventRegistration?.registration_status ===
+                            "registered" ? (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-10 w-10 sm:h-12 sm:w-12 text-green-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            ) : (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-10 w-10 sm:h-12 sm:w-12 text-yellow-400"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                            )}
                         </div>
                         <div className="text-center sm:text-left">
                             <h3 className="text-xl sm:text-2xl font-bold mb-2 text-blue-300">
-                                You're Registered!
+                                {eventRegistration?.registration_status ===
+                                "registered"
+                                    ? "Registration Approved!"
+                                    : "Waiting for Approval"}
                             </h3>
                             <p className="text-gray-300 text-sm sm:text-base">
-                                Thank you for registering for Hacksphere. We'll
-                                send you more details via email as the event
-                                approaches.
+                                {eventRegistration?.registration_status ===
+                                "registered"
+                                    ? "Congratulations! Your registration has been approved. Get ready for an exciting hackathon experience!"
+                                    : "Thank you for registering for Hacksphere. We'll send you more details via email as the event approaches."}
                             </p>
                         </div>
                     </div>
@@ -144,7 +178,7 @@ function RegistrationSection({
                                             </span>
                                             . Please complete your payment of{" "}
                                             <span className="font-semibold">
-                                                IDR 150,000
+                                                IDR 100,000
                                             </span>{" "}
                                             and send proof via WhatsApp.
                                         </p>
@@ -169,7 +203,7 @@ function RegistrationSection({
                                         </svg>
                                         <span>
                                             <strong>Important:</strong> Each
-                                            team member must pay IDR 150,000
+                                            team member must pay IDR 100,000
                                             individually.
                                         </span>
                                     </p>
@@ -199,7 +233,8 @@ function RegistrationSection({
                         )}
 
                     {eventRegistration &&
-                        eventRegistration.payment_status === "paid" && (
+                        eventRegistration.payment_status === "paid" &&
+                        eventRegistration.registration_status === "pending" && (
                             <motion.div
                                 className="mt-6 bg-gradient-to-br from-green-900/20 to-green-800/20 border border-green-600/50 rounded-xl p-4 sm:p-6 shadow-lg"
                                 initial={{ opacity: 0, y: 20 }}
@@ -233,14 +268,13 @@ function RegistrationSection({
                                         <p className="text-gray-300 text-sm sm:text-base">
                                             Your payment of{" "}
                                             <span className="font-semibold">
-                                                IDR 150,000
+                                                IDR 100,000
                                             </span>{" "}
                                             has been{" "}
                                             <span className="text-green-400 font-medium">
                                                 Verified
                                             </span>
-                                            . Thank you for completing your
-                                            registration!
+                                            !
                                         </p>
                                     </div>
                                 </div>
@@ -248,296 +282,291 @@ function RegistrationSection({
                         )}
 
                     {/* Twibbon Input Section */}
-                    {eventRegistration && (
-                        <motion.div
-                            className="mt-6 bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/50 rounded-xl p-4 sm:p-6 shadow-lg"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                                delay: 0.3,
-                                duration: 0.5,
-                            }}
-                        >
-                            <div className="flex flex-col space-y-4">
-                                <div className="flex items-center gap-3 sm:gap-4">
-                                    <div className="bg-purple-500/20 p-2 sm:p-3 rounded-full flex-shrink-0">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4 className="text-lg sm:text-xl font-bold mb-1 text-purple-400">
-                                            Twibbon Upload
-                                        </h4>
-                                        <p className="text-gray-300 text-sm sm:text-base">
-                                            Upload your twibbon link to complete
-                                            your registration process. This step
-                                            is optional and can be completed
-                                            later.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg border border-gray-700/50 mb-4">
-                                    <p className="flex items-start text-sm sm:text-base">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-purple-500 flex-shrink-0 mt-0.5"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                            />
-                                        </svg>
-                                        <span>
-                                            <strong>Twibbon Template:</strong>{" "}
-                                            Download our official twibbon
-                                            template, apply it to your profile
-                                            picture, and upload it to your
-                                            Instagram. Then paste the link here.
-                                        </span>
-                                    </p>
-                                </div>
-
-                                <div className="flex flex-col space-y-3">
-                                    <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
-                                        <a
-                                            href="/assets/hacksphere/twibbon-template.png"
-                                            target="_blank"
-                                            className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-700 to-purple-800 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg text-sm transition duration-300"
-                                            download
-                                        >
+                    {eventRegistration &&
+                        eventRegistration.registration_status === "pending" && (
+                            <motion.div
+                                className="mt-6 bg-gradient-to-br from-purple-900/20 to-purple-800/20 border border-purple-600/50 rounded-xl p-4 sm:p-6 shadow-lg"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    delay: 0.3,
+                                    duration: 0.5,
+                                }}
+                            >
+                                <div className="flex flex-col space-y-4">
+                                    <div className="flex items-center gap-3 sm:gap-4">
+                                        <div className="bg-purple-500/20 p-2 sm:p-3 rounded-full flex-shrink-0">
                                             <svg
-                                                className="w-5 h-5 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
+                                                className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
                                             >
                                                 <path
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
                                                     strokeWidth={2}
-                                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 />
                                             </svg>
-                                            Download Twibbon Template
-                                        </a>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-lg sm:text-xl font-bold mb-1 text-purple-400">
+                                                Twibbon{" "}
+                                                {eventRegistration &&
+                                                    !eventRegistration.twibbon_link &&
+                                                    "Upload"}
+                                            </h4>
+                                            <p className="text-gray-300 text-sm sm:text-base">
+                                                {eventRegistration &&
+                                                !eventRegistration.twibbon_link
+                                                    ? "Upload your twibbon link to complete your registration process. This stepis optional and can be completedlater."
+                                                    : "Your twibbon has been uploaded. Thank you for uploading your twibbon!"}
+                                            </p>
+                                        </div>
                                     </div>
 
-                                    {/* Conditional rendering based on whether twibbon link exists */}
                                     {eventRegistration &&
-                                    eventRegistration.twibbon_link ? (
-                                        <div className="flex items-center bg-green-900/20 p-3 border border-green-600/30 rounded-lg">
-                                            <div className="bg-green-500/20 p-2 rounded-full mr-3">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="h-5 w-5 text-green-400"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={2}
-                                                        d="M5 13l4 4L19 7"
-                                                    />
-                                                </svg>
-                                            </div>
-                                            <div className="flex-grow">
-                                                <p className="font-medium text-green-400">
-                                                    Twibbon Uploaded
+                                        !eventRegistration.twibbon_link && (
+                                            <div className="bg-gray-800/50 p-3 sm:p-4 rounded-lg border border-gray-700/50 mb-4">
+                                                <p className="flex items-start text-sm sm:text-base">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-purple-500 flex-shrink-0 mt-0.5"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                        />
+                                                    </svg>
+                                                    <span>
+                                                        <strong>
+                                                            Twibbon Template:
+                                                        </strong>{" "}
+                                                        Download our official
+                                                        twibbon template, apply
+                                                        it to your profile
+                                                        picture, and upload it
+                                                        to your Instagram. Then
+                                                        paste the link here.
+                                                    </span>
                                                 </p>
-                                                <a
-                                                    href={
-                                                        eventRegistration.twibbon_link
-                                                    }
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-sm text-blue-400 hover:underline truncate block"
-                                                >
-                                                    {
-                                                        eventRegistration.twibbon_link
-                                                    }
-                                                </a>
                                             </div>
-                                            <button
-                                                type="button"
-                                                className="px-3 py-2 bg-purple-600/30 hover:bg-purple-600/50 text-white text-sm rounded-lg transition duration-300"
-                                                onClick={() =>
-                                                    setShowTwibbonEditMode(true)
-                                                }
-                                            >
-                                                Change
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <form
-                                            className="flex flex-col sm:flex-row items-stretch gap-3"
-                                            onSubmit={(e) => {
-                                                e.preventDefault();
-                                                twibbonForm.post(
-                                                    route(
-                                                        "participant.events.update-twibbon",
-                                                        {
-                                                            eventId: event.id,
+                                        )}
+
+                                    <div className="flex flex-col space-y-3">
+                                        {eventRegistration &&
+                                            !eventRegistration.twibbon_link && (
+                                                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                                                    <a
+                                                        href="/assets/hacksphere/twibbon-template.png"
+                                                        target="_blank"
+                                                        className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-700 to-purple-800 hover:from-purple-600 hover:to-purple-700 text-white rounded-lg text-sm transition duration-300"
+                                                        download
+                                                    >
+                                                        <svg
+                                                            className="w-5 h-5 mr-2"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                        >
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth={2}
+                                                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                                            />
+                                                        </svg>
+                                                        Download Twibbon
+                                                        Template
+                                                    </a>
+                                                </div>
+                                            )}
+
+                                        {/* Conditional rendering based on whether twibbon link exists */}
+                                        {eventRegistration &&
+                                        eventRegistration.twibbon_link ? (
+                                            <div className="flex items-center bg-green-900/20 p-3 border border-green-600/30 rounded-lg">
+                                                <div className="bg-green-500/20 p-2 rounded-full mr-3">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-5 w-5 text-green-400"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M5 13l4 4L19 7"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div className="flex-grow">
+                                                    <p className="font-medium text-green-400">
+                                                        Twibbon Uploaded
+                                                    </p>
+                                                    <a
+                                                        href={
+                                                            eventRegistration.twibbon_link
                                                         }
-                                                    ),
-                                                    {
-                                                        onSuccess: () => {
-                                                            setTwibbonMessage({
-                                                                type: "success",
-                                                                text: "Twibbon link uploaded successfully!",
-                                                            });
-                                                            setShowTwibbonEditMode(
-                                                                false
-                                                            );
-                                                            setTimeout(() => {
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-sm text-blue-400 hover:underline truncate block"
+                                                    >
+                                                        {
+                                                            eventRegistration.twibbon_link
+                                                        }
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <form
+                                                className="flex flex-col sm:flex-row items-stretch gap-3"
+                                                onSubmit={(e) => {
+                                                    e.preventDefault();
+                                                    twibbonForm.post(
+                                                        route(
+                                                            "participant.update-twibbon",
+                                                            {
+                                                                eventId:
+                                                                    event.id,
+                                                            }
+                                                        ),
+                                                        {
+                                                            onSuccess: () => {
                                                                 setTwibbonMessage(
-                                                                    null
+                                                                    {
+                                                                        type: "success",
+                                                                        text: "Twibbon link uploaded successfully!",
+                                                                    }
                                                                 );
-                                                            }, 5000);
-                                                        },
-                                                        onError: () => {
-                                                            setTwibbonMessage({
-                                                                type: "error",
-                                                                text: "Failed to upload twibbon link. Please try again.",
-                                                            });
-                                                            setTimeout(() => {
+                                                                setShowTwibbonEditMode(
+                                                                    false
+                                                                );
+                                                                setTimeout(
+                                                                    () => {
+                                                                        setTwibbonMessage(
+                                                                            null
+                                                                        );
+                                                                    },
+                                                                    5000
+                                                                );
+                                                            },
+                                                            onError: () => {
                                                                 setTwibbonMessage(
-                                                                    null
+                                                                    {
+                                                                        type: "error",
+                                                                        text: "Failed to upload twibbon link. Please try again.",
+                                                                    }
                                                                 );
-                                                            }, 5000);
-                                                        },
-                                                    }
-                                                );
-                                            }}
-                                        >
-                                            <div className="flex-grow w-full">
-                                                <input
-                                                    type="url"
-                                                    className="w-full px-4 py-2 h-10 bg-gray-700 border 
+                                                                setTimeout(
+                                                                    () => {
+                                                                        setTwibbonMessage(
+                                                                            null
+                                                                        );
+                                                                    },
+                                                                    5000
+                                                                );
+                                                            },
+                                                        }
+                                                    );
+                                                }}
+                                            >
+                                                <div className="flex-grow w-full">
+                                                    <input
+                                                        type="url"
+                                                        className="w-full px-4 py-2 h-10 bg-gray-700 border 
                                                 border-gray-600 rounded-lg text-white placeholder-gray-400 
                                                 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                                    placeholder="https://www.instagram.com/p/..."
-                                                    value={
-                                                        twibbonForm.data
-                                                            .twibbon_link
-                                                    }
-                                                    onChange={(e) =>
-                                                        twibbonForm.setData(
-                                                            "twibbon_link",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    required
-                                                />
-                                                {twibbonForm.errors
-                                                    .twibbon_link && (
-                                                    <p className="text-red-500 text-xs mt-1">
-                                                        {
-                                                            twibbonForm.errors
+                                                        placeholder="https://www.instagram.com/p/..."
+                                                        value={
+                                                            twibbonForm.data
                                                                 .twibbon_link
                                                         }
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <div className="flex gap-2">
-                                                <button
-                                                    type="submit"
-                                                    className="px-4 h-10 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow-lg transition duration-300 flex-shrink-0"
-                                                    disabled={
-                                                        twibbonForm.processing
-                                                    }
-                                                >
-                                                    {twibbonForm.processing ? (
-                                                        <span className="flex items-center">
-                                                            <svg
-                                                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                fill="none"
-                                                                viewBox="0 0 24 24"
-                                                            >
-                                                                <circle
-                                                                    className="opacity-25"
-                                                                    cx="12"
-                                                                    cy="12"
-                                                                    r="10"
-                                                                    stroke="currentColor"
-                                                                    strokeWidth="4"
-                                                                ></circle>
-                                                                <path
-                                                                    className="opacity-75"
-                                                                    fill="currentColor"
-                                                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                                                ></path>
-                                                            </svg>
-                                                            Processing
-                                                        </span>
-                                                    ) : (
-                                                        "Upload"
+                                                        onChange={(e) =>
+                                                            twibbonForm.setData(
+                                                                "twibbon_link",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                    {twibbonForm.errors
+                                                        .twibbon_link && (
+                                                        <p className="text-red-500 text-xs mt-1">
+                                                            {
+                                                                twibbonForm
+                                                                    .errors
+                                                                    .twibbon_link
+                                                            }
+                                                        </p>
                                                     )}
-                                                </button>
-                                                {showTwibbonEditMode && (
+                                                </div>
+                                                <div className="flex gap-2">
                                                     <button
-                                                        type="button"
-                                                        className="px-4 h-10 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition duration-300 flex-shrink-0"
-                                                        onClick={() => {
-                                                            setShowTwibbonEditMode(
-                                                                false
-                                                            );
-                                                            twibbonForm.reset();
-                                                            twibbonForm.clearErrors();
-                                                        }}
+                                                        type="submit"
+                                                        className="px-4 h-10 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow-lg transition duration-300 flex-shrink-0"
+                                                        disabled={
+                                                            twibbonForm.processing
+                                                        }
                                                     >
-                                                        Cancel
+                                                        {twibbonForm.processing ? (
+                                                            <span className="flex items-center">
+                                                                <svg
+                                                                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                >
+                                                                    <circle
+                                                                        className="opacity-25"
+                                                                        cx="12"
+                                                                        cy="12"
+                                                                        r="10"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth="4"
+                                                                    ></circle>
+                                                                    <path
+                                                                        className="opacity-75"
+                                                                        fill="currentColor"
+                                                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                                                    ></path>
+                                                                </svg>
+                                                                Processing
+                                                            </span>
+                                                        ) : (
+                                                            "Upload"
+                                                        )}
                                                     </button>
-                                                )}
+                                                </div>
+                                            </form>
+                                        )}
+
+                                        {twibbonMessage && (
+                                            <div
+                                                className={`mt-2 px-3 py-2 rounded-lg text-sm ${
+                                                    twibbonMessage.type ===
+                                                    "success"
+                                                        ? "bg-green-900/30 text-green-400"
+                                                        : "bg-red-900/30 text-red-400"
+                                                }`}
+                                            >
+                                                {twibbonMessage.text}
                                             </div>
-                                        </form>
-                                    )}
-
-                                    {twibbonMessage && (
-                                        <div
-                                            className={`mt-2 px-3 py-2 rounded-lg text-sm ${
-                                                twibbonMessage.type ===
-                                                "success"
-                                                    ? "bg-green-900/30 text-green-400"
-                                                    : "bg-red-900/30 text-red-400"
-                                            }`}
-                                        >
-                                            {twibbonMessage.text}
-                                        </div>
-                                    )}
-
-                                    <p className="text-sm text-gray-400 italic">
-                                        {eventRegistration &&
-                                        eventRegistration.twibbon_link &&
-                                        !showTwibbonEditMode
-                                            ? "You can update your twibbon link at any time by clicking 'Change'."
-                                            : "You can upload your twibbon link at any time."}
-                                    </p>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    )}
+                            </motion.div>
+                        )}
                 </motion.div>
             ) : showNikForm ? (
                 <motion.div

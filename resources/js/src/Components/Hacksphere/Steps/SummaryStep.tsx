@@ -215,7 +215,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                         <span className="font-medium min-w-32 sm:mr-2">
                             Payment Amount:
                         </span>{" "}
-                        IDR 150,000
+                        IDR 100,000
                     </p>
                 </motion.div>
 
@@ -279,7 +279,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                         <span className="font-medium min-w-32 sm:mr-2">
                             Payment Amount:
                         </span>{" "}
-                        IDR 150,000
+                        IDR 100,000
                     </p>
                 </motion.div>
 
@@ -343,7 +343,7 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                         <span className="font-medium min-w-32 sm:mr-2">
                             Payment Amount:
                         </span>{" "}
-                        IDR 150,000
+                        IDR 100,000
                     </p>
                 </motion.div>
 
