@@ -84,6 +84,7 @@ export interface EventRegistration {
     payment_amount: number | null;
     payment_date: string | null;
     invoice_id: string | null;
+    twibbon_link: string | null;
     created_at: string;
     updated_at: string;
     event?: Event;

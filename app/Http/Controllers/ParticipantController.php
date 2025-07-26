@@ -21,6 +21,41 @@ use Inertia\Inertia;
 class ParticipantController extends Controller
 {
     /**
+     * Update twibbon link for Hacksphere event registration.
+     * 
+     * @param Request $request
+     * @param int $eventId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateTwibbonLink(Request $request, $eventId)
+    {
+        $request->validate([
+            'twibbon_link' => 'nullable|url',
+        ]);
+        
+        // Find the user's registration for this event
+        $registration = EventRegistration::where('user_id', Auth::id())
+            ->where('event_id', $eventId)
+            ->first();
+        
+        if (!$registration) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'You are not registered for this event.'
+            ], 404);
+        }
+        
+        // Update the twibbon link
+        $registration->twibbon_link = $request->twibbon_link;
+        $registration->save();
+        
+        return response()->json([
+            'success' => true, 
+            'message' => $request->twibbon_link ? 'Twibbon link saved successfully.' : 'Twibbon link removed.',
+            'twibbon_link' => $registration->twibbon_link
+        ]);
+    }
+    /**
      * Display the participant dashboard.
      */
     public function dashboard(Request $request)

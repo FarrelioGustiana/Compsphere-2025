@@ -32,6 +32,9 @@ Route::group([
         
         Route::post('/register-event/{eventId}', [ParticipantController::class, 'registerEvent'])
             ->name('participant.register-event');
+            
+        Route::post('/events/{eventId}/twibbon', [ParticipantController::class, 'updateTwibbonLink'])
+            ->name('participant.update-twibbon');
         
         Route::post('/update-nik', function () {
             return app()->make(ParticipantController::class)->updateNik(request());
