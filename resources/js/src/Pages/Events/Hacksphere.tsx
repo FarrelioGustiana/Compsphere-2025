@@ -14,6 +14,9 @@ import RegistrationSection from "@/src/Components/Hacksphere/RegistrationSection
 import AboutSection from "@/src/Components/Hacksphere/AboutSection";
 import FeaturesSection from "@/src/Components/Hacksphere/FeaturesSection";
 import PrizesSection from "@/src/Components/Hacksphere/PrizesSection";
+import EventLayout from "@/src/Components/Layout/EventLayout";
+import StarGrid from "@/src/Components/StarGrid";
+import CosmicBackground from "@/src/Components/Home/CosmicBackground";
 
 // CountdownTimer component for Hacksphere event
 const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
@@ -165,148 +168,155 @@ const Hacksphere: React.FC<HacksphereProps> = ({
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
-            {/* Hero Section with fixed background */}
-            <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-transparent"></div>
-                <div className="relative z-20 min-h-screen flex items-center justify-center overflow-hidden">
-                    {/* Hero Content */}
-                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-32 text-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: -30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                        >
-                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 text-transparent bg-clip-text leading-tight font-airborne">
-                                HACKSPHERE
-                            </h1>
-                        </motion.div>
+        <EventLayout>
+            <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
+                {/* Star Grid Background */}
+                <StarGrid />
 
-                        <motion.p
-                            className="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 text-blue-100 max-w-4xl mx-auto px-4"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3, duration: 0.8 }}
-                        >
-                            Where Innovation Meets Technology: Building
-                            Tomorrow's Solutions Today
-                        </motion.p>
-
-                        {/* Countdown Timer */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6, duration: 0.8 }}
-                        >
-                            <h2 className="text-lg sm:text-xl font-semibold mb-2 text-blue-300">
-                                Event Starts In:
-                            </h2>
-                            <CountdownTimer targetDate={eventDate} />
-                        </motion.div>
-                    </div>
-
-                    {/* Scroll indicator */}
-                    <motion.div
-                        className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20"
-                        animate={{ y: [0, 10, 0] }}
-                        transition={{
-                            repeat: Number.POSITIVE_INFINITY,
-                            duration: 2,
-                        }}
-                    >
-                        <ArrowDownCircle className="w-12 h-12 text-blue-400" />
-                    </motion.div>
-                </div>
-                <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-900 to-transparent"></div>
-            </div>
-
-            {/* Spacer to push content below the hero height */}
-            <div className="h-screen w-full"></div>
-
-            {/* Content that scrolls over the hero - higher z-index */}
-            <div className="relative z-10 bg-gray-900 pt-16 pb-20">
-                {/* Registration Form Section */}
-                {showHacksphereRegistration ? (
-                    <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                            className="mb-6"
-                        >
-                            <button
-                                onClick={() =>
-                                    setShowHacksphereRegistration(false)
-                                }
-                                className="flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+                {/* Hero Section with fixed background */}
+                <div className="fixed top-0 left-0 w-full h-screen z-0 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-transparent"></div>
+                    <div className="relative z-20 min-h-screen flex items-center justify-center overflow-hidden">
+                        {/* Hero Content */}
+                        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-32 text-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: -30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8 }}
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="h-4 w-4 sm:h-5 sm:w-5 mr-1"
-                                    viewBox="0 0 20 20"
-                                    fill="currentColor"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
-                                        clipRule="evenodd"
-                                    />
-                                </svg>
-                                Back to Event Details
-                            </button>
-                        </motion.div>
+                                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400 text-transparent bg-clip-text leading-tight font-airborne">
+                                    HACKSPHERE
+                                </h1>
+                            </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.6 }}
-                            className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl shadow-blue-900/20 border border-blue-900/30"
-                        >
-                            <div className="mb-6 text-center">
-                                <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-indigo-400 text-transparent bg-clip-text">
-                                    Team Registration
+                            <motion.p
+                                className="text-lg sm:text-xl lg:text-2xl mb-6 sm:mb-8 text-blue-100 max-w-4xl mx-auto px-4"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                            >
+                                Where Innovation Meets Technology: Building
+                                Tomorrow's Solutions Today
+                            </motion.p>
+
+                            {/* Countdown Timer */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.6, duration: 0.8 }}
+                            >
+                                <h2 className="text-lg sm:text-xl font-semibold mb-2 text-blue-300">
+                                    Event Starts In:
                                 </h2>
-                                <p className="text-blue-300 text-sm sm:text-base">
-                                    Complete all steps to register your team
-                                </p>
-                            </div>
+                                <CountdownTimer targetDate={eventDate} />
+                            </motion.div>
+                        </div>
 
-                            <HacksphereRegistration
-                                user={user}
-                                participantDetails={participantDetails}
-                                eventId={event.id}
-                            />
+                        {/* Scroll indicator */}
+                        <motion.div
+                            className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20"
+                            animate={{ y: [0, 10, 0] }}
+                            transition={{
+                                repeat: Number.POSITIVE_INFINITY,
+                                duration: 2,
+                            }}
+                        >
+                            <ArrowDownCircle className="w-12 h-12 text-blue-400" />
                         </motion.div>
                     </div>
-                ) : (
-                    <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-                        <AboutSection fadeInUpVariant={fadeInUpVariant} />
-                        <FeaturesSection fadeInUpVariant={fadeInUpVariant} />
-                        <PrizesSection fadeInUpVariant={fadeInUpVariant} />
+                    <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                </div>
 
-                        <RegistrationSection
-                            fadeInUpVariant={fadeInUpVariant}
-                            isRegistered={isRegistered}
-                            eventRegistration={eventRegistration}
-                            event={event}
-                            showTwibbonEditMode={showTwibbonEditMode}
-                            setShowTwibbonEditMode={setShowTwibbonEditMode}
-                            twibbonForm={twibbonForm}
-                            twibbonMessage={twibbonMessage}
-                            setTwibbonMessage={setTwibbonMessage}
-                            showNikForm={showNikForm}
-                            setShowNikForm={setShowNikForm}
-                            handleNikSubmit={handleNikSubmit}
-                            processing={processing}
-                            errors={errors}
-                            handleRegisterClick={handleRegisterClick}
-                            data={data}
-                            setData={setData}
-                        />
-                    </div>
-                )}
+                {/* Spacer to push content below the hero height */}
+                <div className="h-screen w-full bottom-0"></div>
+
+                {/* Content that scrolls over the hero - higher z-index */}
+                <div className="relative z-20 bg-gray-900 pt-16 pb-20">
+                    {/* Registration Form Section */}
+                    {showHacksphereRegistration ? (
+                        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.5 }}
+                                className="mb-6"
+                            >
+                                <button
+                                    onClick={() =>
+                                        setShowHacksphereRegistration(false)
+                                    }
+                                    className="flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm sm:text-base"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-4 w-4 sm:h-5 sm:w-5 mr-1"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                    Back to Event Details
+                                </button>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2, duration: 0.6 }}
+                                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-xl shadow-blue-900/20 border border-blue-900/30"
+                            >
+                                <div className="mb-6 text-center">
+                                    <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-indigo-400 text-transparent bg-clip-text">
+                                        Team Registration
+                                    </h2>
+                                    <p className="text-blue-300 text-sm sm:text-base">
+                                        Complete all steps to register your team
+                                    </p>
+                                </div>
+
+                                <HacksphereRegistration
+                                    user={user}
+                                    participantDetails={participantDetails}
+                                    eventId={event.id}
+                                />
+                            </motion.div>
+                        </div>
+                    ) : (
+                        <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+                            <AboutSection fadeInUpVariant={fadeInUpVariant} />
+                            <FeaturesSection
+                                fadeInUpVariant={fadeInUpVariant}
+                            />
+                            <PrizesSection fadeInUpVariant={fadeInUpVariant} />
+
+                            <RegistrationSection
+                                fadeInUpVariant={fadeInUpVariant}
+                                isRegistered={isRegistered}
+                                eventRegistration={eventRegistration}
+                                event={event}
+                                showTwibbonEditMode={showTwibbonEditMode}
+                                setShowTwibbonEditMode={setShowTwibbonEditMode}
+                                twibbonForm={twibbonForm}
+                                twibbonMessage={twibbonMessage}
+                                setTwibbonMessage={setTwibbonMessage}
+                                showNikForm={showNikForm}
+                                setShowNikForm={setShowNikForm}
+                                handleNikSubmit={handleNikSubmit}
+                                processing={processing}
+                                errors={errors}
+                                handleRegisterClick={handleRegisterClick}
+                                data={data}
+                                setData={setData}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
+        </EventLayout>
     );
 };
 
