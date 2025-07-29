@@ -377,10 +377,12 @@ public function registerHacksphere(Request $request)
     
     $successMessage = 'Your team has been successfully registered for Hacksphere!';
     if (isset($validated['payment_initiated']) && $validated['payment_initiated']) {
-        $successMessage .= ' Your payment status is currently pending verification.';
+        $successMessage .= ' Please complete your payment verification to access all features.';
     }
     
-    return redirect()->route('participant.dashboard')->with('success', $successMessage);
+    // Redirect to payment status page instead of dashboard
+    return redirect()->route('participant.hacksphere.payment-status', ['teamId' => $team->id])
+        ->with('success', $successMessage);
 }
 
 /**

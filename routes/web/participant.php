@@ -4,6 +4,7 @@ use App\Http\Controllers\Participant\TeamQRCodeController;
 use App\Http\Controllers\Participant\TeamDashboardController;
 use App\Http\Controllers\Participant\ActivityQrController;
 use App\Http\Controllers\Participant\EventRegistrationQRController;
+use App\Http\Controllers\Participant\PaymentStatusController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,8 +43,12 @@ Route::group([
 
         Route::post('/profile/update', [\App\Http\Controllers\ParticipantController::class, 'updateProfile'])->name('participant.profile.update');
         
-        // Team QR Code routes for Hacksphere
-        Route::prefix('teams/{teamId}/qr-codes')->group(function () {
+        // Payment Status route for Hacksphere (no middleware needed)
+        Route::get('/hacksphere/payment-status/{teamId}', [PaymentStatusController::class, 'show'])
+            ->name('participant.hacksphere.payment-status');
+        
+        // Team QR Code routes for Hacksphere (with payment verification middleware)
+        Route::prefix('teams/{teamId}/qr-codes')->middleware('\App\Http\Middleware\VerifyHackspherePayment')->group(function () {
             Route::get('/', [TeamQRCodeController::class, 'showTeamQRCodes'])
                 ->name('participant.team.qr-codes');
                 
@@ -54,12 +59,14 @@ Route::group([
                 ->name('participant.team.qr-codes.download');
         });
         
-        // Team Dashboard route for Hacksphere
+        // Team Dashboard route for Hacksphere (with payment verification middleware)
         Route::get('/team/{teamId}', [\App\Http\Controllers\Participant\TeamDashboardController::class, 'show'])
+            ->middleware(\App\Http\Middleware\VerifyHackspherePayment::class)
             ->name('participant.team.dashboard');
             
-        // Activity QR Code route
+        // Activity QR Code route (with payment verification middleware)
         Route::get('/activity-qr/{teamId}/{activityId}', [\App\Http\Controllers\Participant\ActivityQrController::class, 'show'])
+            ->middleware(\App\Http\Middleware\VerifyHackspherePayment::class)
             ->name('participant.activity.qr');
             
         // Event Registration QR Code routes for Talksphere and Festsphere
@@ -73,9 +80,13 @@ Route::group([
             Route::get('/qr-code/download/{eventCode}', [EventRegistrationQRController::class, 'downloadQRCode'])
                 ->name('participant.event-registration.qr-code.download');
         });
+        
+        // Hacksphere Registration Routes
+        Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])
+            ->name('participant.register-hacksphere');
+        Route::post('/validate-team-member-email', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberEmail'])
+            ->name('participant.validate-team-member-email');
+        Route::post('/validate-team-member-nik', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberNik'])
+            ->name('participant.validate-team-member-nik');
     });
-
-    Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])->name('participant.register-hacksphere');
-    Route::post('/validate-team-member-email', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberEmail'])->name('participant.validate-team-member-email');
-    Route::post('/validate-team-member-nik', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberNik'])->name('participant.validate-team-member-nik');
 });

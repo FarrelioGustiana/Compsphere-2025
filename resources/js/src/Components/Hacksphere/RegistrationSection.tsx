@@ -72,7 +72,7 @@ function RegistrationSection({
             eventRegistration?.registration_status === "registered" ? (
                 <motion.div
                     className={`bg-gradient-to-br ${
-                        eventRegistration?.registration_status === "registered"
+                        eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
                             ? "from-green-900/30 to-blue-900/30 border border-green-700/50"
                             : "from-yellow-900/30 to-blue-900/30 border border-yellow-700/50"
                     } rounded-xl p-6 sm:p-8 shadow-lg gap-6`}
@@ -83,14 +83,12 @@ function RegistrationSection({
                     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                         <div
                             className={`${
-                                eventRegistration?.registration_status ===
-                                "registered"
+                                eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
                                     ? "bg-green-500/20"
                                     : "bg-yellow-500/20"
                             } p-3 sm:p-4 rounded-full flex-shrink-0`}
                         >
-                            {eventRegistration?.registration_status ===
-                            "registered" ? (
+                            {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified" ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-10 w-10 sm:h-12 sm:w-12 text-green-400"
@@ -124,15 +122,17 @@ function RegistrationSection({
                         </div>
                         <div className="text-center sm:text-left">
                             <h3 className="text-xl sm:text-2xl font-bold mb-2 text-blue-300">
-                                {eventRegistration?.registration_status ===
-                                "registered"
+                                {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
                                     ? "Registration Approved!"
+                                    : eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "pending"
+                                    ? "Payment Verification Required"
                                     : "Waiting for Approval"}
                             </h3>
                             <p className="text-gray-300 text-sm sm:text-base">
-                                {eventRegistration?.registration_status ===
-                                "registered"
+                                {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
                                     ? "Congratulations! Your registration has been approved. Get ready for an exciting hackathon experience!"
+                                    : eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "pending"
+                                    ? "Your team registration is complete, but payment verification is still required to access all Hacksphere features."
                                     : "Thank you for registering for Hacksphere. We'll send you more details via email as the event approaches."}
                             </p>
                         </div>

@@ -7,7 +7,19 @@ createInertiaApp({
         const pages = import.meta.glob("./src/**/*.tsx", {
             eager: true,
         }) as Record<string, { default: any }>;
-        const page = pages[`./src/${name}.tsx`];
+        
+        // Try with direct path first
+        let page = pages[`./src/${name}.tsx`];
+        
+        // If not found, try with Pages prefix
+        if (!page) {
+            page = pages[`./src/Pages/${name}.tsx`];
+            if (!page) {
+                console.error(`Page not found: ${name}`);
+                console.log('Available paths:', Object.keys(pages).join('\n'));
+            }
+        }
+        
         return page;
     },
     setup({ el, App, props }) {
