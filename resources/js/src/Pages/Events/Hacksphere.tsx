@@ -16,7 +16,6 @@ import FeaturesSection from "@/src/Components/Hacksphere/FeaturesSection";
 import PrizesSection from "@/src/Components/Hacksphere/PrizesSection";
 import EventLayout from "@/src/Components/Layout/EventLayout";
 import StarGrid from "@/src/Components/StarGrid";
-import CosmicBackground from "@/src/Components/Home/CosmicBackground";
 
 // CountdownTimer component for Hacksphere event
 const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
