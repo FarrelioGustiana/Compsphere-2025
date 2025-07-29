@@ -21,7 +21,7 @@ const Navigation: React.FC = () => {
     // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 20);
+            setIsScrolled(window.scrollY > 10);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -135,7 +135,7 @@ const Navigation: React.FC = () => {
             <motion.nav
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
                     isScrolled || isMenuOpen
-                        ? "bg-gray-900/95 backdrop-blur-md border-b border-gray-800/50"
+                        ? "bg-black/55 backdrop-blur-md border-b border-gray-800/50 shadow-[0_0_16px_2px_rgba(59,130,246,0.35)]"
                         : "bg-transparent"
                 }`}
                 initial={{ y: -100, opacity: 0 }}
@@ -202,7 +202,7 @@ const Navigation: React.FC = () => {
                                                         transition={{
                                                             duration: 0.2,
                                                         }}
-                                                        className="absolute top-full left-0 mt-2 w-48 rounded-lg bg-gray-900/95 backdrop-blur-md border border-gray-800/50 shadow-xl z-50"
+                                                        className="absolute top-full left-0 mt-2 w-48 rounded-lg bg-black/55 backdrop-blur-md border border-gray-800/50 shadow-xl z-50"
                                                         data-dropdown-content="true"
                                                     >
                                                         <div className="py-2">
@@ -679,9 +679,6 @@ const Navigation: React.FC = () => {
                     </>
                 )}
             </AnimatePresence>
-
-            {/* Spacer to prevent content from hiding behind fixed nav */}
-            <div className="h-16 sm:h-20" />
         </>
     );
 };

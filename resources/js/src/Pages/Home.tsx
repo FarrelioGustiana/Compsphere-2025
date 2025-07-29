@@ -413,10 +413,6 @@ const Home: React.FC = () => {
                                     2025 Compsphere. All rights reserved.
                                 </p>
                             </div>
-
-                            {/* FestSphere Event Milestone */}
-
-                            {/* Journey content ends here */}
                         </div>
                     </section>
                 </div>

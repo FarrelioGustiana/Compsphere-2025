@@ -2,8 +2,10 @@ import React from "react";
 import Logo from "@/src/Components/UI/Logo";
 import { ArrowRight, Calendar, Clock, MapPin, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import { usePage } from "@inertiajs/react";
 
 const TimeLine = () => {
+    const { auth } = usePage().props as any;
     return (
         <section className="relative z-10 px-4 sm:px-6 py-20 sm:py-28 overflow-hidden">
             {/* Animated cosmic background elements */}
@@ -528,59 +530,65 @@ const TimeLine = () => {
                                 className="relative flex flex-col items-center justify-center ml-8 lg:ml-0 w-[calc(100%-2rem)] lg:w-[450px]"
                             >
                                 {/* Final celestial glow */}
-                                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 filter blur-xl animate-pulse-slow"></div>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-lg font-semibold text-white text-center px-6 py-3 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
-                                        Join us on this cosmic journey through
-                                        innovation
-                                    </span>
-                                </div>
+                                {!auth.user && (
+                                    <>
+                                        <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-80 filter blur-xl animate-pulse-slow"></div>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <span className="text-lg font-semibold text-white text-center px-6 py-3 backdrop-blur-sm rounded-full border border-white/20 shadow-lg">
+                                                Join us on this cosmic journey
+                                                through innovation
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
                             </motion.div>
                         </div>
                     </div>
                 </div>
 
-                <motion.div
-                    className="relative lg:col-span-2"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -8 }}
-                >
-                    <div className="bg-gradient-to-br from-[#333333]/80 to-[#000000]/90 backdrop-blur-md border border-[#666666]/50 rounded-2xl p-8 sm:p-10 text-center shadow-xl relative overflow-hidden">
-                        {/* Decorative elements */}
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-[#1E88E5]/10 rounded-full blur-[80px]"></div>
-                        <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#D32F2F]/10 rounded-full blur-[80px]"></div>
+                {!auth.user && (
+                    <motion.div
+                        className="relative lg:col-span-2"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                        viewport={{ once: true }}
+                        whileHover={{ y: -8 }}
+                    >
+                        <div className="bg-gradient-to-br from-[#333333]/80 to-[#000000]/90 backdrop-blur-md border border-[#666666]/50 rounded-2xl p-8 sm:p-10 text-center shadow-xl relative overflow-hidden">
+                            {/* Decorative elements */}
+                            <div className="absolute top-0 right-0 w-40 h-40 bg-[#1E88E5]/10 rounded-full blur-[80px]"></div>
+                            <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#D32F2F]/10 rounded-full blur-[80px]"></div>
 
-                        <div className="relative z-10">
-                            <div className="inline-block bg-gradient-to-br from-[#1E88E5] to-[#D32F2F] p-4 rounded-2xl mb-6 shadow-lg">
-                                <Logo
-                                    size="lg"
-                                    showText={false}
-                                    className="justify-center"
-                                />
+                            <div className="relative z-10">
+                                <div className="inline-block bg-gradient-to-br from-[#1E88E5] to-[#D32F2F] p-4 rounded-2xl mb-6 shadow-lg">
+                                    <Logo
+                                        size="lg"
+                                        showText={false}
+                                        className="justify-center"
+                                    />
+                                </div>
+
+                                <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-airborne">
+                                    Ready to Join?
+                                </h3>
+
+                                <p className="text-gray-300 mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
+                                    Jangan lewatkan kesempatan untuk menjadi
+                                    bagian dari revolusi teknologi
+                                </p>
+
+                                <button className="w-full group relative overflow-hidden bg-gradient-to-r from-[#1E88E5] to-[#0D47A1] hover:from-[#0D47A1] hover:to-[#1E88E5] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg">
+                                    <span className="relative z-10 flex items-center justify-center gap-2 group-hover:gap-3 transition-all duration-300">
+                                        Register Now
+                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                                    </span>
+                                    <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                                </button>
                             </div>
-
-                            <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-airborne">
-                                Ready to Join?
-                            </h3>
-
-                            <p className="text-gray-300 mb-6 sm:mb-8 text-base sm:text-lg leading-relaxed">
-                                Jangan lewatkan kesempatan untuk menjadi bagian
-                                dari revolusi teknologi
-                            </p>
-
-                            <button className="w-full group relative overflow-hidden bg-gradient-to-r from-[#1E88E5] to-[#0D47A1] hover:from-[#0D47A1] hover:to-[#1E88E5] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg">
-                                <span className="relative z-10 flex items-center justify-center gap-2 group-hover:gap-3 transition-all duration-300">
-                                    Register Now
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                                </span>
-                                <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                            </button>
                         </div>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                )}
             </div>
         </section>
     );
