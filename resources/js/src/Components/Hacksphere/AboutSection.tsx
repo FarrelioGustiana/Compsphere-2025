@@ -94,7 +94,7 @@ function AboutSection({ fadeInUpVariant }: Props) {
                         }}
                     >
                         <img
-                            src="/assets/hacksphere/Kanan.png"
+                            src="/assets/hacksphere/Kiri.png"
                             alt="Hacksphere Illustration"
                             className="w-full h-auto rounded-xl shadow-2xl shadow-blue-700/20 border border-blue-800/30"
                         />
