@@ -112,6 +112,7 @@ class ParticipantController extends Controller
             'category' => 'required|string|max:255',
             'phone_number' => 'required|string|max:255',
             'date_of_birth' => 'required|date',
+            'domicile' => 'string|max:255',
         ]);
 
         $participant = $user->participant;
@@ -300,7 +301,7 @@ public function registerHacksphere(Request $request)
         'team_name' => $validated['team_name'],
         'team_leader_id' => $user->id,
         'team_code' => $team_code,
-        'event_id' => $hacksphereEvent->id, // Pastikan event_id diisi
+        'event_id' => $hacksphereEvent->id,
     ]);
     
     // Process member 1

@@ -56,14 +56,10 @@ Route::group([
         Route::prefix('hacksphere')->group(function () {
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
             Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
-            Route::get('/team/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
-            Route::get('/payments', [\App\Http\Controllers\Admin\HacksphereController::class, 'payments'])->name('admin.hacksphere.payments');
-            // Route::post('/payments/verify/{teamId}/{userId}', [\App\Http\Controllers\Admin\PaymentVerificationController::class, 'verifyPayment'])->name('admin.hacksphere.payments.verify');
-            // Route::post('/payments/reject/{teamId}/{userId}', [\App\Http\Controllers\Admin\PaymentVerificationController::class, 'rejectPayment'])->name('admin.hacksphere.payments.reject');
+            Route::get('/teams/{team_id}/members', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
             
-            // Rute baru untuk verifikasi pembayaran tim
-            Route::post('/payments/verify-team/{teamId}', [\App\Http\Controllers\Admin\TeamPaymentController::class, 'verifyTeamPayment'])->name('admin.hacksphere.payments.verify-team');
-            Route::post('/payments/reject-team/{teamId}', [\App\Http\Controllers\Admin\TeamPaymentController::class, 'rejectTeamPayment'])->name('admin.hacksphere.payments.reject-team');
+            Route::post('/verify-payment/{user_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'verifyPayment'])->name('admin.hacksphere.verify-payment');
+            Route::post('/reject-payment/{user_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'rejectPayment'])->name('admin.hacksphere.reject-payment');
         });
         
         // Talksphere Admin Routes
@@ -74,5 +70,6 @@ Route::group([
         
         // Exposphere Admin Routes
         Route::get('/exposphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.exposphere.participants')->defaults('eventCode', 'exposphere');
+
     });
 });

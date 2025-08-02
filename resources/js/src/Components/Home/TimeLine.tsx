@@ -98,7 +98,7 @@ const TimeLine = () => {
                 {/* Cosmic Journey Path */}
                 <div className="relative mb-24">
                     {/* Connecting orbital line */}
-                    <div className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-[#7ECEF4] via-[#1E88E5] to-[#D32F2F] rounded-full opacity-70 glow-sm hidden sm:block"></div>
+                    <div className="absolute left-8 lg:left-1/2 top-0 bottom-0 w-1 bg-gradient-four-colors rounded-full opacity-70 glow-sm hidden sm:block"></div>
 
                     {/* Celestial milestones */}
                     <div className="space-y-32">
@@ -130,7 +130,7 @@ const TimeLine = () => {
                                         <div className="absolute -right-8 -top-8 w-16 h-16 rounded-full border border-blue-500/30 opacity-50"></div>
 
                                         <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-[#1E88E5] to-[#7ECEF4] bg-clip-text text-transparent">
-                                            HackSphere Experience
+                                            Hacksphere Experience
                                         </h3>
 
                                         <p className="text-gray-300 mb-6 leading-relaxed">
@@ -200,14 +200,14 @@ const TimeLine = () => {
                                             <div className="absolute inset-0 opacity-80 mix-blend-overlay">
                                                 <img
                                                     src="/assets/hacksphere/planet-texture.png"
-                                                    alt="HackSphere Planet"
+                                                    alt="Hacksphere Planet"
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
                                             <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 to-transparent"></div>
                                             <div className="absolute bottom-0 w-full p-4 text-center">
                                                 <span className="text-xs font-bold tracking-wider text-blue-200 uppercase">
-                                                    HackSphere
+                                                    Hacksphere
                                                 </span>
                                             </div>
                                         </motion.div>
@@ -239,7 +239,7 @@ const TimeLine = () => {
                             </div>
                         </div>
 
-                        {/* Milestone 2: TalkSphere */}
+                        {/* Milestone 2: Talksphere */}
                         <div className="relative">
                             <motion.div
                                 className="grid grid-cols-1 lg:grid-cols-2 gap-8"
@@ -267,7 +267,7 @@ const TimeLine = () => {
                                         <div className="absolute -left-8 -top-8 w-16 h-16 rounded-full border border-red-500/30 opacity-50"></div>
 
                                         <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-[#D32F2F] to-[#FF5252] bg-clip-text text-transparent">
-                                            TalkSphere Sessions
+                                            Talksphere Sessions
                                         </h3>
 
                                         <p className="text-gray-300 mb-6 leading-relaxed">
@@ -337,14 +337,14 @@ const TimeLine = () => {
                                             <div className="absolute inset-0 opacity-80 mix-blend-overlay">
                                                 <img
                                                     src="/assets/talksphere/planet-texture.png"
-                                                    alt="TalkSphere Planet"
+                                                    alt="Talksphere Planet"
                                                     className="w-full h-full object-cover"
                                                 />
                                             </div>
                                             <div className="absolute inset-0 bg-gradient-to-t from-red-900/80 to-transparent"></div>
                                             <div className="absolute bottom-0 w-full p-4 text-center">
                                                 <span className="text-xs font-bold tracking-wider text-red-200 uppercase">
-                                                    TalkSphere
+                                                    Talksphere
                                                 </span>
                                             </div>
                                         </motion.div>
@@ -376,67 +376,138 @@ const TimeLine = () => {
                             </div>
                         </div>
 
-                        {/* FestSphere Event Milestone */}
-                        <div className="relative ml-8 lg:ml-1/2 mb-16 sm:mb-28">
+                        {/* Milestone 3: Festsphere */}
+                        <div className="relative">
                             <motion.div
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: 0.4,
-                                }}
+                                className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ duration: 0.8 }}
                                 viewport={{ once: true }}
-                                className="relative bg-gradient-to-br from-purple-900/80 to-purple-700/30 backdrop-blur-md border border-purple-500/30 rounded-xl shadow-xl p-6 ml-8 lg:ml-0 w-[calc(100%-2rem)] lg:w-[450px] overflow-hidden group"
                             >
-                                {/* Orbital rings */}
-                                <div className="absolute -right-16 -top-16 w-32 h-32 border-2 border-purple-400/20 rounded-full animate-pulse-slow"></div>
-                                <div className="absolute -right-8 -top-8 w-16 h-16 border-2 border-purple-400/30 rounded-full animate-reverse-spin"></div>
+                                <motion.div
+                                    className="order-2 lg:order-1"
+                                    initial={{ x: -50, opacity: 0 }}
+                                    whileInView={{
+                                        x: 0,
+                                        opacity: 1,
+                                    }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: 0.2,
+                                    }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="relative bg-gray-900/50 backdrop-blur-xl p-6 sm:p-8 rounded-2xl overflow-hidden border border-purple-500/20 shadow-lg shadow-purple-500/10">
+                                        {/* Decorative orbit elements */}
+                                        <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full border border-purple-500/20 opacity-40"></div>
+                                        <div className="absolute -right-8 -top-8 w-16 h-16 rounded-full border border-purple-500/30 opacity-50"></div>
 
-                                {/* Planet texture overlay */}
-                                <div className="absolute inset-0 bg-[url('/img/planet-texture-3.webp')] bg-cover opacity-10 mix-blend-overlay"></div>
+                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-[#A259F7] to-[#F7B7F7] bg-clip-text text-transparent">
+                                            Festsphere Experience
+                                        </h3>
 
-                                {/* Glowing dots */}
-                                <div className="absolute top-6 right-8 w-2 h-2 bg-purple-400 rounded-full animate-pulse-fast"></div>
-                                <div className="absolute top-12 right-12 w-1 h-1 bg-purple-300 rounded-full animate-ping"></div>
+                                        <p className="text-purple-100 mb-6 leading-relaxed">
+                                            Celebrate the fusion of technology,
+                                            art, and culture at Festsphere!
+                                            Enjoy live music, tech showcases,
+                                            creative workshops, and vibrant
+                                            community activities. Whether you're
+                                            a tech enthusiast, artist, or simply
+                                            looking for inspiration, Festsphere
+                                            brings everyone together for an
+                                            unforgettable festival.
+                                        </p>
 
-                                <h3 className="text-2xl font-bold mb-3 text-purple-200">
-                                    FestSphere
-                                </h3>
-                                <p className="text-sm text-purple-100/80 mb-6 max-w-sm">
-                                    Celebrate technological fusion with art,
-                                    music, and community at our grand
-                                    tech-cultural festival.
-                                </p>
-
-                                <div className="space-y-3">
-                                    <div className="flex items-center text-purple-200/90">
-                                        <Calendar size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            April 15-16, 2025
-                                        </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="text-purple-400 w-4 h-4" />
+                                                <span className="text-purple-200">
+                                                    April 15-16, 2025
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="text-purple-400 w-4 h-4" />
+                                                <span className="text-purple-200">
+                                                    10:00 AM - 9:00 PM
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <MapPin className="text-purple-400 w-4 h-4" />
+                                                <span className="text-purple-200">
+                                                    Grand Tech Plaza
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Users className="text-purple-400 w-4 h-4" />
+                                                <span className="text-purple-200">
+                                                    500+ Participants
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-purple-200/90">
-                                        <MapPin size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            Grand Tech Plaza
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center text-purple-200/90">
-                                        <Clock size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            10:00 AM - 9:00 PM
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center text-purple-200/90">
-                                        <Users size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            500+ participants
-                                        </span>
-                                    </div>
-                                </div>
+                                </motion.div>
 
-                                {/* Interactive hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/0 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <motion.div
+                                    className="order-1 lg:order-2 flex justify-center items-center"
+                                    initial={{ x: 50, opacity: 0 }}
+                                    whileInView={{
+                                        x: 0,
+                                        opacity: 1,
+                                    }}
+                                    transition={{ duration: 0.8 }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="relative">
+                                        {/* Orbit ring animation */}
+                                        <div className="absolute inset-0 -m-8 rounded-full border border-purple-500/30 animate-spin-slow"></div>
+                                        <div className="absolute inset-0 -m-16 rounded-full border border-purple-500/20 animate-spin-slow animation-delay-2000"></div>
+                                        <div className="absolute inset-0 -m-24 rounded-full border border-purple-500/10 animate-spin-slow animation-delay-3000"></div>
+
+                                        {/* Planet image */}
+                                        <motion.div
+                                            className="relative w-48 h-48 rounded-full overflow-hidden bg-gradient-to-br from-purple-900/80 to-purple-700/30 glow-lg shadow-lg shadow-purple-500/20"
+                                            whileHover={{
+                                                scale: 1.05,
+                                            }}
+                                            transition={{
+                                                duration: 0.5,
+                                            }}
+                                        >
+                                            <div className="absolute inset-0 opacity-80 mix-blend-overlay">
+                                                <img
+                                                    src="/img/planet-texture-3.webp"
+                                                    alt="Festsphere Planet"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent"></div>
+                                            <div className="absolute bottom-0 w-full p-4 text-center">
+                                                <span className="text-xs font-bold tracking-wider text-purple-200 uppercase">
+                                                    Festsphere
+                                                </span>
+                                            </div>
+                                        </motion.div>
+
+                                        {/* Orbital dot */}
+                                        <motion.div
+                                            className="absolute rounded-full w-3 h-3 bg-purple-400 shadow-md shadow-purple-400/50 glow-sm"
+                                            animate={{
+                                                x: [0, 20, 0, -20, 0],
+                                                y: [0, 20, 0, -20, 0],
+                                            }}
+                                            transition={{
+                                                duration: 10,
+                                                repeat: Infinity,
+                                                ease: "linear",
+                                            }}
+                                            style={{
+                                                top: "15%",
+                                                right: "20%",
+                                            }}
+                                        />
+                                    </div>
+                                </motion.div>
                             </motion.div>
 
                             {/* Journey connection node */}
@@ -445,67 +516,138 @@ const TimeLine = () => {
                             </div>
                         </div>
 
-                        {/* ExpoSphere Event Milestone */}
-                        <div className="relative ml-8 lg:ml-1/2 mb-16 sm:mb-28">
+                        {/* Milestone 4: Exposphere */}
+
+                        <div className="relative">
                             <motion.div
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.8,
-                                    delay: 0.5,
-                                }}
+                                className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ duration: 0.8 }}
                                 viewport={{ once: true }}
-                                className="relative bg-gradient-to-br from-green-900/80 to-emerald-700/30 backdrop-blur-md border border-emerald-500/30 rounded-xl shadow-xl p-6 ml-8 lg:ml-0 w-[calc(100%-2rem)] lg:w-[450px] overflow-hidden group"
                             >
-                                {/* Orbital rings */}
-                                <div className="absolute -right-16 -top-16 w-32 h-32 border-2 border-emerald-400/20 rounded-full animate-pulse-slow"></div>
-                                <div className="absolute -right-8 -top-8 w-16 h-16 border-2 border-emerald-400/30 rounded-full animate-reverse-spin"></div>
+                                <motion.div
+                                    className="order-2"
+                                    initial={{ x: -50, opacity: 0 }}
+                                    whileInView={{
+                                        x: 0,
+                                        opacity: 1,
+                                    }}
+                                    transition={{
+                                        duration: 0.8,
+                                        delay: 0.2,
+                                    }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="relative bg-gray-900/50 backdrop-blur-xl p-6 sm:p-8 rounded-2xl overflow-hidden border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+                                        {/* Decorative orbit elements */}
+                                        <div className="absolute -right-16 -top-16 w-32 h-32 rounded-full border border-emerald-500/20 opacity-40"></div>
+                                        <div className="absolute -right-8 -top-8 w-16 h-16 rounded-full border border-emerald-500/30 opacity-50"></div>
 
-                                {/* Planet texture overlay */}
-                                <div className="absolute inset-0 bg-[url('/img/planet-texture-4.webp')] bg-cover opacity-10 mix-blend-overlay"></div>
+                                        <h3 className="text-2xl sm:text-3xl font-bold mb-4 bg-gradient-to-r from-[#43e97b] to-[#38f9d7] bg-clip-text text-transparent">
+                                            Exposphere Showcase
+                                        </h3>
 
-                                {/* Glowing dots */}
-                                <div className="absolute top-6 right-8 w-2 h-2 bg-emerald-400 rounded-full animate-pulse-fast"></div>
-                                <div className="absolute top-12 right-12 w-1 h-1 bg-emerald-300 rounded-full animate-ping"></div>
+                                        <p className="text-emerald-100 mb-6 leading-relaxed">
+                                            Showcase of cutting-edge
+                                            innovations, startups, and industry
+                                            leaders shaping our technological
+                                            future. Experience interactive
+                                            demos, meet the minds behind
+                                            breakthrough products, and connect
+                                            with the next wave of tech
+                                            disruptors.
+                                        </p>
 
-                                <h3 className="text-2xl font-bold mb-3 text-emerald-200">
-                                    ExpoSphere
-                                </h3>
-                                <p className="text-sm text-emerald-100/80 mb-6 max-w-sm">
-                                    Showcase of cutting-edge innovations,
-                                    startups, and industry leaders shaping our
-                                    technological future.
-                                </p>
-
-                                <div className="space-y-3">
-                                    <div className="flex items-center text-emerald-200/90">
-                                        <Calendar size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            April 17, 2025
-                                        </span>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="text-emerald-400 w-4 h-4" />
+                                                <span className="text-emerald-200">
+                                                    April 17, 2025
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Clock className="text-emerald-400 w-4 h-4" />
+                                                <span className="text-emerald-200">
+                                                    9:00 AM - 6:00 PM
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <MapPin className="text-emerald-400 w-4 h-4" />
+                                                <span className="text-emerald-200">
+                                                    Innovation Center
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Users className="text-emerald-400 w-4 h-4" />
+                                                <span className="text-emerald-200">
+                                                    50+ Exhibitors
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-emerald-200/90">
-                                        <MapPin size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            Innovation Center
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center text-emerald-200/90">
-                                        <Clock size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            9:00 AM - 6:00 PM
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center text-emerald-200/90">
-                                        <Users size={18} className="mr-2" />
-                                        <span className="text-sm">
-                                            50+ exhibitors
-                                        </span>
-                                    </div>
-                                </div>
+                                </motion.div>
 
-                                {/* Interactive hover effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/0 to-emerald-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <motion.div
+                                    className="order-1 flex justify-center items-center"
+                                    initial={{ x: 50, opacity: 0 }}
+                                    whileInView={{
+                                        x: 0,
+                                        opacity: 1,
+                                    }}
+                                    transition={{ duration: 0.8 }}
+                                    viewport={{ once: true }}
+                                >
+                                    <div className="relative">
+                                        {/* Orbit ring animation */}
+                                        <div className="absolute inset-0 -m-8 rounded-full border border-emerald-500/30 animate-spin-slow"></div>
+                                        <div className="absolute inset-0 -m-16 rounded-full border border-emerald-500/20 animate-spin-slow animation-delay-2000"></div>
+                                        <div className="absolute inset-0 -m-24 rounded-full border border-emerald-500/10 animate-spin-slow animation-delay-3000"></div>
+
+                                        {/* Planet image */}
+                                        <motion.div
+                                            className="relative w-48 h-48 rounded-full overflow-hidden bg-gradient-to-br from-green-900/80 to-emerald-700/30 glow-lg shadow-lg shadow-emerald-500/20"
+                                            whileHover={{
+                                                scale: 1.05,
+                                            }}
+                                            transition={{
+                                                duration: 0.5,
+                                            }}
+                                        >
+                                            <div className="absolute inset-0 opacity-80 mix-blend-overlay">
+                                                <img
+                                                    src="/img/planet-texture-4.webp"
+                                                    alt="Exposphere Planet"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            <div className="absolute inset-0 bg-gradient-to-t from-green-900/80 to-transparent"></div>
+                                            <div className="absolute bottom-0 w-full p-4 text-center">
+                                                <span className="text-xs font-bold tracking-wider text-emerald-200 uppercase">
+                                                    Exposphere
+                                                </span>
+                                            </div>
+                                        </motion.div>
+
+                                        {/* Orbital dot */}
+                                        <motion.div
+                                            className="absolute rounded-full w-3 h-3 bg-emerald-400 shadow-md shadow-emerald-400/50 glow-sm"
+                                            animate={{
+                                                x: [0, 20, 0, -20, 0],
+                                                y: [0, 20, 0, -20, 0],
+                                            }}
+                                            transition={{
+                                                duration: 10,
+                                                repeat: Infinity,
+                                                ease: "linear",
+                                            }}
+                                            style={{
+                                                top: "15%",
+                                                right: "20%",
+                                            }}
+                                        />
+                                    </div>
+                                </motion.div>
                             </motion.div>
 
                             {/* Journey connection node */}
@@ -569,7 +711,7 @@ const TimeLine = () => {
                                     />
                                 </div>
 
-                                <h3 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent font-airborne">
+                                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-5 bg-gradient-to-r from-[#7ECEF4] to-[#1E88E5] bg-clip-text text-transparent">
                                     Ready to Join?
                                 </h3>
 

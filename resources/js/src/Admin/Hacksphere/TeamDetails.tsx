@@ -1,5 +1,4 @@
-import React from "react";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
 import {
     User,
@@ -11,7 +10,7 @@ import {
     Mail,
     MapPin,
     Briefcase,
-    CreditCard
+    CreditCard,
 } from "lucide-react";
 import { route } from "ziggy-js";
 
@@ -31,6 +30,8 @@ interface TeamMember {
     nik: string;
     category: string;
     domicile: string;
+    payment_status?: string;
+    payment_date?: string | null;
 }
 
 interface ActivityStatus {
@@ -48,7 +49,11 @@ interface TeamDetailsProps {
     activities: ActivityStatus[];
 }
 
-export default function TeamDetails({ team, members, activities }: TeamDetailsProps) {
+export default function TeamDetails({
+    team,
+    members,
+    activities,
+}: TeamDetailsProps) {
     // Format date for display
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleString("id-ID", {
@@ -60,11 +65,23 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
         });
     };
 
+    const verifyPayment = (userId: number) => {
+        router.post(
+            route("admin.hacksphere.verify-payment", { user_id: userId })
+        );
+    };
+
+    const rejectPayment = (userId: number) => {
+        router.post(
+            route("admin.hacksphere.reject-payment", { user_id: userId })
+        );
+    };
+
     // Get team leader
-    const teamLeader = members.find(member => member.role === "Leader");
-    
+    const teamLeader = members.find((member) => member.role === "Leader");
+
     // Get team members (excluding leader)
-    const teamMembers = members.filter(member => member.role !== "Leader");
+    const teamMembers = members.filter((member) => member.role !== "Leader");
 
     return (
         <DashboardLayout>
@@ -80,7 +97,7 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                             <ArrowLeft size={16} className="mr-1" />
                             Back to Teams
                         </Link>
-                        
+
                         <h1 className="text-2xl font-semibold text-gray-200">
                             Team: {team.team_name}
                         </h1>
@@ -104,7 +121,9 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                                     )}
                                 </div>
                                 <div className="ml-6">
-                                    <h2 className="text-xl font-bold text-gray-200">{team.team_name}</h2>
+                                    <h2 className="text-xl font-bold text-gray-200">
+                                        {team.team_name}
+                                    </h2>
                                     <div className="mt-1 flex items-center text-sm text-gray-400">
                                         <span className="bg-gray-700 px-2 py-1 rounded text-gray-300 text-xs font-medium">
                                             {team.team_code}
@@ -112,11 +131,16 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                                     </div>
                                     <div className="mt-2 flex items-center text-sm text-gray-400">
                                         <Calendar className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                        <span>Registered on {formatDate(team.created_at)}</span>
+                                        <span>
+                                            Registered on{" "}
+                                            {formatDate(team.created_at)}
+                                        </span>
                                     </div>
                                     <div className="mt-2 flex items-center text-sm text-gray-400">
                                         <Users className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                        <span>{members.length} Team Members</span>
+                                        <span>
+                                            {members.length} Team Members
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -126,8 +150,10 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                     {/* Team Members Section */}
                     <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
                         <div className="space-y-6">
-                            <h2 className="text-xl font-semibold text-gray-200 mb-4">Team Members</h2>
-                            
+                            <h2 className="text-xl font-semibold text-gray-200 mb-4">
+                                Team Members
+                            </h2>
+
                             {/* Team Leader */}
                             {teamLeader && (
                                 <div className="bg-gray-800 shadow rounded-lg overflow-hidden">
@@ -147,31 +173,101 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                                                 <span>{teamLeader.email}</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="grid grid-cols-1 gap-4 mt-4">
                                             <div className="flex items-center text-sm">
                                                 <CreditCard className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">NIK:</span>
-                                                <span className="ml-1 text-gray-300">{teamLeader.nik}</span>
+                                                <span className="text-gray-400">
+                                                    NIK:
+                                                </span>
+                                                <span className="ml-1 text-gray-300">
+                                                    {teamLeader.nik}
+                                                </span>
                                             </div>
                                             <div className="flex items-center text-sm">
                                                 <Briefcase className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">Category:</span>
-                                                <span className="ml-1 text-gray-300 capitalize">{teamLeader.category}</span>
+                                                <span className="text-gray-400">
+                                                    Category:
+                                                </span>
+                                                <span className="ml-1 text-gray-300 capitalize">
+                                                    {teamLeader.category}
+                                                </span>
                                             </div>
                                             <div className="flex items-center text-sm">
                                                 <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">Domicile:</span>
-                                                <span className="ml-1 text-gray-300">{teamLeader.domicile}</span>
+                                                <span className="text-gray-400">
+                                                    Domicile:
+                                                </span>
+                                                <span className="ml-1 text-gray-300">
+                                                    {teamLeader.domicile}
+                                                </span>
                                             </div>
+                                            <div className="flex items-center text-sm">
+                                                <span className="text-gray-400">
+                                                    Payment status:
+                                                </span>
+                                                <span
+                                                    className={`ml-1 ${
+                                                        teamLeader.payment_status ===
+                                                        "paid"
+                                                            ? "text-green-400"
+                                                            : teamLeader.payment_status ===
+                                                              "failed"
+                                                            ? "text-red-400"
+                                                            : "text-yellow-400"
+                                                    }`}
+                                                >
+                                                    {teamLeader.payment_status ||
+                                                        "pending"}
+                                                </span>
+                                            </div>
+                                            {teamLeader.payment_status !==
+                                                "paid" && (
+                                                <div className="flex items-center space-x-2 mt-2">
+                                                    <button
+                                                        onClick={() =>
+                                                            verifyPayment(
+                                                                teamLeader.id
+                                                            )
+                                                        }
+                                                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm flex items-center"
+                                                    >
+                                                        <CheckCircle
+                                                            size={14}
+                                                            className="mr-1"
+                                                        />
+                                                        Verify Payment
+                                                    </button>
+                                                    {teamLeader.payment_status !==
+                                                        "failed" && (
+                                                        <button
+                                                            onClick={() =>
+                                                                rejectPayment(
+                                                                    teamLeader.id
+                                                                )
+                                                            }
+                                                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm flex items-center"
+                                                        >
+                                                            <XCircle
+                                                                size={14}
+                                                                className="mr-1"
+                                                            />
+                                                            Reject Payment
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             )}
-                            
+
                             {/* Team Members */}
                             {teamMembers.map((member, index) => (
-                                <div key={member.id} className="bg-gray-800 shadow rounded-lg overflow-hidden">
+                                <div
+                                    key={member.id}
+                                    className="bg-gray-800 shadow rounded-lg overflow-hidden"
+                                >
                                     <div className="p-4 border-b border-gray-700">
                                         <h3 className="text-lg font-medium text-gray-200 flex items-center">
                                             <User className="h-5 w-5 text-green-400 mr-2" />
@@ -188,33 +284,102 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                                                 <span>{member.email}</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="grid grid-cols-1 gap-4 mt-4">
                                             <div className="flex items-center text-sm">
                                                 <CreditCard className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">NIK:</span>
-                                                <span className="ml-1 text-gray-300">{member.nik}</span>
+                                                <span className="text-gray-400">
+                                                    NIK:
+                                                </span>
+                                                <span className="ml-1 text-gray-300">
+                                                    {member.nik}
+                                                </span>
                                             </div>
                                             <div className="flex items-center text-sm">
                                                 <Briefcase className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">Category:</span>
-                                                <span className="ml-1 text-gray-300 capitalize">{member.category}</span>
+                                                <span className="text-gray-400">
+                                                    Category:
+                                                </span>
+                                                <span className="ml-1 text-gray-300 capitalize">
+                                                    {member.category}
+                                                </span>
                                             </div>
                                             <div className="flex items-center text-sm">
                                                 <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                                                <span className="text-gray-400">Domicile:</span>
-                                                <span className="ml-1 text-gray-300">{member.domicile}</span>
+                                                <span className="text-gray-400">
+                                                    Domicile:
+                                                </span>
+                                                <span className="ml-1 text-gray-300">
+                                                    {member.domicile}
+                                                </span>
                                             </div>
+                                            <div className="flex items-center text-sm mt-2">
+                                                <span className="text-gray-400">
+                                                    Payment status:
+                                                </span>
+                                                <span
+                                                    className={`ml-1 ${
+                                                        member.payment_status ===
+                                                        "paid"
+                                                            ? "text-green-400"
+                                                            : member.payment_status ===
+                                                              "failed"
+                                                            ? "text-red-400"
+                                                            : "text-yellow-400"
+                                                    }`}
+                                                >
+                                                    {member.payment_status ||
+                                                        "pending"}
+                                                </span>
+                                            </div>
+                                            {member.payment_status !==
+                                                "paid" && (
+                                                <div className="flex items-center space-x-2 mt-2">
+                                                    <button
+                                                        onClick={() =>
+                                                            verifyPayment(
+                                                                member.id
+                                                            )
+                                                        }
+                                                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm flex items-center"
+                                                    >
+                                                        <CheckCircle
+                                                            size={14}
+                                                            className="mr-1"
+                                                        />
+                                                        Verify Payment
+                                                    </button>
+                                                    {member.payment_status !==
+                                                        "failed" && (
+                                                        <button
+                                                            onClick={() =>
+                                                                rejectPayment(
+                                                                    member.id
+                                                                )
+                                                            }
+                                                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm flex items-center"
+                                                        >
+                                                            <XCircle
+                                                                size={14}
+                                                                className="mr-1"
+                                                            />
+                                                            Reject Payment
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        
+
                         {/* Activities Status */}
                         <div>
-                            <h2 className="text-xl font-semibold text-gray-200 mb-4">Activity Status</h2>
-                            
+                            <h2 className="text-xl font-semibold text-gray-200 mb-4">
+                                Activity Status
+                            </h2>
+
                             <div className="bg-gray-800 shadow rounded-lg overflow-hidden">
                                 <div className="divide-y divide-gray-700">
                                     {activities.map((activity) => (
@@ -231,36 +396,58 @@ export default function TeamDetails({ team, members, activities }: TeamDetailsPr
                                                 <div className="ml-4">
                                                     <span
                                                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                            activity.status === "Completed"
+                                                            activity.status ===
+                                                            "Completed"
                                                                 ? "bg-green-100 text-green-800"
                                                                 : "bg-red-100 text-red-800"
                                                         }`}
                                                     >
-                                                        {activity.status === "Completed" ? (
+                                                        {activity.status ===
+                                                        "Completed" ? (
                                                             <>
-                                                                <CheckCircle size={12} className="mr-1" />
-                                                                {activity.status}
+                                                                <CheckCircle
+                                                                    size={12}
+                                                                    className="mr-1"
+                                                                />
+                                                                {
+                                                                    activity.status
+                                                                }
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <XCircle size={12} className="mr-1" />
-                                                                {activity.status}
+                                                                <XCircle
+                                                                    size={12}
+                                                                    className="mr-1"
+                                                                />
+                                                                {
+                                                                    activity.status
+                                                                }
                                                             </>
                                                         )}
                                                     </span>
                                                 </div>
                                             </div>
-                                            
-                                            {activity.status === "Completed" && (
+
+                                            {activity.status ===
+                                                "Completed" && (
                                                 <div className="mt-3 text-xs text-gray-400">
                                                     <div>
-                                                        <span className="font-medium">Verified at:</span>{" "}
-                                                        {formatDate(activity.verified_at || "")}
+                                                        <span className="font-medium">
+                                                            Verified at:
+                                                        </span>{" "}
+                                                        {formatDate(
+                                                            activity.verified_at ||
+                                                                ""
+                                                        )}
                                                     </div>
                                                     {activity.verified_by && (
                                                         <div>
-                                                            <span className="font-medium">Verified by:</span>{" "}
-                                                            {activity.verified_by}
+                                                            <span className="font-medium">
+                                                                Verified by:
+                                                            </span>{" "}
+                                                            {
+                                                                activity.verified_by
+                                                            }
                                                         </div>
                                                     )}
                                                 </div>

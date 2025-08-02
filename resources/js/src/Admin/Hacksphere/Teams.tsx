@@ -283,6 +283,7 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
                                                         )}
                                                     </div>
                                                 </td>
+
                                                 <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
                                                     <Link
                                                         href={route(

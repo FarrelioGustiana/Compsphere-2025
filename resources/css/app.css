@@ -146,4 +146,16 @@
     .text-shadow {
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
+    .bg-gradient-four-colors {
+        background: linear-gradient(
+            to bottom,
+            #7ecef4 0%,
+            #1e88e5 10%,
+            #d32f2f 30%,
+            #a259ff 55%,
+            #43e97b 85%,
+            #adffc8 100%
+        );
+    }
 }

@@ -169,10 +169,12 @@ class HacksphereController extends Controller
      */
     public function teamDetails(Request $request, $team_id)
     {
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+
         // Get the team with relations
         $team = Team::with([
             'leader.user', 
-            'members.user', 
+            'members.user',
             'activities' => function($query) {
                 $query->withPivot(['status', 'verified_at', 'verified_by']);
             }
@@ -187,6 +189,8 @@ class HacksphereController extends Controller
         
         // Add leader
         if ($team->leader) {
+            $leaderRegistration = EventRegistration::where('user_id', $team->leader->user_id)->where('event_id', $hacksphereEvent->id)->first();
+
             $members[] = [
                 'id' => $team->leader->user_id,
                 'full_name' => $team->leader->user->full_name,
@@ -195,11 +199,15 @@ class HacksphereController extends Controller
                 'nik' => $team->leader->nik,
                 'category' => $team->leader->category,
                 'domicile' => $team->leader->domicile,
+                'payment_status' => $leaderRegistration ? $leaderRegistration->payment_status : null,
+                'payment_date' => $leaderRegistration ? $leaderRegistration->payment_date : null,
             ];
         }
         
         // Add other members
         foreach ($team->members as $member) {
+            $memberRegistration = EventRegistration::where('user_id', $member->user_id)->where('event_id', $hacksphereEvent->id)->first();
+
             $members[] = [
                 'id' => $member->user_id,
                 'full_name' => $member->user->full_name,
@@ -208,6 +216,8 @@ class HacksphereController extends Controller
                 'nik' => $member->nik,
                 'category' => $member->category,
                 'domicile' => $member->domicile,
+                'payment_status' => $memberRegistration ? $memberRegistration->payment_status : null,
+                'payment_date' => $memberRegistration ? $memberRegistration->payment_date : null,
             ];
         }
         
@@ -238,235 +248,45 @@ class HacksphereController extends Controller
                 'team_code' => $team->team_code,
                 'profile_picture' => $team->profile_picture,
                 'created_at' => $team->created_at,
+                'testt' => $team
             ],
             'members' => $members,
             'activities' => $activities,
         ]);
     }
     
-    /**
-     * Display the payments page for Hacksphere teams
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Inertia\Response
-     */
-    public function payments(Request $request)
-    {
-        // Get the Hacksphere event
+    public function verifyPayment($user_id) {
         $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
-        
-        if (!$hacksphereEvent) {
-            return back()->with('error', 'Hacksphere event not found.');
+
+        $eventRegistration = EventRegistration::where('user_id', $user_id)->where('event_id', $hacksphereEvent->id)->first();
+
+        if (!$eventRegistration) {
+            return back()->with('error', 'Event registration not found.');
         }
-        
-        // Get all teams for Hacksphere with their payment status
-        $teams = Team::where('event_id', $hacksphereEvent->id)
-            ->with(['leader', 'members.user'])
-            ->get();
-        
-        // Format teams data with payment status
-        $formattedTeams = $teams->map(function($team) use ($hacksphereEvent) {
-            // Get payment status for all team members
-            $teamMembers = collect();
-            
-            // Add team leader
-            if ($team->leader) {
-                $leaderRegistration = EventRegistration::where('user_id', $team->team_leader_id)
-                    ->where('event_id', $hacksphereEvent->id)
-                    ->first();
-                    
-                $teamMembers->push([
-                    'id' => $team->leader->id,
-                    'user_id' => $team->team_leader_id, // Explicit user_id for backend verification
-                    'name' => $team->leader->first_name . ' ' . $team->leader->last_name,
-                    'email' => $team->leader->email,
-                    'role' => 'Leader',
-                    'payment_status' => $leaderRegistration ? $leaderRegistration->payment_status : 'pending',
-                    'payment_verified_at' => $leaderRegistration ? $leaderRegistration->payment_date : null,
-                ]);
-            }
-            
-            // Add team members
-            foreach ($team->members as $member) {
-                $memberRegistration = EventRegistration::where('user_id', $member->user_id)
-                    ->where('event_id', $hacksphereEvent->id)
-                    ->first();
-                    
-                $teamMembers->push([
-                    'id' => $member->user->id,
-                    'user_id' => $member->user_id, // Explicit user_id for backend verification
-                    'name' => $member->user->first_name . ' ' . $member->user->last_name,
-                    'email' => $member->user->email,
-                    'role' => 'Member',
-                    'payment_status' => $memberRegistration ? $memberRegistration->payment_status : 'pending',
-                    'payment_verified_at' => $memberRegistration ? $memberRegistration->payment_date : null,
-                ]);
-            }
-            
-            // Calculate payment summary
-            $totalMembers = $teamMembers->count();
-            // Mengenali status 'paid' dan 'verified' sebagai terverifikasi
-            $verifiedPayments = $teamMembers->whereIn('payment_status', ['verified', 'paid'])->count();
-            $pendingPayments = $teamMembers->where('payment_status', 'pending')->count();
-            $allPaymentsVerified = $verifiedPayments === $totalMembers;
-            
-            return [
-                'id' => $team->id,
-                'team_name' => $team->team_name,
-                'team_code' => $team->team_code,
-                'leader_name' => $team->leader ? $team->leader->first_name . ' ' . $team->leader->last_name : 'No leader',
-                'total_members' => $totalMembers,
-                'verified_payments' => $verifiedPayments,
-                'pending_payments' => $pendingPayments,
-                'all_payments_verified' => $allPaymentsVerified,
-                'team_members' => $teamMembers,
-                'created_at' => $team->created_at,
-            ];
-        });
-        
-        return Inertia::render('Admin/Hacksphere/Payments', [
-            'teams' => $formattedTeams,
-            'total_teams' => $teams->count(),
-        ]);
+
+        $eventRegistration->payment_status = 'paid';
+        $eventRegistration->payment_date = now();
+        $eventRegistration->save();
+
+        return back()->with('success', 'Payment verified successfully.');
     }
     
     /**
-     * Verify payment for a specific team member
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
+     * Reject a payment for Hacksphere event
      */
-    public function verifyPayment(Request $request, $teamId, $userId)
-    {
-        // Debug info
-        \Illuminate\Support\Facades\Log::debug("Payment verification attempt", [
-            'teamId' => $teamId,
-            'userId' => $userId,
-            'request' => $request->all()
-        ]);
-        
-        // Get the Hacksphere event
+    public function rejectPayment($user_id) {
         $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
-        
-        if (!$hacksphereEvent) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hacksphere event not found.'
-            ], 404);
+
+        $eventRegistration = EventRegistration::where('user_id', $user_id)->where('event_id', $hacksphereEvent->id)->first();
+
+        if (!$eventRegistration) {
+            return back()->with('error', 'Event registration not found.');
         }
-        
-        // Get the team
-        $team = Team::find($teamId);
-        
-        if (!$team || $team->event_id !== $hacksphereEvent->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Team not found or not a Hacksphere team.'
-            ], 404);
-        }
-        
-        // Check if user is a member of this team
-        $isMember = $team->members()->where('team_members.user_id', $userId)->exists() 
-                   || $team->team_leader_id === $userId;
-        
-        if (!$isMember) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User is not a member of this team.'
-            ], 400);
-        }
-        
-        // Get or create event registration
-        $registration = EventRegistration::where('user_id', $userId)
-            ->where('event_id', $hacksphereEvent->id)
-            ->first();
-        
-        if (!$registration) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Event registration not found.'
-            ], 404);
-        }
-        
-        // Update payment status
-        $registration->update([
-            'payment_status' => 'verified',
-            'payment_date' => now(),
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment verified successfully.',
-            'payment_status' => 'verified',
-            'payment_verified_at' => $registration->payment_date,
-        ]);
-    }
-    
-    /**
-     * Reject payment for a specific team member
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $teamId
-     * @param  int  $userId
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function rejectPayment(Request $request, $teamId, $userId)
-    {
-        // Get the Hacksphere event
-        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
-        
-        if (!$hacksphereEvent) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Hacksphere event not found.'
-            ], 404);
-        }
-        
-        // Get the team
-        $team = Team::find($teamId);
-        
-        if (!$team || $team->event_id !== $hacksphereEvent->id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Team not found or not a Hacksphere team.'
-            ], 404);
-        }
-        
-        // Check if user is a member of this team
-        $isMember = $team->members()->where('team_members.user_id', $userId)->exists() 
-                   || $team->team_leader_id === $userId;
-        
-        if (!$isMember) {
-            return response()->json([
-                'success' => false,
-                'message' => 'User is not a member of this team.'
-            ], 400);
-        }
-        
-        // Get event registration
-        $registration = EventRegistration::where('user_id', $userId)
-            ->where('event_id', $hacksphereEvent->id)
-            ->first();
-        
-        if (!$registration) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Event registration not found.'
-            ], 404);
-        }
-        
-        // Update payment status
-        $registration->update([
-            'payment_status' => 'rejected',
-            'payment_date' => null,
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment rejected.',
-            'payment_status' => 'rejected',
-        ]);
+
+        $eventRegistration->payment_status = 'failed';
+        $eventRegistration->payment_date = null;
+        $eventRegistration->save();
+
+        return back()->with('success', 'Payment rejected successfully.');
     }
 }
