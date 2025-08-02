@@ -1,22 +1,19 @@
-import React from "react";
+import React, { lazy, Suspense, useMemo, memo } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
-import {
-    ChevronDown,
-    ArrowRight,
-    Calendar,
-    MapPin,
-    Clock,
-    Users,
-} from "lucide-react";
+import { ChevronDown, ArrowRight, Calendar, MapPin, Clock } from "lucide-react";
 
-import EnhancedBackground from "@/src/Components/UI/EnhancedBackground";
 import Navigation from "@/src/Components/Layout/Navigation";
 import Logo from "@/src/Components/UI/Logo";
 import { Event } from "@/types/models";
-import ImmersiveEventSection from "@/src/Components/Home/ImmersiveEventSection";
-import { events as eventsData } from "@/src/Constants/events";
-import TimeLine from "../Components/Home/TimeLine";
+// Lazy load heavy components
+const ImmersiveEventSection = lazy(
+    () => import("@/src/Components/Home/ImmersiveEventSection")
+);
+const TimeLine = lazy(() => import("../Components/Home/TimeLine"));
+const EnhancedBackground = lazy(
+    () => import("@/src/Components/UI/EnhancedBackground")
+);
 
 // Function removed in favor of configuring colors and mascots in the ImmersiveEventSection component
 
@@ -36,13 +33,43 @@ export const getColorAndIcon = (eventCode: string) => {
     return { color: colors[eventCode], icon: icons[eventCode] };
 };
 
+// Memoized social icon component for footer
+const SocialIcon = memo(({ icon }: { icon: React.ReactNode }) => (
+    <motion.a
+        href="#"
+        className="bg-[#333333] hover:bg-[#666666] p-2 rounded-full text-[#666666] hover:text-white transition-all duration-300"
+        whileHover={{ scale: 1.1 }}
+    >
+        {icon}
+    </motion.a>
+));
+
+// Memoized footer link component
+const FooterLink = memo(({ text, href }: { text: string; href: string }) => (
+    <li>
+        <a
+            href={href}
+            className="text-white/50 hover:text-[#7ECEF4] transition-colors duration-300"
+        >
+            {text}
+        </a>
+    </li>
+));
+
+// Loading fallback component
+const LoadingFallback = () => (
+    <div className="flex justify-center items-center min-h-[300px]">
+        <div className="w-10 h-10 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
+    </div>
+);
+
 const Home: React.FC = () => {
     const { events, auth } = usePage().props as unknown as {
         events: Event[];
         auth: { user: any };
     };
     // Check if user is logged in
-    const isLoggedIn = auth?.user !== null;
+    const isLoggedIn = useMemo(() => auth?.user !== null, [auth?.user]);
 
     return (
         <React.Fragment>
@@ -60,25 +87,14 @@ const Home: React.FC = () => {
                     {/* Custom Hero Section */}
                     <section className="relative min-h-screen flex flex-col justify-center items-center px-4 z-10 overflow-hidden">
                         <div className="max-w-7xl w-full mx-auto text-center relative">
-                            {/* Animated logo with pulsing effect */}
+                            {/* Simplified animated logo with reduced animation complexity */}
                             <motion.div
-                                initial={{ scale: 0.8, opacity: 0 }}
+                                initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
-                                transition={{ duration: 1, delay: 0.2 }}
+                                transition={{ duration: 0.8 }}
                                 className="mb-8 sm:mb-10 relative"
                             >
-                                <motion.div
-                                    className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1E88E5]/20 to-[#D32F2F]/20 blur-3xl"
-                                    animate={{
-                                        scale: [1, 1.2, 1],
-                                        opacity: [0.5, 0.8, 0.5],
-                                    }}
-                                    transition={{
-                                        duration: 3,
-                                        repeat: Infinity,
-                                        repeatType: "reverse",
-                                    }}
-                                />
+                                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#1E88E5]/20 to-[#D32F2F]/20 blur-3xl" />
                                 <Logo
                                     size="xxxl"
                                     showText={false}
@@ -200,9 +216,9 @@ const Home: React.FC = () => {
 
                         <motion.div
                             className="text-center mb-4 pt-24 pb-6"
-                            initial={{ y: 50, opacity: 0 }}
-                            whileInView={{ y: 0, opacity: 1 }}
-                            transition={{ duration: 0.8 }}
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
                             <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight">
@@ -218,14 +234,18 @@ const Home: React.FC = () => {
                             </p>
                         </motion.div>
 
-                        {/* Integrated Immersive Event Section */}
-                        <ImmersiveEventSection
-                            events={events}
-                            isLoggedIn={auth.user !== null}
-                        />
+                        {/* Lazy loaded Immersive Event Section with Suspense */}
+                        <Suspense fallback={<LoadingFallback />}>
+                            <ImmersiveEventSection
+                                events={events}
+                                isLoggedIn={isLoggedIn}
+                            />
+                        </Suspense>
                     </section>
 
-                    <TimeLine />
+                    <Suspense fallback={<LoadingFallback />}>
+                        <TimeLine />
+                    </Suspense>
 
                     <section className="relative z-10 px-4 sm:px-6 py-16 sm:py-20 mt-8">
                         <div className="max-w-7xl mx-auto relative z-10">
@@ -241,93 +261,83 @@ const Home: React.FC = () => {
                                         shaping the future of technology.
                                     </p>
                                     <div className="flex items-center justify-center md:justify-start space-x-4">
-                                        {[
-                                            {
-                                                icon: (
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
+                                        {/* Optimized social icons using memoized component */}
+                                        <SocialIcon
+                                            icon={
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                                    <rect
+                                                        x="2"
+                                                        y="9"
+                                                        width="4"
+                                                        height="12"
+                                                    ></rect>
+                                                    <circle
+                                                        cx="4"
+                                                        cy="4"
+                                                        r="2"
+                                                    ></circle>
+                                                </svg>
+                                            }
+                                        />
+                                        <SocialIcon
+                                            icon={
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                                                </svg>
+                                            }
+                                        />
+                                        <SocialIcon
+                                            icon={
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="20"
+                                                    height="20"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                >
+                                                    <rect
+                                                        x="2"
+                                                        y="2"
                                                         width="20"
                                                         height="20"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                                                        <rect
-                                                            x="2"
-                                                            y="9"
-                                                            width="4"
-                                                            height="12"
-                                                        ></rect>
-                                                        <circle
-                                                            cx="4"
-                                                            cy="4"
-                                                            r="2"
-                                                        ></circle>
-                                                    </svg>
-                                                ),
-                                            },
-                                            {
-                                                icon: (
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="20"
-                                                        height="20"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                                                    </svg>
-                                                ),
-                                            },
-                                            {
-                                                icon: (
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="20"
-                                                        height="20"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    >
-                                                        <rect
-                                                            x="2"
-                                                            y="2"
-                                                            width="20"
-                                                            height="20"
-                                                            rx="5"
-                                                            ry="5"
-                                                        ></rect>
-                                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                                                        <line
-                                                            x1="17.5"
-                                                            y1="6.5"
-                                                            x2="17.51"
-                                                            y2="6.5"
-                                                        ></line>
-                                                    </svg>
-                                                ),
-                                            },
-                                        ].map((item, index) => (
-                                            <motion.a
-                                                key={index}
-                                                href="#"
-                                                className="bg-[#333333] hover:bg-[#666666] p-2 rounded-full text-[#666666] hover:text-white transition-all duration-300"
-                                                whileHover={{ scale: 1.1 }}
-                                            >
-                                                {item.icon}
-                                            </motion.a>
-                                        ))}
+                                                        rx="5"
+                                                        ry="5"
+                                                    ></rect>
+                                                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                                    <line
+                                                        x1="17.5"
+                                                        y1="6.5"
+                                                        x2="17.51"
+                                                        y2="6.5"
+                                                    ></line>
+                                                </svg>
+                                            }
+                                        />
                                     </div>
                                 </div>
 
@@ -336,25 +346,15 @@ const Home: React.FC = () => {
                                         Quick Links
                                     </h3>
                                     <ul className="space-y-2">
-                                        {[
-                                            { text: "About Us", href: "#" },
-                                            {
-                                                text: "Our Events",
-                                                href: "#events",
-                                            },
-                                            { text: "Schedule", href: "#" },
-                                            { text: "Sponsors", href: "#" },
-                                            { text: "Contact", href: "#" },
-                                        ].map((item, index) => (
-                                            <li key={index}>
-                                                <a
-                                                    href={item.href}
-                                                    className="text-white/50 hover:text-[#7ECEF4] transition-colors duration-300"
-                                                >
-                                                    {item.text}
-                                                </a>
-                                            </li>
-                                        ))}
+                                        {/* Optimized links using memoized component */}
+                                        <FooterLink text="About Us" href="#" />
+                                        <FooterLink
+                                            text="Our Events"
+                                            href="#events"
+                                        />
+                                        <FooterLink text="Schedule" href="#" />
+                                        <FooterLink text="Sponsors" href="#" />
+                                        <FooterLink text="Contact" href="#" />
                                     </ul>
                                 </div>
 

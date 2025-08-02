@@ -44,7 +44,7 @@ const FestSphere: React.FC<FestSphereProps> = ({
                 <div
                     className="relative h-screen overflow-hidden"
                     style={{
-                        backgroundImage: `url('/assets/red-grid.png')`,
+                        backgroundImage: `url('https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmXaxyD2fDw1XEVpmfYpqNvrCYSbpbVBYim48ZacP3uP6U')`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -170,7 +170,7 @@ const FestSphere: React.FC<FestSphereProps> = ({
                                             }}
                                         >
                                             <img
-                                                src="/assets/festsphere/machino.png"
+                                                src="https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmcLQrwLwSuVcrhwtZyF86gpD87FRqeVAKaeZB5nVVbkL5"
                                                 alt="Machino Festsphere"
                                                 className="object-contain w-[300px]"
                                             />
@@ -201,7 +201,7 @@ const FestSphere: React.FC<FestSphereProps> = ({
                                                     }}
                                                 >
                                                     <img
-                                                        src="/assets/festsphere/machino.png"
+                                                        src="https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmcLQrwLwSuVcrhwtZyF86gpD87FRqeVAKaeZB5nVVbkL5"
                                                         alt="Machino Festsphere"
                                                         className="object-contain w-[500px] md:w-[600px] lg:w-[700px] xl:w-[800px]"
                                                     />

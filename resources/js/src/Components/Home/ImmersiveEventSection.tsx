@@ -19,25 +19,25 @@ interface MascotConfig {
 const getMascotConfig = (eventCode: string): MascotConfig => {
     const configs: Record<string, MascotConfig> = {
         hacksphere: {
-            path: "/assets/hacksphere/Kanan.png",
+            path: "https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmQbuSVn4QLpyWfgEPv4SMQTyhHreCVb4jEwzPQ23Z874j",
             position: "right-0 md:right-10 bottom-0",
             scale: "scale-75 md:scale-90 lg:scale-100",
             translateY: "translate-y-10 md:translate-y-16",
         },
         talksphere: {
-            path: "/assets/talksphere/machino.png",
+            path: "https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmSrEBwEHL7qjqr9jUtLikLG9W9H1uQdAjoHxrVHiVctrJ",
             position: "right-0 md:right-10 bottom-0",
             scale: "scale-75 md:scale-90 lg:scale-100",
             translateY: "translate-y-10 md:translate-y-16",
         },
         festsphere: {
-            path: "/assets/festsphere/machino.png",
+            path: "https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmcLQrwLwSuVcrhwtZyF86gpD87FRqeVAKaeZB5nVVbkL5",
             position: "right-0 md:right-10 bottom-0",
             scale: "scale-75 md:scale-90 lg:scale-100",
             translateY: "translate-y-10 md:translate-y-16",
         },
         exposphere: {
-            path: "/assets/exposphere/machino.png",
+            path: "https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmVDvxvGTYBrAkPiqxuou9E668mu5Y78eQhir9RCstWaMK",
             position: "right-0 md:right-10 bottom-0",
             scale: "scale-75 md:scale-90 lg:scale-100",
             translateY: "translate-y-10 md:translate-y-16",
