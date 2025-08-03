@@ -106,14 +106,14 @@ const Home: React.FC = () => {
                             <div className="relative">
                                 <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-2xl" />
                                 <Logo
-                                    size="xl"
+                                    size="xxxl"
                                     className="justify-center relative z-10"
                                 />
                             </div>
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold opacity-0 animate-fadeIn animation-delay-200">
+                        <h1 className="text-5xl font-airborne sm:text-5xl md:text-6xl lg:text-7xl font-bold opacity-0 animate-fadeIn animation-delay-200">
                             <span className="bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
                                 COMPSPHERE
                             </span>
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
                                     onClick={() => {
                                         window.location.href = `/${auth?.user?.role}/dashboard`;
                                     }}
-                                    className="bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                    className="cursor-pointer bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
                                 >
                                     <span>Dashboard</span>
                                     <ArrowRight className="w-4 h-4" />
@@ -152,7 +152,7 @@ const Home: React.FC = () => {
                                         onClick={() => {
                                             window.location.href = "/register";
                                         }}
-                                        className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                        className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
                                     >
                                         <span>Daftar Sekarang</span>
                                         <ArrowRight className="w-4 h-4" />
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
                                         onClick={() => {
                                             window.location.href = "/login";
                                         }}
-                                        className="bg-transparent border border-blue-400/20 hover:border-blue-400/40 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
+                                        className="cursor-pointer bg-transparent border border-blue-400/20 hover:border-blue-400/40 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
                                     >
                                         Login
                                     </button>
@@ -182,7 +182,7 @@ const Home: React.FC = () => {
                 {/* Events Section */}
                 <section id="events-section" className="relative">
                     <div className="text-center py-16 opacity-0 animate-fadeInView">
-                        <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-blue-400 via-blue-500 to-red-500 bg-clip-text text-transparent">
+                        <h2 className="text-4xl md:text-5xl font-airborne font-bold mb-8 bg-gradient-to-r from-blue-400 via-blue-500 to-red-500 bg-clip-text text-transparent">
                             OUR SUB-EVENTS
                         </h2>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto px-4">

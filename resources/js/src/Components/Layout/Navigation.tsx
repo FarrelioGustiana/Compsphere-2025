@@ -380,7 +380,7 @@ const Navigation: React.FC = () => {
                                     >
                                         <Link
                                             href="/login"
-                                            className="border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm lg:text-base"
+                                            className="border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white hover:border-blue-500 px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm lg:text-md"
                                         >
                                             Log in
                                         </Link>
@@ -392,7 +392,7 @@ const Navigation: React.FC = () => {
                                     >
                                         <Link
                                             href="/register"
-                                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm lg:text-base shadow-lg shadow-blue-500/25"
+                                            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-2 rounded-lg font-semibold transition-all duration-300 text-sm lg:text-md shadow-lg shadow-blue-500/25"
                                         >
                                             Register
                                         </Link>

@@ -150,7 +150,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                             {/* Mascot (in front) */}
                                             <div className="absolute bottom-0 right-0 z-10">
                                                 <img
-                                                    src="/assets/talksphere/machino.png"
+                                                    src="https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmSrEBwEHL7qjqr9jUtLikLG9W9H1uQdAjoHxrVHiVctrJ"
                                                     alt="Machino Talksphere"
                                                     className="w-80 sm:w-96 object-contain"
                                                 />
@@ -172,7 +172,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                                 }}
                                             >
                                                 <img
-                                                    src="/assets/talksphere/machino.png"
+                                                    src="https://exotic-scarlet-bedbug.myfilebase.com/ipfs/QmSrEBwEHL7qjqr9jUtLikLG9W9H1uQdAjoHxrVHiVctrJ"
                                                     alt="Machino Talksphere"
                                                     className="object-contain w-96 md:w-[400px] lg:w-[500px] xl:w-[600px]"
                                                 />

@@ -21,17 +21,11 @@ const Logo: React.FC<LogoProps> = ({
         xxxl: "w-36 h-36",
     };
 
-    const textSizeClasses = {
-        sm: "text-lg",
-        md: "text-2xl",
-        lg: "text-3xl",
-        xl: "text-4xl",
-        xxl: "text-5xl",
-        xxxl: "text-6xl",
-    };
-
     return (
-        <div className={`flex items-center space-x-3 ${className}`}>
+        <div
+            className={`flex items-center space-x-3 cursor-pointer ${className}`}
+            onClick={() => (window.location.href = "/")}
+        >
             <motion.img
                 src="/assets/compsphere.png"
                 alt="Compsphere Logo"
