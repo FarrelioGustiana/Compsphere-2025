@@ -49,7 +49,7 @@ const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     }, [targetDate]);
 
     return (
-        <div className="flex justify-center gap-6 my-8">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 my-6 sm:my-8">
             {[
                 { value: days, label: "Days" },
                 { value: hours, label: "Hours" },
@@ -64,15 +64,15 @@ const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
                     transition={{ delay: index * 0.1 }}
                 >
                     <div
-                        className="bg-gradient-to-b from-blue-900 to-indigo-900 w-24 h-24 rounded-lg 
+                        className="bg-gradient-to-b from-blue-900 to-indigo-900 w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg 
                                  flex items-center justify-center border-2 border-blue-500 shadow-lg shadow-blue-500/30"
                     >
-                        <span className="text-4xl font-bold text-white">
-                            {item.value}
+                        <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">
+                            {item.value < 10 ? `0${item.value}` : item.value}
                         </span>
                     </div>
-                    <span className="text-blue-400 mt-2 font-medium">
-                        {item.label}
+                    <span className="text-blue-400 mt-2 text-xs sm:text-sm md:text-base font-medium">
+                        {index === 0 ? "Days" : index === 1 ? "Hours" : index === 2 ? "Minutes" : "Seconds"}
                     </span>
                 </motion.div>
             ))}
@@ -109,8 +109,8 @@ const Hacksphere: React.FC<HacksphereProps> = ({
         }),
     };
 
-    // Event date for countdown (October 12, 2025)
-    const eventDate = new Date(2025, 9, 12, 18, 0, 0);
+    // Event date for countdown (October 2, 2025)
+    const eventDate = new Date(2025, 9, 2, 9, 30, 0);
 
     const [showNikForm, setShowNikForm] = useState(false);
     const [showHacksphereRegistration, setShowHacksphereRegistration] =
@@ -194,8 +194,7 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.8 }}
                             >
-                                Where Innovation Meets Technology: Building
-                                Tomorrow's Solutions Today
+                                Accelerating Innovation Through Intelligent Technology
                             </motion.p>
 
                             {/* Countdown Timer */}

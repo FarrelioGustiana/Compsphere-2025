@@ -49,7 +49,7 @@ function AboutSection({ fadeInUpVariant }: Props) {
                                 />
                             </svg>
                             <span className="text-sm sm:text-base">
-                                August 15-17, 2025
+                                October 2-4, 2025
                             </span>
                         </div>
 
@@ -75,7 +75,7 @@ function AboutSection({ fadeInUpVariant }: Props) {
                                 />
                             </svg>
                             <span className="text-sm sm:text-base">
-                                Jakarta, Indonesia
+                                Fablab, President University
                             </span>
                         </div>
                     </div>
