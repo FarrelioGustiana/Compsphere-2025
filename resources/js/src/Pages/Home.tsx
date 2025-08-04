@@ -99,8 +99,8 @@ const Home: React.FC = () => {
                 <Navigation />
 
                 {/* Hero Section */}
-                <section className="min-h-screen flex flex-col justify-center items-center px-4 pt-24 sm:pt-32 lg:pt-40">
-                    <div className="max-w-4xl text-center space-y-8">
+                <section className="min-h-screen flex flex-col justify-center items-center px-3 sm:px-4 pt-16 sm:pt-24 md:pt-32 lg:pt-40">
+                    <div className="w-full max-w-4xl text-center space-y-4 sm:space-y-6 md:space-y-8">
                         {/* Logo */}
                         <div className="opacity-0 animate-fadeIn">
                             <div className="relative">
@@ -113,14 +113,14 @@ const Home: React.FC = () => {
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-5xl font-airborne sm:text-5xl md:text-6xl lg:text-7xl font-bold opacity-0 animate-fadeIn animation-delay-200">
+                        <h1 className="text-4xl font-airborne sm:text-5xl md:text-6xl lg:text-7xl font-bold opacity-0 animate-fadeIn animation-delay-200">
                             <span className="bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
                                 COMPSPHERE
                             </span>
                         </h1>
 
                         {/* Tagline */}
-                        <p className="text-lg sm:text-xl md:text-2xl text-gray-200 opacity-0 animate-fadeIn animation-delay-300">
+                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 opacity-0 animate-fadeIn animation-delay-300">
                             <span className="text-blue-400">Accelerating</span>{" "}
                             Innovation Through{" "}
                             <span className="text-red-400">Intelligent</span>{" "}
@@ -128,20 +128,20 @@ const Home: React.FC = () => {
                         </p>
 
                         {/* Description */}
-                        <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed opacity-0 animate-fadeIn animation-delay-400">
+                        <p className="text-sm sm:text-base text-gray-300 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed opacity-0 animate-fadeIn animation-delay-400">
                             Bergabunglah dengan para inovator, developer, dan
                             teknolog terdepan dalam event teknologi terbesar
                             tahun ini.
                         </p>
 
                         {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center opacity-0 animate-fadeIn animation-delay-500">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center opacity-0 animate-fadeIn animation-delay-500">
                             {isLoggedIn ? (
                                 <button
                                     onClick={() => {
                                         window.location.href = `/${auth?.user?.role}/dashboard`;
                                     }}
-                                    className="cursor-pointer bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                    className="cursor-pointer bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
                                 >
                                     <span>Dashboard</span>
                                     <ArrowRight className="w-4 h-4" />
@@ -152,7 +152,7 @@ const Home: React.FC = () => {
                                         onClick={() => {
                                             window.location.href = "/register";
                                         }}
-                                        className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                        className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105 whitespace-nowrap mx-3 sm:mx-0"
                                     >
                                         <span>Daftar Sekarang</span>
                                         <ArrowRight className="w-4 h-4" />
@@ -161,7 +161,7 @@ const Home: React.FC = () => {
                                         onClick={() => {
                                             window.location.href = "/login";
                                         }}
-                                        className="cursor-pointer bg-transparent border border-blue-400/20 hover:border-blue-400/40 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
+                                        className="cursor-pointer bg-transparent border border-blue-400/20 hover:border-blue-400/40 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 whitespace-nowrap mx-3 sm:mx-0"
                                     >
                                         Login
                                     </button>
@@ -173,19 +173,21 @@ const Home: React.FC = () => {
                     {/* Scroll indicator */}
                     <button
                         onClick={scrollToEvents}
-                        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow opacity-0 animate-fadeIn animation-delay-1000"
+                        className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow opacity-0 animate-fadeIn animation-delay-1000"
                     >
-                        <ChevronDown className="w-6 h-6 text-gray-400" />
+                        <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
                     </button>
                 </section>
 
                 {/* Events Section */}
                 <section id="events-section" className="relative">
-                    <div className="text-center py-16 opacity-0 animate-fadeInView">
-                        <h2 className="text-4xl md:text-5xl font-airborne font-bold mb-8 bg-gradient-to-r from-blue-400 via-blue-500 to-red-500 bg-clip-text text-transparent">
-                            OUR SUB-EVENTS
-                        </h2>
-                        <p className="text-xl text-gray-300 max-w-3xl mx-auto px-4">
+                    <div className="text-center py-16 opacity-0 animate-fadeInView space-y-2">
+                        <h1 className="text-2xl font-airborne sm:text-3xl md:text-4xl font-bold opacity-0 animate-fadeIn animation-delay-200">
+                            <span className="bg-gradient-to-r from-blue-500 to-red-500 bg-clip-text text-transparent">
+                                OUR SUB-EVENTS
+                            </span>
+                        </h1>
+                        <p className="text-lg text-gray-300 max-w-3xl mx-auto px-4">
                             Check out our sub-events and join us in celebrating
                             the latest in technology and innovation.
                         </p>
@@ -207,7 +209,7 @@ const Home: React.FC = () => {
                 </div>
 
                 {/* Footer */}
-                <footer className="relative py-16 px-4 border-t border-white/10">
+                <footer className="relative py-8 sm:py-16 px-4 border-t border-white/10">
                     <div className="max-w-7xl mx-auto">
                         <div className="grid md:grid-cols-3 gap-8 mb-8">
                             <div className="text-center md:text-left">
@@ -277,7 +279,7 @@ const Home: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="pt-8 border-t border-white/10 text-center">
+                        <div className="pt-4 sm:pt-8 border-t border-white/10 text-center">
                             <p className="text-gray-500">
                                 2025 Compsphere. All rights reserved.
                             </p>
