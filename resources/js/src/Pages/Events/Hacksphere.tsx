@@ -155,6 +155,13 @@ const Hacksphere: React.FC<HacksphereProps> = ({
     };
 
     const handleRegisterClick = () => {
+        // Check if user is logged in first
+        if (!user) {
+            // Redirect to login page
+            window.location.href = route('login');
+            return;
+        }
+
         if (isProfileCompleteButNikMissing) {
             setShowNikForm(true);
         } else if (isProfileComplete) {
@@ -309,6 +316,9 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                                 handleRegisterClick={handleRegisterClick}
                                 data={data}
                                 setData={setData}
+                                user={user}
+                                isProfileComplete={isProfileComplete}
+                                isProfileCompleteButNikMissing={isProfileCompleteButNikMissing}
                             />
                         </div>
                     )}

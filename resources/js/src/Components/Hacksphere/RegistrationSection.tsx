@@ -35,6 +35,9 @@ type Props = {
     handleRegisterClick: () => void;
     data: Record<string, string>;
     setData: (key: string, value: any) => void;
+    user?: any; // Added user prop
+    isProfileComplete?: boolean | null | string | undefined; // Added profile completeness prop
+    isProfileCompleteButNikMissing?: boolean | null | string | undefined; // Added NIK check prop
 };
 
 function RegistrationSection({
@@ -55,6 +58,9 @@ function RegistrationSection({
     handleRegisterClick,
     data,
     setData,
+    user,
+    isProfileComplete,
+    isProfileCompleteButNikMissing,
 }: Props) {
     return (
         <motion.div
@@ -72,7 +78,9 @@ function RegistrationSection({
             eventRegistration?.registration_status === "registered" ? (
                 <motion.div
                     className={`bg-gradient-to-br ${
-                        eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
+                        eventRegistration?.registration_status ===
+                            "registered" &&
+                        eventRegistration?.payment_status === "verified"
                             ? "from-green-900/30 to-blue-900/30 border border-green-700/50"
                             : "from-yellow-900/30 to-blue-900/30 border border-yellow-700/50"
                     } rounded-xl p-6 sm:p-8 shadow-lg gap-6`}
@@ -83,12 +91,16 @@ function RegistrationSection({
                     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
                         <div
                             className={`${
-                                eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
+                                eventRegistration?.registration_status ===
+                                    "registered" &&
+                                eventRegistration?.payment_status === "verified"
                                     ? "bg-green-500/20"
                                     : "bg-yellow-500/20"
                             } p-3 sm:p-4 rounded-full flex-shrink-0`}
                         >
-                            {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified" ? (
+                            {eventRegistration?.registration_status ===
+                                "registered" &&
+                            eventRegistration?.payment_status === "verified" ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-10 w-10 sm:h-12 sm:w-12 text-green-400"
@@ -122,16 +134,26 @@ function RegistrationSection({
                         </div>
                         <div className="text-center sm:text-left">
                             <h3 className="text-xl sm:text-2xl font-bold mb-2 text-blue-300">
-                                {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
+                                {eventRegistration?.registration_status ===
+                                    "registered" &&
+                                eventRegistration?.payment_status === "verified"
                                     ? "Registration Approved!"
-                                    : eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "pending"
+                                    : eventRegistration?.registration_status ===
+                                          "registered" &&
+                                      eventRegistration?.payment_status ===
+                                          "pending"
                                     ? "Payment Verification Required"
                                     : "Waiting for Approval"}
                             </h3>
                             <p className="text-gray-300 text-sm sm:text-base">
-                                {eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "verified"
+                                {eventRegistration?.registration_status ===
+                                    "registered" &&
+                                eventRegistration?.payment_status === "verified"
                                     ? "Congratulations! Your registration has been approved. Get ready for an exciting hackathon experience!"
-                                    : eventRegistration?.registration_status === "registered" && eventRegistration?.payment_status === "pending"
+                                    : eventRegistration?.registration_status ===
+                                          "registered" &&
+                                      eventRegistration?.payment_status ===
+                                          "pending"
                                     ? "Your team registration is complete, but payment verification is still required to access all Hacksphere features."
                                     : "Thank you for registering for Hacksphere. We'll send you more details via email as the event approaches."}
                             </p>
@@ -639,12 +661,90 @@ function RegistrationSection({
                             build innovative solutions!
                         </p>
 
-                        <button
-                            onClick={handleRegisterClick}
-                            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
-                        >
-                            Register Your Team
-                        </button>
+                        {user ? (
+                            <div className="space-y-4">
+                                <button
+                                    onClick={handleRegisterClick}
+                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
+                                >
+                                    Register Your Team
+                                </button>
+
+                                {/* Profile warning and button for incomplete profile */}
+                                {!isProfileComplete && !isRegistered && (
+                                    <div className="mt-4 space-y-4">
+                                        <div className="bg-yellow-500/20 text-yellow-300 p-4 rounded-lg border border-yellow-700/30 text-sm">
+                                            <p>
+                                                Please complete your profile
+                                                before registering for
+                                                Hacksphere.
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-center">
+                                            <a
+                                                href={route(
+                                                    "participant.profile"
+                                                )}
+                                                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-blue-600 hover:from-yellow-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
+                                            >
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="h-5 w-5"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                                                </svg>
+                                                Complete Your Profile
+                                            </a>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="space-y-4">
+                                <div className="bg-blue-500/20 text-blue-300 p-4 rounded-lg border border-blue-700/30 text-sm">
+                                    <p>
+                                        You need to log in or register before
+                                        you can participate in Hacksphere.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <a
+                                        href={route("login")}
+                                        className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        Login
+                                    </a>
+                                    <a
+                                        href={route("register")}
+                                        className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                                        </svg>
+                                        Register
+                                    </a>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
             )}

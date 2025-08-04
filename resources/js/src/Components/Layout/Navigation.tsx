@@ -403,7 +403,7 @@ const Navigation: React.FC = () => {
 
                         {/* Mobile Menu Button */}
                         <motion.button
-                            className="md:hidden relative z-50 p-2 rounded-lg hover:bg-gray-800/50 transition-colors duration-300"
+                            className="cursor-pointer md:hidden relative z-50 p-2 rounded-lg hover:bg-gray-800/50 transition-colors duration-300"
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -466,7 +466,7 @@ const Navigation: React.FC = () => {
                                             {item.dropdown ? (
                                                 <div className="mb-2">
                                                     <motion.button
-                                                        className="flex items-center justify-between w-full py-3 px-4 text-lg font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all duration-300"
+                                                        className="cursor-pointer flex items-center justify-between w-full py-3 px-4 text-lg font-medium text-gray-300 hover:text-blue-400 hover:bg-gray-800/50 rounded-lg transition-all duration-300"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             toggleDropdown(
