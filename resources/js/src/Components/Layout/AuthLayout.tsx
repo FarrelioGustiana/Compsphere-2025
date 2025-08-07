@@ -7,7 +7,7 @@ import Logo from "@/src/Components/UI/Logo";
 interface AuthLayoutProps {
     children: React.ReactNode;
     title: string;
-    subtitle: string;
+    subtitle?: string;
     status?: string;
 }
 
@@ -49,7 +49,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
                         <div className="mb-4 sm:mb-6 flex justify-center relative">
                             {/* Logo glow effect */}
                             <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-lg"></div>
-                            <Logo size="lg" showText={false} className="relative z-10" />
+                            <Logo
+                                size="lg"
+                                showText={false}
+                                className="relative z-10"
+                            />
                         </div>
                         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-red-400 bg-clip-text text-transparent mb-2">
                             {title}
@@ -87,7 +91,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
                             <span className="mr-1.5">←</span> Back to Compsphere
                         </Link>
                     </motion.div>
-                    
+
                     {/* Floating decorative space elements */}
                     <div className="absolute top-10 right-10 w-2 h-2 bg-blue-400 rounded-full animate-pulse-slow"></div>
                     <div className="absolute bottom-20 left-20 w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse-slow animation-delay-1000"></div>

@@ -67,7 +67,7 @@ export default function Login({
     };
 
     return (
-        <AuthLayout title="Sign In" subtitle="Welcome back" status={status}>
+        <AuthLayout title="Sign In" status={status}>
             {/* Glowing orb behind form */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-gradient-to-br from-indigo-900/20 to-purple-800/20 blur-3xl opacity-30 -z-10"></div>
 

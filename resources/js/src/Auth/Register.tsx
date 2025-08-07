@@ -111,7 +111,7 @@ export default function Register() {
     };
 
     return (
-        <AuthLayout title="Sign Up" subtitle="Create your account">
+        <AuthLayout title="Create Account">
             {/* Glowing orb behind form */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <motion.div
@@ -130,95 +130,112 @@ export default function Register() {
                 transition={{ duration: 0.5 }}
             >
                 <motion.div
-                    className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
-                        activeField === "first_name" ? "scale-105" : ""
-                    } transition-transform duration-300`}
+                    className={`grid grid-cols-1 md:grid-cols-2 gap-4 transition-transform duration-300`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
                 >
-                    <div className="relative">
-                        {activeField === "first_name" && (
-                            <motion.div
-                                className="absolute inset-0 rounded-xl bg-blue-500/10 -z-10 blur-md"
-                                layoutId="activeFieldGlow"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                            />
-                        )}
-                        <div className="relative z-10">
-                            <InputField
-                                label="First Name"
-                                name="first_name"
-                                type="text"
-                                value={data.first_name}
-                                onChange={(value) =>
-                                    setData("first_name", value)
-                                }
-                                error={errors.first_name}
-                                placeholder="Enter first name"
-                                icon={
-                                    <motion.div
-                                        animate={
-                                            activeField === "first_name"
-                                                ? { rotate: 360 }
-                                                : { rotate: 0 }
-                                        }
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        <User className="w-5 h-5 text-blue-400" />
-                                    </motion.div>
-                                }
-                                autoComplete="given-name"
-                                required
-                                onFocus={() => handleFocus("first_name")}
-                                onBlur={handleBlur}
-                            />
+                    <motion.div
+                        className={` ${
+                            activeField === "first_name" ? "scale-105" : ""
+                        } transition-transform duration-300`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className="relative">
+                            {activeField === "first_name" && (
+                                <motion.div
+                                    className="absolute inset-0 rounded-xl bg-blue-500/10 -z-10 blur-md"
+                                    layoutId="activeFieldGlow"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                            )}
+                            <div className="relative z-10">
+                                <InputField
+                                    label="First Name"
+                                    name="first_name"
+                                    type="text"
+                                    value={data.first_name}
+                                    onChange={(value) =>
+                                        setData("first_name", value)
+                                    }
+                                    error={errors.first_name}
+                                    placeholder="Enter first name"
+                                    icon={
+                                        <motion.div
+                                            animate={
+                                                activeField === "first_name"
+                                                    ? { rotate: 360 }
+                                                    : { rotate: 0 }
+                                            }
+                                            transition={{ duration: 0.5 }}
+                                        >
+                                            <User className="w-5 h-5 text-blue-400" />
+                                        </motion.div>
+                                    }
+                                    autoComplete="given-name"
+                                    required
+                                    onFocus={() => handleFocus("first_name")}
+                                    onBlur={handleBlur}
+                                />
+                            </div>
                         </div>
-                    </div>
-                    <div className="relative">
-                        {activeField === "last_name" && (
-                            <motion.div
-                                className="absolute inset-0 rounded-xl bg-blue-500/10 -z-10 blur-md"
-                                layoutId="activeFieldGlow"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                            />
-                        )}
-                        <div className="relative z-10">
-                            <InputField
-                                label="Last Name"
-                                name="last_name"
-                                type="text"
-                                value={data.last_name}
-                                onChange={(value) =>
-                                    setData("last_name", value)
-                                }
-                                error={errors.last_name}
-                                placeholder="Enter last name"
-                                icon={
-                                    <motion.div
-                                        animate={
-                                            activeField === "last_name"
-                                                ? { rotate: 360 }
-                                                : { rotate: 0 }
-                                        }
-                                        transition={{ duration: 0.5 }}
-                                    >
-                                        <User className="w-5 h-5 text-purple-400" />
-                                    </motion.div>
-                                }
-                                autoComplete="family-name"
-                                required
-                                onFocus={() => handleFocus("last_name")}
-                                onBlur={handleBlur}
-                            />
+                    </motion.div>
+
+                    <motion.div
+                        className={` ${
+                            activeField === "last_name" ? "scale-105" : ""
+                        } transition-transform duration-300`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className="relative">
+                            {activeField === "last_name" && (
+                                <motion.div
+                                    className="absolute inset-0 rounded-xl bg-blue-500/10 -z-10 blur-md"
+                                    layoutId="activeFieldGlow"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                />
+                            )}
+                            <div className="relative z-10">
+                                <InputField
+                                    label="Last Name"
+                                    name="last_name"
+                                    type="text"
+                                    value={data.last_name}
+                                    onChange={(value) =>
+                                        setData("last_name", value)
+                                    }
+                                    error={errors.last_name}
+                                    placeholder="Enter last name"
+                                    icon={
+                                        <motion.div
+                                            animate={
+                                                activeField === "last_name"
+                                                    ? { rotate: 360 }
+                                                    : { rotate: 0 }
+                                            }
+                                            transition={{ duration: 0.5 }}
+                                        >
+                                            <User className="w-5 h-5 text-purple-400" />
+                                        </motion.div>
+                                    }
+                                    autoComplete="family-name"
+                                    required
+                                    onFocus={() => handleFocus("last_name")}
+                                    onBlur={handleBlur}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </motion.div>
                 <motion.div
                     initial={{ x: -20, opacity: 0 }}
@@ -576,35 +593,6 @@ export default function Register() {
                         </motion.div>
                     </div>
                 </div>
-
-                {/* Terms agreement with cosmic styling */}
-                <motion.div
-                    className="text-center text-xs text-gray-400 mt-2 pb-2"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.4 }}
-                >
-                    <div className="flex items-center justify-center gap-1">
-                        <span>
-                            By signing up, you agree to our{" "}
-                            <a
-                                href="#"
-                                className="text-blue-400 hover:text-blue-300 transition-colors duration-300 relative inline-block group"
-                            >
-                                <span>Terms of Service</span>
-                                <span className="absolute left-0 right-0 bottom-0 h-[1px] bg-blue-400/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </a>{" "}
-                            and{" "}
-                            <a
-                                href="#"
-                                className="text-blue-400 hover:text-blue-300 transition-colors duration-300 relative inline-block group"
-                            >
-                                <span>Privacy Policy</span>
-                                <span className="absolute left-0 right-0 bottom-0 h-[1px] bg-blue-400/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
-                            </a>
-                        </span>
-                    </div>
-                </motion.div>
             </motion.form>
         </AuthLayout>
     );
