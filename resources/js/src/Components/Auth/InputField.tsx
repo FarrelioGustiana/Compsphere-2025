@@ -15,6 +15,8 @@ interface InputFieldProps {
     required?: boolean;
     autoComplete?: string;
     showPasswordToggle?: boolean;
+    onFocus?: () => void;
+    onBlur?: () => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -29,6 +31,8 @@ const InputField: React.FC<InputFieldProps> = ({
     required = false,
     autoComplete,
     showPasswordToggle = false,
+    onFocus,
+    onBlur,
 }) => {
     const [showPassword, setShowPassword] = useState(false);
     const inputType = showPasswordToggle
@@ -66,6 +70,8 @@ const InputField: React.FC<InputFieldProps> = ({
                     placeholder={placeholder}
                     autoComplete={autoComplete}
                     required={required}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
                 />
 
                 {showPasswordToggle && (

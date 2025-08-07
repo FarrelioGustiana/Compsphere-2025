@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 interface ButtonProps {
     children: React.ReactNode;
-    variant?: "primary" | "secondary" | "outline" | "gradient";
+    variant?: "primary" | "secondary" | "outline" | "gradient" | "custom";
     size?: "sm" | "md" | "lg";
     disabled?: boolean;
     loading?: boolean;
@@ -33,6 +33,7 @@ const Button: React.FC<ButtonProps> = ({
             "border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white focus:ring-blue-500",
         gradient:
             "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white focus:ring-blue-500 shadow-lg shadow-blue-500/25",
+        custom: "", // Empty class to allow fully custom styling via className prop
     };
 
     const sizeClasses = {
@@ -51,7 +52,7 @@ const Button: React.FC<ButtonProps> = ({
             type={type}
             disabled={disabled || loading}
             onClick={onClick}
-            className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`}
+            className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className} cursor-pointer`}
             whileHover={disabled || loading ? {} : { scale: 1.02 }}
             whileTap={disabled || loading ? {} : { scale: 0.98 }}
         >
