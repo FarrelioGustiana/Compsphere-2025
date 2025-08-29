@@ -226,25 +226,7 @@ const Festsphere: React.FC<FestsphereProps> = ({
                             >
                                 <div className="space-y-4 sm:space-y-6">
                                     <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                                        Festsphere is a vibrant cultural
-                                        festival that celebrates artistic
-                                        expressions, cultural performances, and
-                                        creative collaborations across diverse
-                                        communities. This colorful event brings
-                                        together artists, performers, cultural
-                                        enthusiasts, and students to experience
-                                        unique traditions and contemporary
-                                        interpretations.
-                                    </p>
-                                    <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                                        Through interactive displays,
-                                        demonstrations, and engaging
-                                        presentations, Festsphere offers
-                                        visitors a unique opportunity to immerse
-                                        themselves in rich cultural experiences
-                                        and gain appreciation for diverse
-                                        artistic traditions that enrich our
-                                        global community.
+                                        Festsphere is a vibrant festival that celebrates the talents and accomplishments of the Faculty of Computer Science through mesmerizing performances and awarding sessions. Designed to offer a space for enjoyment and meaningful interaction, Festsphere brings together students, lecturers, and guests in a lively and memorable atmosphere that highlights the spirit and creativity of the compsphere.
                                     </p>
                                 </div>
                                 <div className="relative">
@@ -262,7 +244,7 @@ const Festsphere: React.FC<FestsphereProps> = ({
 
                         {/* Features Section */}
                         <section className="mb-16 sm:mb-20 lg:mb-24">
-                            <motion.div
+                            {/* <motion.div
                                 className="text-center mb-8 sm:mb-10"
                                 initial="hidden"
                                 whileInView="visible"
@@ -328,7 +310,7 @@ const Festsphere: React.FC<FestsphereProps> = ({
                                         </p>
                                     </motion.div>
                                 ))}
-                            </div>
+                            </div> */}
                         </section>
 
                         {/* Registration Section */}

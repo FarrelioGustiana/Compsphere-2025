@@ -16,12 +16,12 @@ class EventSeeder extends Seeder
         Event::create([
             'event_code' => 'hacksphere',
             'event_name' => 'Hacksphere',
-            'description' => 'Kompetisi hackathon untuk mengembangkan solusi inovatif menggunakan teknologi terdepan',
+            'description' => 'A Hackathon Competition where individuals or teams collaborate to create a solution for a given problem or case study.',
             'registration_open_date' => '2025-07-14 00:00:00',
             'registration_close_date' => '2025-07-31 23:59:59',
-            'start_date' => '2025-10-12',
-            'end_date' => '2025-10-14',
-            'location' => 'Location 1',
+            'start_date' => '2025-10-2',
+            'end_date' => '2025-10-4',
+            'location' => 'Fablab, President University.',
             'is_paid_event' => true,
             'is_active' => true,
         ]);
@@ -29,12 +29,12 @@ class EventSeeder extends Seeder
         Event::create([
             'event_code' => 'talksphere',
             'event_name' => 'Talksphere',
-            'description' => 'Sesi presentasi dan diskusi dengan para ahli teknologi dan inovator terkemuka',
+            'description' => 'Talkshow and seminar sessions featuring notable speakers, discussing the latest happenings in the technological world',
             'registration_open_date' => '2025-07-14 00:00:00',
             'registration_close_date' => '2025-07-31 23:59:59',
-            'start_date' => '2025-10-12',
-            'end_date' => '2025-10-14',
-            'location' => 'Location 2',
+            'start_date' => '2025-10-2',
+            'end_date' => '2025-10-2',
+            'location' => 'Fablab, President University.',
             'is_paid_event' => false,
             'is_active' => true,
         ]);
@@ -42,12 +42,12 @@ class EventSeeder extends Seeder
         Event::create([
             'event_code' => 'festsphere',
             'event_name' => 'Festsphere',
-            'description' => 'Festival teknologi dengan berbagai aktivitas menarik dan showcase produk inovatif',
+            'description' => 'A festival celebrating the talents and accomplishments of the faculty of computer science, featuring mesmerizing performance and awarding sessions',
             'registration_open_date' => '2025-07-14 00:00:00',
             'registration_close_date' => '2025-07-31 23:59:59',
-            'start_date' => '2025-10-12',
-            'end_date' => '2025-10-14',
-            'location' => 'Location 3',
+            'start_date' => '2025-10-4',
+            'end_date' => '2025-10-4',
+            'location' => 'Charles Hirmawan Auditorium, President University.',
             'is_paid_event' => false,
             'is_active' => true,
         ]);
@@ -58,11 +58,11 @@ class EventSeeder extends Seeder
             'description' => 'Pameran teknologi dan startup showcase untuk memamerkan inovasi terbaru',
             'registration_open_date' => '2025-07-14 00:00:00',
             'registration_close_date' => '2025-07-31 23:59:59',
-            'start_date' => '2025-10-12',
-            'end_date' => '2025-10-14',
-            'location' => 'Location 4',
+            'start_date' => '2025-10-1',
+            'end_date' => '2025-10-4',
+            'location' => 'President University Convention Center (PUCC)',
             'is_paid_event' => false,
-            'is_active' => true,
+            'is_active' => false,
         ]);
     }
 }

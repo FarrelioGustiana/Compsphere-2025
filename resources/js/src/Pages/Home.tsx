@@ -121,17 +121,10 @@ const Home: React.FC = () => {
 
                         {/* Tagline */}
                         <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-200 opacity-0 animate-fadeIn animation-delay-300">
-                            <span className="text-blue-400">Accelerating</span>{" "}
-                            Innovation Through{" "}
-                            <span className="text-red-400">Intelligent</span>{" "}
-                            Technology
-                        </p>
-
-                        {/* Description */}
-                        <p className="text-sm sm:text-base text-gray-300 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto leading-relaxed opacity-0 animate-fadeIn animation-delay-400">
-                            Bergabunglah dengan para inovator, developer, dan
-                            teknolog terdepan dalam event teknologi terbesar
-                            tahun ini.
+                            <span className="text-blue-400">Empowering</span>{" "}
+                            Intelligence to{" "}
+                            <span className="text-red-400">Innovate</span>{" "}
+                            Imagination
                         </p>
 
                         {/* CTA Buttons */}
@@ -218,9 +211,7 @@ const Home: React.FC = () => {
                                     className="justify-center md:justify-start mb-4"
                                 />
                                 <p className="text-gray-400 mb-6">
-                                    Accelerating Innovation Through Intelligent
-                                    Technology. Join us in shaping the future of
-                                    technology.
+                                    Empowering Intelligence to Innovate Imagination
                                 </p>
                             </div>
 

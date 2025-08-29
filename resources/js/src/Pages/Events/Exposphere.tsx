@@ -226,23 +226,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                             >
                                 <div className="space-y-4 sm:space-y-6">
                                     <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                                        Exposphere is a premier exhibition event
-                                        that showcases the latest innovations,
-                                        products, and technologies across
-                                        various fields. This dynamic platform
-                                        brings together industry leaders,
-                                        researchers, entrepreneurs, and students
-                                        to explore cutting-edge solutions and
-                                        network with like-minded innovators.
-                                    </p>
-                                    <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                                        Through interactive displays,
-                                        demonstrations, and engaging
-                                        presentations, Exposphere offers
-                                        visitors a unique opportunity to
-                                        experience the future firsthand and gain
-                                        insights into emerging trends that are
-                                        shaping our world.
+                                        Exposphere is an exhibition that showcases a wide range of innovative technology projects developed by students from the Faculty of Computer Science. Featuring works in IoT, Artificial Intelligence, Cybersecurity, Game Development, and more, this sub-event highlights creative and practical applications of technology. 
                                     </p>
                                 </div>
                                 <div className="relative">

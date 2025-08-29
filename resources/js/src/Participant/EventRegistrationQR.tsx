@@ -119,7 +119,7 @@ export default function EventRegistrationQR({ event, eventRegistration, qrCodeDa
                       Download QR Code
                     </Button>
                     
-                    <button
+                    {/* <button
                       onClick={handleRegenerateQRCode}
                       disabled={qrCodeData.status === 'verified'}
                       className={`flex-1 border px-4 py-2 rounded-lg flex items-center justify-center transition-colors ${
@@ -130,7 +130,7 @@ export default function EventRegistrationQR({ event, eventRegistration, qrCodeDa
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       {qrCodeData.status === 'verified' ? 'Verified' : 'Regenerate'}
-                    </button>
+                    </button> */}
                   </div>
                 </div>
 

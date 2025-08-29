@@ -109,7 +109,6 @@ const Hacksphere: React.FC<HacksphereProps> = ({
         }),
     };
 
-    // Event date for countdown (October 2, 2025)
     const eventDate = new Date(2025, 9, 2, 9, 30, 0);
 
     const [showNikForm, setShowNikForm] = useState(false);
@@ -201,7 +200,7 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.8 }}
                             >
-                                Accelerating Innovation Through Intelligent Technology
+                                Empowering Intelligence to Innovate Imagination
                             </motion.p>
 
                             {/* Countdown Timer */}

@@ -151,23 +151,15 @@ export default function TeamQRCodes({ team, event, qrCodesData }: Props) {
                     </div>
                   </CardContent>
                   
-                  <CardFooter className="flex justify-between">
-                    <Button
-                      variant="outline"
-                      onClick={() => downloadQRCode(qrData.activity.id, qrData.verification_url)}
-                    >
-                      <Download className="h-4 w-4 mr-2" /> Download
-                    </Button>
-                    
-                    {team.leader_id === (window as any).auth?.user?.id && (
+                  <CardFooter>
+                    <div className="flex justify-center">
                       <Button
-                        variant="secondary"
-                        disabled={regeneratingActivity === qrData.activity.id}
-                        onClick={() => handleRegenerateQRCode(qrData.activity.id)}
+                        variant="outline"
+                        onClick={() => downloadQRCode(qrData.activity.id, qrData.verification_url)}
                       >
-                        {regeneratingActivity === qrData.activity.id ? 'Regenerating...' : 'Regenerate'}
+                        <Download className="h-4 w-4 mr-2" /> Download
                       </Button>
-                    )}
+                    </div>
                   </CardFooter>
                 </Card>
               ))}

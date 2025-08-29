@@ -162,8 +162,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.3, duration: 0.8 }}
                             >
-                                Engaging Discussions with Industry Thought
-                                Leaders and Tech Innovators
+                                Introducing and spreading knowledge related to the latest technological advancements.
                             </motion.p>
 
                             {/* Countdown Timer */}

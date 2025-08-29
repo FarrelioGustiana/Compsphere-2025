@@ -99,7 +99,7 @@ export default function Users({ users, filters }: Props) {
                     <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                     <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    {/* <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th> */}
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -112,7 +112,7 @@ export default function Users({ users, filters }: Props) {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.email}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">{user.role}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        {/* <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
                             type="button"
                             className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition ease-in-out duration-150"
@@ -123,7 +123,7 @@ export default function Users({ users, filters }: Props) {
                           >
                             View
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (

@@ -15,15 +15,15 @@ export const events: EventItem[] = [
     {
         name: "Hacksphere",
         description:
-            "Kompetisi hackathon untuk mengembangkan solusi inovatif menggunakan teknologi terdepan",
+            "A Hackathon Competition where individuals or teams collaborate to create a solution for a given problem or case study.",
         icon: Zap,
         color: "from-red-500 to-pink-500",
-        date: "12-14 Oktober 2025",
+        date: "2-4 Oktober 2025",
     },
     {
         name: "Talksphere",
         description:
-            "Sesi presentasi dan diskusi dengan para ahli teknologi dan inovator terkemuka",
+            "A festival celebrating the talents and accomplishments of the faculty of computer science, featuring mesmerizing performance and awarding sessions",
         icon: Users,
         color: "from-blue-500 to-cyan-500",
         date: "13 Oktober 2025",

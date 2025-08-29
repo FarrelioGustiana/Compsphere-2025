@@ -39,10 +39,10 @@ const InteractiveTimeline: React.FC = () => {
             name: "Hacksphere",
             description:
                 "Immerse yourself in a 48-hour coding marathon where the brightest minds collaborate to build innovative solutions. Connect with mentors, access cutting-edge technologies, and compete for stellar prizes.",
-            date: "12-14 Oktober 2025",
+            date: "October 2-4, 2025",
             time: "Starts 12.00 WIB",
-            location: "President University",
-            participants: "500+ Participants",
+            location: "Fablab, President University",
+            participants: "50+ Participants",
             gradient: "from-blue-500 to-blue-600",
             cssGradient: "linear-gradient(to right, #3b82f6, #2563eb)", // blue-500 to blue-600
             bgColor: "bg-blue-500/10",
@@ -52,10 +52,10 @@ const InteractiveTimeline: React.FC = () => {
             name: "Talksphere",
             description:
                 "Join visionary tech leaders and innovators for cutting-edge talks and panels. Network with industry experts, gain insights into emerging technologies, and expand your knowledge horizons.",
-            date: "13 Oktober 2025",
+            date: "October 2, 2025",
             time: "09.00 - 17.00 WIB",
-            location: "Auditorium Center",
-            participants: "20+ Speakers",
+            location: "Fablab, President University.",
+            participants: "Open to Public",
             gradient: "from-red-500 to-red-600",
             cssGradient: "linear-gradient(to right, #ef4444, #dc2626)", // red-500 to red-600
             bgColor: "bg-red-500/10",
@@ -65,10 +65,10 @@ const InteractiveTimeline: React.FC = () => {
             name: "Festsphere",
             description:
                 "Celebrate the fusion of technology, art, and culture at Festsphere! Enjoy live music, tech showcases, creative workshops, and vibrant community activities.",
-            date: "April 15-16, 2025",
+            date: "October 4, 2025",
             time: "10:00 AM - 9:00 PM",
-            location: "Grand Tech Plaza",
-            participants: "500+ Participants",
+            location: "Charles Hirmawan Auditorium, President University.",
+            participants: "Open to Public",
             gradient: "from-purple-500 to-purple-600",
             cssGradient: "linear-gradient(to right, #a855f7, #9333ea)", // purple-500 to purple-600
             bgColor: "bg-purple-500/10",
@@ -78,9 +78,9 @@ const InteractiveTimeline: React.FC = () => {
             name: "Exposphere",
             description:
                 "Showcase of cutting-edge innovations, startups, and industry leaders shaping our technological future. Experience interactive demos and connect with tech disruptors.",
-            date: "April 17, 2025",
+            date: "October 1 - 4, 2025",
             time: "9:00 AM - 6:00 PM",
-            location: "Innovation Center",
+            location: "President University Convention Center (PUCC)",
             participants: "50+ Exhibitors",
             gradient: "from-green-500 to-green-600",
             cssGradient: "linear-gradient(to right, #22c55e, #16a34a)", // green-500 to green-600
