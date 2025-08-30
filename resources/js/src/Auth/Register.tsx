@@ -65,7 +65,12 @@ export default function Register() {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route("register"));
+        post(route("register"), {
+            onSuccess: () => {
+                // Redirect to email verification page after successful registration
+                window.location.href = route("verification.notice");
+            }
+        });
     };
 
     const handleFocus = (field: string) => {

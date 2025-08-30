@@ -5,6 +5,7 @@ import EventCard from "@/src/Components/Home/EventCard";
 import { getColorAndIcon } from "@/src/Pages/Home";
 import { Link } from "@inertiajs/react";
 import { Users } from "lucide-react";
+import VerificationReminder from "@/src/Components/UI/VerificationReminder";
 
 interface ParticipantDashboardProps {
     user: User;
@@ -17,6 +18,11 @@ interface ParticipantDashboardProps {
         team_code: string;
         is_leader: boolean;
     } | null;
+    auth: {
+        user: User & {
+            email_verified: boolean;
+        };
+    };
 }
 
 export default function Dashboard({
@@ -25,6 +31,7 @@ export default function Dashboard({
     allEvents,
     registeredEvents,
     hacksphereTeam,
+    auth,
 }: ParticipantDashboardProps) {
     return (
         <DashboardLayout>
@@ -62,6 +69,13 @@ export default function Dashboard({
                                 .
                             </div>
                         </div>
+                    </div>
+                )}
+                
+                {/* Email Verification Reminder */}
+                {auth?.user && auth.user.email_verified === false && (
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6">
+                        <VerificationReminder />
                     </div>
                 )}
 
