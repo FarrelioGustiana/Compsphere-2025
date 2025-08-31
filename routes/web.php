@@ -19,6 +19,8 @@ require __DIR__ . '/web/admin.php';
 require __DIR__ . '/web/judge.php';
 
 // Fallback route for authenticated users
+
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::fallback(function () {
@@ -27,4 +29,3 @@ Route::fallback(function () {
     }
     return redirect('/');
 });
-

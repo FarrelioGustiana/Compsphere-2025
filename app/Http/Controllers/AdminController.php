@@ -76,6 +76,7 @@ class AdminController extends Controller
             ->when($request->input('role'), function ($query, $role) {
                 $query->where('role', $role);
             })
+            ->select('id', 'first_name', 'last_name', 'email', 'role', 'email_verified', 'created_at')
             ->paginate(10)
             ->withQueryString();
             
