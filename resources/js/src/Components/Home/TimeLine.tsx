@@ -272,7 +272,7 @@ const InteractiveTimeline: React.FC = () => {
                                             </div>
 
                                             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-white">
-                                                {event.name} Experience
+                                                {event.name}
                                             </h3>
 
                                             <p className="text-gray-300 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">

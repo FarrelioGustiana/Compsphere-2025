@@ -109,7 +109,7 @@ export default function Users({ users, filters }: Props) {
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.id}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {user.first_name} {user.last_name}
-                        </td>
+                        </td>eh ters
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.email}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 capitalize">{user.role}</td>
                         {/* <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
