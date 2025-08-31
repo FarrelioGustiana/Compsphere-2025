@@ -26,7 +26,6 @@ Route::middleware('guest')->group(function () {
     })->name('register');
 });
 
-// Email Verification Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/email/verify', [VerificationController::class, 'notice'])
         ->name('verification.notice');
