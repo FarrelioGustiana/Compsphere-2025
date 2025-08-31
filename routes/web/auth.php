@@ -24,9 +24,11 @@ Route::middleware('guest')->group(function () {
         }
         return Inertia::render('Auth/Register');
     })->name('register');
+    
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('register.store');
 });
 
-// Email Verification Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/email/verify', [VerificationController::class, 'notice'])
         ->name('verification.notice');
