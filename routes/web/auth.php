@@ -24,6 +24,9 @@ Route::middleware('guest')->group(function () {
         }
         return Inertia::render('Auth/Register');
     })->name('register');
+    
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('register.store');
 });
 
 Route::middleware(['auth'])->group(function () {
