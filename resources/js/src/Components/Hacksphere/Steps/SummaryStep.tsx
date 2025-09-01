@@ -197,26 +197,6 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                         </span>{" "}
                         {leaderInfo.team_leader_domicile}
                     </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Status:
-                        </span>{" "}
-                        <span
-                            className={getStatusColorClass(
-                                paymentInfo?.payment_initiated
-                            )}
-                        >
-                            {paymentInfo?.payment_initiated
-                                ? "Payment Initiated (Pending Verification)"
-                                : "Not Started"}
-                        </span>
-                    </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Amount:
-                        </span>{" "}
-                        IDR 100,000
-                    </p>
                 </motion.div>
 
                 <motion.div
@@ -261,26 +241,6 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                         </span>{" "}
                         {member1Info.member1_domicile}
                     </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Status:
-                        </span>{" "}
-                        <span
-                            className={getStatusColorClass(
-                                paymentInfo?.payment_initiated
-                            )}
-                        >
-                            {paymentInfo?.payment_initiated
-                                ? "Payment Initiated (Pending Verification)"
-                                : "Not Started"}
-                        </span>
-                    </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Amount:
-                        </span>{" "}
-                        IDR 100,000
-                    </p>
                 </motion.div>
 
                 <motion.div
@@ -324,26 +284,6 @@ const SummaryStep: React.FC<SummaryStepProps> = ({
                             Domicile:
                         </span>{" "}
                         {member2Info.member2_domicile}
-                    </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Status:
-                        </span>{" "}
-                        <span
-                            className={getStatusColorClass(
-                                paymentInfo?.payment_initiated
-                            )}
-                        >
-                            {paymentInfo?.payment_initiated
-                                ? "Payment Initiated (Pending Verification)"
-                                : "Not Started"}
-                        </span>
-                    </p>
-                    <p className="text-gray-300 mb-2 flex flex-col sm:flex-row sm:items-center">
-                        <span className="font-medium min-w-32 sm:mr-2">
-                            Payment Amount:
-                        </span>{" "}
-                        IDR 100,000
                     </p>
                 </motion.div>
 

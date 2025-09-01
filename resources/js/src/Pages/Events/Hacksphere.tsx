@@ -72,7 +72,13 @@ const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
                         </span>
                     </div>
                     <span className="text-blue-400 mt-2 text-xs sm:text-sm md:text-base font-medium">
-                        {index === 0 ? "Days" : index === 1 ? "Hours" : index === 2 ? "Minutes" : "Seconds"}
+                        {index === 0
+                            ? "Days"
+                            : index === 1
+                            ? "Hours"
+                            : index === 2
+                            ? "Minutes"
+                            : "Seconds"}
                     </span>
                 </motion.div>
             ))}
@@ -157,7 +163,7 @@ const Hacksphere: React.FC<HacksphereProps> = ({
         // Check if user is logged in first
         if (!user) {
             // Redirect to login page
-            window.location.href = route('login');
+            window.location.href = route("login");
             return;
         }
 
@@ -317,7 +323,9 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                                 setData={setData}
                                 user={user}
                                 isProfileComplete={isProfileComplete}
-                                isProfileCompleteButNikMissing={isProfileCompleteButNikMissing}
+                                isProfileCompleteButNikMissing={
+                                    isProfileCompleteButNikMissing
+                                }
                             />
                         </div>
                     )}

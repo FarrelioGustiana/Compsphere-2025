@@ -125,6 +125,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
         setSubmissionError("");
 
         post(route("participant.register-hacksphere"), {

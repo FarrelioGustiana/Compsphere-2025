@@ -62,6 +62,17 @@ function RegistrationSection({
     isProfileComplete,
     isProfileCompleteButNikMissing,
 }: Props) {
+    // Format currency for display
+    const formatCurrency = (amount: number) => {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // Payment amount
+    const paymentAmount = eventRegistration?.payment_amount || 100019;
+    const formattedPayment = formatCurrency(paymentAmount);
+
+    console.log(eventRegistration);
+
     return (
         <motion.div
             className="mb-12 sm:mb-16"
@@ -80,7 +91,7 @@ function RegistrationSection({
                     className={`bg-gradient-to-br ${
                         eventRegistration?.registration_status ===
                             "registered" &&
-                        eventRegistration?.payment_status === "verified"
+                        eventRegistration?.payment_status === "paid"
                             ? "from-green-900/30 to-blue-900/30 border border-green-700/50"
                             : "from-yellow-900/30 to-blue-900/30 border border-yellow-700/50"
                     } rounded-xl p-6 sm:p-8 shadow-lg gap-6`}
@@ -93,14 +104,14 @@ function RegistrationSection({
                             className={`${
                                 eventRegistration?.registration_status ===
                                     "registered" &&
-                                eventRegistration?.payment_status === "verified"
+                                eventRegistration?.payment_status === "paid"
                                     ? "bg-green-500/20"
                                     : "bg-yellow-500/20"
                             } p-3 sm:p-4 rounded-full flex-shrink-0`}
                         >
                             {eventRegistration?.registration_status ===
                                 "registered" &&
-                            eventRegistration?.payment_status === "verified" ? (
+                            eventRegistration?.payment_status === "paid" ? (
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     className="h-10 w-10 sm:h-12 sm:w-12 text-green-400"
@@ -136,7 +147,7 @@ function RegistrationSection({
                             <h3 className="text-xl sm:text-2xl font-bold mb-2 text-blue-300">
                                 {eventRegistration?.registration_status ===
                                     "registered" &&
-                                eventRegistration?.payment_status === "verified"
+                                eventRegistration?.payment_status === "paid"
                                     ? "Registration Approved!"
                                     : eventRegistration?.registration_status ===
                                           "registered" &&
@@ -148,7 +159,7 @@ function RegistrationSection({
                             <p className="text-gray-300 text-sm sm:text-base">
                                 {eventRegistration?.registration_status ===
                                     "registered" &&
-                                eventRegistration?.payment_status === "verified"
+                                eventRegistration?.payment_status === "paid"
                                     ? "Congratulations! Your registration has been approved. Get ready for an exciting hackathon experience!"
                                     : eventRegistration?.registration_status ===
                                           "registered" &&
@@ -173,7 +184,7 @@ function RegistrationSection({
                                 }}
                             >
                                 <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 mb-4">
-                                    <div className="bg-amber-500/20 p-2 sm:p-3 rounded-full flex-shrink-0">
+                                    <div className="bg-amber-500/20 p-3 sm:p-4 rounded-full flex-shrink-0">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-8 w-8 sm:h-10 sm:w-10 text-amber-400"
@@ -200,7 +211,7 @@ function RegistrationSection({
                                             </span>
                                             . Please complete your payment of{" "}
                                             <span className="font-semibold">
-                                                IDR 100,000
+                                                IDR {formattedPayment}
                                             </span>{" "}
                                             and send proof via WhatsApp.
                                         </p>
@@ -224,9 +235,8 @@ function RegistrationSection({
                                             />
                                         </svg>
                                         <span>
-                                            <strong>Important:</strong> Each
-                                            team member must pay IDR 100,000
-                                            individually.
+                                            <strong>Important:</strong>
+                                            team must pay IDR {formattedPayment}
                                         </span>
                                     </p>
                                     <p className="text-sm sm:text-base">
@@ -267,7 +277,7 @@ function RegistrationSection({
                                 }}
                             >
                                 <div className="flex items-center gap-3 sm:gap-4">
-                                    <div className="bg-green-500/20 p-2 sm:p-3 rounded-full flex-shrink-0">
+                                    <div className="bg-green-500/20 p-2 rounded-full mr-3">
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             className="h-6 w-6 sm:h-8 sm:w-8 text-green-400"
@@ -290,7 +300,7 @@ function RegistrationSection({
                                         <p className="text-gray-300 text-sm sm:text-base">
                                             Your payment of{" "}
                                             <span className="font-semibold">
-                                                IDR 100,000
+                                                IDR {formattedPayment}
                                             </span>{" "}
                                             has been{" "}
                                             <span className="text-green-400 font-medium">
@@ -343,7 +353,7 @@ function RegistrationSection({
                                             <p className="text-gray-300 text-sm sm:text-base">
                                                 {eventRegistration &&
                                                 !eventRegistration.twibbon_link
-                                                    ? "Upload your twibbon link to complete your registration process. This stepis optional and can be completedlater."
+                                                    ? "Upload your twibbon link to complete your registration process. This step is optional and can be completed later."
                                                     : "Your twibbon has been uploaded. Thank you for uploading your twibbon!"}
                                             </p>
                                         </div>
@@ -394,10 +404,9 @@ function RegistrationSection({
                                                     >
                                                         <svg
                                                             className="w-5 h-5 mr-2"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
+                                                            fill="currentColor"
                                                             xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 24 24"
                                                         >
                                                             <path
                                                                 strokeLinecap="round"
@@ -462,66 +471,42 @@ function RegistrationSection({
                                                                 eventId:
                                                                     event.id,
                                                             }
-                                                        ),
-                                                        {
-                                                            onSuccess: () => {
-                                                                setTwibbonMessage(
-                                                                    {
-                                                                        type: "success",
-                                                                        text: "Twibbon link uploaded successfully!",
-                                                                    }
-                                                                );
-                                                                setShowTwibbonEditMode(
-                                                                    false
-                                                                );
-                                                                setTimeout(
-                                                                    () => {
-                                                                        setTwibbonMessage(
-                                                                            null
-                                                                        );
-                                                                    },
-                                                                    5000
-                                                                );
-                                                            },
-                                                            onError: () => {
-                                                                setTwibbonMessage(
-                                                                    {
-                                                                        type: "error",
-                                                                        text: "Failed to upload twibbon link. Please try again.",
-                                                                    }
-                                                                );
-                                                                setTimeout(
-                                                                    () => {
-                                                                        setTwibbonMessage(
-                                                                            null
-                                                                        );
-                                                                    },
-                                                                    5000
-                                                                );
-                                                            },
-                                                        }
+                                                        )
                                                     );
                                                 }}
                                             >
                                                 <div className="flex-grow w-full">
-                                                    <input
-                                                        type="url"
-                                                        className="w-full px-4 py-2 h-10 bg-gray-700 border 
-                                                border-gray-600 rounded-lg text-white placeholder-gray-400 
-                                                focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                                        placeholder="https://www.instagram.com/p/..."
-                                                        value={
-                                                            twibbonForm.data
-                                                                .twibbon_link
-                                                        }
-                                                        onChange={(e) =>
-                                                            twibbonForm.setData(
-                                                                "twibbon_link",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        required
-                                                    />
+                                                    <div className="relative">
+                                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                            <svg
+                                                                className="h-5 w-5 text-gray-400"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24"
+                                                                fill="currentColor"
+                                                            >
+                                                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"></path>
+                                                            </svg>
+                                                        </div>
+                                                        <input
+                                                            type="url"
+                                                            className="w-full pl-10 pr-4 py-2 h-10 bg-gray-700 border 
+                                                        border-gray-600 rounded-lg text-white placeholder-gray-400 
+                                                        focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                                            placeholder="https://www.instagram.com/p/..."
+                                                            value={
+                                                                twibbonForm.data
+                                                                    .twibbon_link
+                                                            }
+                                                            onChange={(e) =>
+                                                                twibbonForm.setData(
+                                                                    "twibbon_link",
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                    </div>
                                                     {twibbonForm.errors
                                                         .twibbon_link && (
                                                         <p className="text-red-500 text-xs mt-1">
@@ -532,11 +517,16 @@ function RegistrationSection({
                                                             }
                                                         </p>
                                                     )}
+                                                    <p className="text-xs text-gray-400 mt-1">
+                                                        Paste the full URL to
+                                                        your Instagram post with
+                                                        the twibbon
+                                                    </p>
                                                 </div>
                                                 <div className="flex gap-2">
                                                     <button
                                                         type="submit"
-                                                        className="px-4 h-10 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow-lg transition duration-300 flex-shrink-0"
+                                                        className="px-4 h-10 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow-lg transition duration-300 flex-shrink-0 flex items-center"
                                                         disabled={
                                                             twibbonForm.processing
                                                         }
@@ -566,7 +556,18 @@ function RegistrationSection({
                                                                 Processing
                                                             </span>
                                                         ) : (
-                                                            "Upload"
+                                                            <span className="flex items-center">
+                                                                <svg
+                                                                    className="h-4 w-4 mr-1.5"
+                                                                    fill="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path d="M5 5v14h14V5H5zm12 12H7V7h10v10z" />
+                                                                    <path d="M12 12.59l1.91 1.91 1.41-1.41-1.91-1.91 1.91-1.91-1.41-1.41-1.91 1.91-1.91-1.91-1.41 1.41 1.91 1.91-1.91 1.91 1.41 1.41 1.91-1.91z" />
+                                                                </svg>
+                                                                Upload Link
+                                                            </span>
                                                         )}
                                                     </button>
                                                 </div>
@@ -575,14 +576,48 @@ function RegistrationSection({
 
                                         {twibbonMessage && (
                                             <div
-                                                className={`mt-2 px-3 py-2 rounded-lg text-sm ${
+                                                className={`mt-2 px-4 py-3 rounded-lg flex items-start ${
                                                     twibbonMessage.type ===
                                                     "success"
-                                                        ? "bg-green-900/30 text-green-400"
-                                                        : "bg-red-900/30 text-red-400"
+                                                        ? "bg-green-900/30 text-green-400 border border-green-700/30"
+                                                        : "bg-red-900/30 text-red-400 border border-red-700/30"
                                                 }`}
                                             >
-                                                {twibbonMessage.text}
+                                                {twibbonMessage.type ===
+                                                "success" ? (
+                                                    <svg
+                                                        className="h-5 w-5 mr-2 flex-shrink-0"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                        />
+                                                    </svg>
+                                                ) : (
+                                                    <svg
+                                                        className="h-5 w-5 mr-2 flex-shrink-0"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                                        />
+                                                    </svg>
+                                                )}
+                                                <span>
+                                                    {twibbonMessage.text}
+                                                </span>
                                             </div>
                                         )}
                                     </div>
@@ -662,13 +697,15 @@ function RegistrationSection({
                         </p>
 
                         {user ? (
-                            <div className="space-y-4">
-                                <button
-                                    onClick={handleRegisterClick}
-                                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
-                                >
-                                    Register Your Team
-                                </button>
+                            <div className="space-y-4 w-full">
+                                {isProfileComplete && (
+                                    <button
+                                        onClick={handleRegisterClick}
+                                        className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold rounded-lg hover:from-blue-500 hover:to-indigo-500 transition-all transform hover:scale-105 shadow-lg text-sm sm:text-base"
+                                    >
+                                        Register Your Team
+                                    </button>
+                                )}
 
                                 {/* Profile warning and button for incomplete profile */}
                                 {!isProfileComplete && !isRegistered && (
@@ -680,7 +717,7 @@ function RegistrationSection({
                                                 Hacksphere.
                                             </p>
                                         </div>
-                                        <div className="flex justify-center">
+                                        <div>
                                             <a
                                                 href={route(
                                                     "participant.profile"
@@ -693,7 +730,7 @@ function RegistrationSection({
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
                                                 >
-                                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                                                    <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                                                 </svg>
                                                 Complete Your Profile
                                             </a>

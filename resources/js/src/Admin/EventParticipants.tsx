@@ -67,8 +67,6 @@ export default function EventParticipants({
         link.click();
     };
 
-    console.log(event);
-
     return (
         <DashboardLayout>
             <Head title={`${event.event_name} Participants`} />

@@ -50,7 +50,7 @@ const Navigation: React.FC = () => {
     const eventPrograms = [
         { href: "/events/hacksphere", label: "Hacksphere" },
         { href: "/events/talksphere", label: "Talksphere" },
-        { href: "/events/festsphere", label: "FestSphere" },
+        { href: "/events/festsphere", label: "Festsphere" },
         { href: "/events/exposphere", label: "Exposphere" },
     ];
 

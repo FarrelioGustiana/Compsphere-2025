@@ -71,6 +71,14 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
         },
     };
 
+    // Format currency for display
+    const formatCurrency = (amount: number) => {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    // Payment amount
+    const paymentAmount = 100019;
+
     return (
         <motion.div
             className="max-w-2xl mx-auto w-full px-4 sm:px-6 overflow-hidden"
@@ -143,10 +151,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     Registration Fee:
                                 </p>
                                 <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                                    IDR 100,000
-                                    <span className="text-xs sm:text-sm ml-2 font-normal text-gray-400">
-                                        (per person)
-                                    </span>
+                                    IDR {formatCurrency(paymentAmount)}
                                 </p>
                             </div>
                             <div className="flex items-start space-x-2 text-amber-400">
@@ -165,8 +170,8 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     />
                                 </svg>
                                 <p className="text-sm">
-                                    <strong>Important:</strong> Each team member
-                                    must pay IDR 100,000 individually.
+                                    <strong>Important:</strong> Each team must
+                                    pay IDR {formatCurrency(paymentAmount)}
                                 </p>
                             </div>
                         </motion.div>
@@ -194,8 +199,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     "Make a payment of IDR 100,000 to our account",
                                     "Take a screenshot or photo of your payment proof",
                                     "Send the proof through WhatsApp using the button below",
-                                    "Include your team name and member name in the WhatsApp message",
-                                    "Each team member must make a separate payment and send proof individually",
+                                    "Include your team name in the WhatsApp message",
                                     "After sending proof, click 'Continue' to complete your registration",
                                 ].map((instruction, index) => (
                                     <motion.li

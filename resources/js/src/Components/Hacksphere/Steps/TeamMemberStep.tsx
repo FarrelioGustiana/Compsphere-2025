@@ -115,15 +115,9 @@ function TeamMemberStep<T extends AnyMemberInfo>({
         setIsValidating(true);
         setEmailError("");
 
-        console.log(`Validating email for ${prefix}:`, email);
-
         axios
             .post(route("participant.validate-team-member-email"), { email })
             .then((response) => {
-                console.log(
-                    `Email validation response for ${prefix}:`,
-                    response.data
-                );
                 const data = response.data;
 
                 if (data && data.valid === true && data.user) {
@@ -148,7 +142,6 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                         [`${prefix}_domicile`]: data.user.domicile || "",
                         [`${prefix}_email`]: data.user.email || "",
                     }));
-                    console.log(`Email validated successfully for ${prefix}`);
                 } else {
                     // Error case
                     setEmailValidated(false);
@@ -170,10 +163,6 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                     }
 
                     setEmailError(errorMessage);
-                    console.log(
-                        `Email validation failed for ${prefix}:`,
-                        errorMessage
-                    );
                 }
             })
             .catch((error) => {
@@ -253,8 +242,6 @@ function TeamMemberStep<T extends AnyMemberInfo>({
         setIsNikValidating(true);
         setNikError("");
 
-        console.log(`Validating NIK for ${prefix}:`, nik);
-
         const otherNiks = collectOtherNiks();
 
         axios
@@ -264,25 +251,16 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                 other_niks: otherNiks,
             })
             .then((response) => {
-                console.log(
-                    `NIK validation response for ${prefix}:`,
-                    response.data
-                );
                 const data = response.data;
 
                 if (data && data.valid === true) {
                     // Success case
                     setNikValidated(true);
                     setNikError("");
-                    console.log(`NIK validated successfully for ${prefix}`);
                 } else {
                     // Error case
                     setNikValidated(false);
                     setNikError(data.message || "Failed to validate NIK");
-                    console.log(
-                        `NIK validation failed for ${prefix}:`,
-                        data.message
-                    );
                 }
             })
             .catch((error) => {

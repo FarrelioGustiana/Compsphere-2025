@@ -226,7 +226,17 @@ const Festsphere: React.FC<FestsphereProps> = ({
                             >
                                 <div className="space-y-4 sm:space-y-6">
                                     <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
-                                        Festsphere is a vibrant festival that celebrates the talents and accomplishments of the Faculty of Computer Science through mesmerizing performances and awarding sessions. Designed to offer a space for enjoyment and meaningful interaction, Festsphere brings together students, lecturers, and guests in a lively and memorable atmosphere that highlights the spirit and creativity of the compsphere.
+                                        Festsphere is a vibrant festival that
+                                        celebrates the talents and
+                                        accomplishments of the Faculty of
+                                        Computer Science through mesmerizing
+                                        performances and awarding sessions.
+                                        Designed to offer a space for enjoyment
+                                        and meaningful interaction, Festsphere
+                                        brings together students, lecturers, and
+                                        guests in a lively and memorable
+                                        atmosphere that highlights the spirit
+                                        and creativity of the compsphere.
                                     </p>
                                 </div>
                                 <div className="relative">
@@ -355,41 +365,74 @@ const Festsphere: React.FC<FestsphereProps> = ({
                                                 You are successfully registered
                                                 for Festsphere!
                                             </p>
-                                            <p className="text-sm mt-2">
-                                                Event details have been sent to
-                                                your email.
-                                            </p>
                                         </div>
                                     ) : user ? (
-                                        <button
-                                            onClick={handleRegisterClick}
-                                            disabled={processing}
-                                            className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-green-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-md shadow-purple-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
-                                        >
-                                            {processing ? (
-                                                <>
-                                                    <span className="animate-pulse">
-                                                        Processing...
-                                                    </span>
-                                                </>
+                                        <>
+                                            {!isProfileComplete &&
+                                            !isRegistered ? (
+                                                <div className="mt-4 space-y-4">
+                                                    <div className="bg-yellow-500/20 text-yellow-300 p-4 rounded-lg border border-yellow-700/30 text-sm">
+                                                        <p>
+                                                            Please complete your
+                                                            profile before
+                                                            registering for
+                                                            Exposphere.
+                                                        </p>
+                                                    </div>
+                                                    <div className="">
+                                                        <a
+                                                            href={route(
+                                                                "participant.profile"
+                                                            )}
+                                                            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="h-5 w-5"
+                                                                viewBox="0 0 20 20"
+                                                                fill="currentColor"
+                                                            >
+                                                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
+                                                            </svg>
+                                                            Complete Your
+                                                            Profile
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             ) : (
-                                                <>
-                                                    Register Now
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-5 w-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </>
+                                                <button
+                                                    onClick={
+                                                        handleRegisterClick
+                                                    }
+                                                    disabled={processing}
+                                                    className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-green-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-md shadow-purple-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
+                                                >
+                                                    {processing ? (
+                                                        <>
+                                                            <span className="animate-pulse">
+                                                                Processing...
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            Register Now
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                className="h-5 w-5"
+                                                                viewBox="0 0 20 20"
+                                                                fill="currentColor"
+                                                            >
+                                                                <path
+                                                                    fillRule="evenodd"
+                                                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                                                                    clipRule="evenodd"
+                                                                />
+                                                            </svg>
+                                                        </>
+                                                    )}
+                                                </button>
                                             )}
-                                        </button>
+                                        </>
                                     ) : (
                                         <div className="mt-6 space-y-4 w-full">
                                             <div className="bg-blue-500/20 text-blue-300 p-4 rounded-lg border border-blue-700/30 text-sm">
@@ -435,39 +478,6 @@ const Festsphere: React.FC<FestsphereProps> = ({
                                             </div>
                                         </div>
                                     )}
-
-                                    {user &&
-                                        !isProfileComplete &&
-                                        !isRegistered && (
-                                            <div className="mt-4 space-y-4">
-                                                <div className="bg-yellow-500/20 text-yellow-300 p-4 rounded-lg border border-yellow-700/30 text-sm">
-                                                    <p>
-                                                        Please complete your
-                                                        profile before
-                                                        registering for
-                                                        Exposphere.
-                                                    </p>
-                                                </div>
-                                                <div className="">
-                                                    <a
-                                                        href={route(
-                                                            "participant.profile"
-                                                        )}
-                                                        className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                    >
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            className="h-5 w-5"
-                                                            viewBox="0 0 20 20"
-                                                            fill="currentColor"
-                                                        >
-                                                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                                                        </svg>
-                                                        Complete Your Profile
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        )}
                                 </div>
                             </motion.div>
                         </section>

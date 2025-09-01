@@ -11,8 +11,12 @@ import {
     MapPin,
     Briefcase,
     CreditCard,
+    Clock,
+    Link as Url,
+    ClipboardCheck,
 } from "lucide-react";
 import { route } from "ziggy-js";
+import { useState } from "react";
 
 interface TeamInfo {
     id: number;
@@ -20,6 +24,10 @@ interface TeamInfo {
     team_code: string;
     profile_picture: string | null;
     created_at: string;
+    payment_amount?: number;
+    payment_status?: string;
+    invoice_id?: string;
+    registration_status?: string;
 }
 
 interface TeamMember {
@@ -32,6 +40,7 @@ interface TeamMember {
     domicile: string;
     payment_status?: string;
     payment_date?: string | null;
+    twibbon_link?: string;
 }
 
 interface ActivityStatus {
@@ -54,7 +63,6 @@ export default function TeamDetails({
     members,
     activities,
 }: TeamDetailsProps) {
-    // Format date for display
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleString("id-ID", {
             year: "numeric",
@@ -65,22 +73,35 @@ export default function TeamDetails({
         });
     };
 
-    const verifyPayment = (userId: number) => {
+    const formatCurrency = (amount: number) => {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    };
+
+    const verifyTeamPayment = (teamId: number) => {
         router.post(
-            route("admin.hacksphere.verify-payment", { user_id: userId })
+            route("admin.hacksphere.verify-team-payment", { team_id: teamId })
         );
     };
 
-    const rejectPayment = (userId: number) => {
+    const rejectTeamPayment = (teamId: number) => {
         router.post(
-            route("admin.hacksphere.reject-payment", { user_id: userId })
+            route("admin.hacksphere.reject-team-payment", { team_id: teamId })
         );
     };
 
-    // Get team leader
+    const changeTeamRegistrationStatus = (teamId: number, status: string) => {
+        router.post(route("admin.hacksphere.change-team-registration-status"), {
+            team_id: teamId,
+            status: status,
+        });
+    };
+
+    const [registrationStatus, setRegistrationStatus] = useState<string>(
+        team.registration_status || "pending"
+    );
+
     const teamLeader = members.find((member) => member.role === "Leader");
 
-    // Get team members (excluding leader)
     const teamMembers = members.filter((member) => member.role !== "Leader");
 
     return (
@@ -142,6 +163,152 @@ export default function TeamDetails({
                                             {members.length} Team Members
                                         </span>
                                     </div>
+                                    {team.payment_amount && (
+                                        <div className="mt-2 flex items-center text-sm">
+                                            <CreditCard className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                            <span className="text-gray-400">
+                                                Team Payment Amount:
+                                            </span>
+                                            <span className="ml-1 text-gray-300">
+                                                Rp{" "}
+                                                {formatCurrency(
+                                                    team.payment_amount ||
+                                                        100019
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
+
+                                    {team.payment_amount && (
+                                        <div className="mt-2 flex items-center text-sm">
+                                            <Clock className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                            <span className="text-gray-400">
+                                                Team Payment Status:
+                                            </span>
+                                            <span
+                                                className={`ml-1 text-gray-300 capitalize ${
+                                                    team.payment_status ===
+                                                    "paid"
+                                                        ? "text-green-500"
+                                                        : team.payment_status ===
+                                                          "pending"
+                                                        ? "text-yellow-500"
+                                                        : team.payment_status ===
+                                                          "rejected"
+                                                        ? "text-red-500"
+                                                        : "text-gray-300"
+                                                }`}
+                                            >
+                                                {team.payment_status}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Team Payment Verification Buttons */}
+                        <div className="mt-4 p-4 border-t border-gray-700">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-200">
+                                        Team Payment Verification
+                                    </h3>
+                                    <p className="text-sm text-gray-400 mt-1">
+                                        Verify or reject payment for the entire
+                                        team at once
+                                    </p>
+                                </div>
+                                <div className="flex items-center space-x-3 mt-3 sm:mt-0">
+                                    <button
+                                        onClick={() =>
+                                            verifyTeamPayment(team.id)
+                                        }
+                                        className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded flex items-center"
+                                    >
+                                        <CheckCircle
+                                            size={16}
+                                            className="mr-2"
+                                        />
+                                        Verify Team Payment
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            rejectTeamPayment(team.id)
+                                        }
+                                        className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded flex items-center"
+                                    >
+                                        <XCircle size={16} className="mr-2" />
+                                        Reject Team Payment
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Team Verified Registration */}
+                        <div className="mt-4 p-4 border-t border-gray-700">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                                <div>
+                                    <h3 className="text-lg font-medium text-gray-200">
+                                        Team Registration Status
+                                    </h3>
+                                    <p className="text-sm text-gray-400 mt-1">
+                                        Change registration status for the
+                                        entire team
+                                    </p>
+                                    <div className="mt-2">
+                                        <span className="text-sm text-gray-400">
+                                            Current Status:{" "}
+                                        </span>
+                                        <span
+                                            className={`text-sm font-medium ${
+                                                team.registration_status ===
+                                                "registered"
+                                                    ? "text-green-500"
+                                                    : team.registration_status ===
+                                                      "rejected"
+                                                    ? "text-red-500"
+                                                    : "text-yellow-500"
+                                            }`}
+                                        >
+                                            {team.registration_status ||
+                                                "pending"}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-3 mt-3 sm:mt-0">
+                                    <select
+                                        value={registrationStatus}
+                                        onChange={(e) =>
+                                            setRegistrationStatus(
+                                                e.target.value
+                                            )
+                                        }
+                                        className="bg-gray-700 border border-gray-600 text-white px-3 py-2 rounded"
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="registered">
+                                            Registered
+                                        </option>
+                                        <option value="cancelled">
+                                            Cancelled
+                                        </option>
+                                    </select>
+                                    <button
+                                        onClick={() =>
+                                            changeTeamRegistrationStatus(
+                                                team.id,
+                                                registrationStatus
+                                            )
+                                        }
+                                        className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center"
+                                    >
+                                        <ClipboardCheck
+                                            size={16}
+                                            className="mr-2"
+                                        />
+                                        Update Status
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -203,60 +370,22 @@ export default function TeamDetails({
                                                 </span>
                                             </div>
                                             <div className="flex items-center text-sm">
+                                                <Url className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-400">
-                                                    Payment status:
+                                                    Twibbon Link:
                                                 </span>
-                                                <span
-                                                    className={`ml-1 ${
-                                                        teamLeader.payment_status ===
-                                                        "paid"
-                                                            ? "text-green-400"
-                                                            : teamLeader.payment_status ===
-                                                              "failed"
-                                                            ? "text-red-400"
-                                                            : "text-yellow-400"
-                                                    }`}
+                                                <a
+                                                    href={
+                                                        teamLeader?.twibbon_link ||
+                                                        ""
+                                                    }
+                                                    target="_blank"
+                                                    className="ml-1 text-gray-300"
                                                 >
-                                                    {teamLeader.payment_status ||
-                                                        "pending"}
-                                                </span>
+                                                    {teamLeader.twibbon_link ||
+                                                        "Haven't uploaded"}
+                                                </a>
                                             </div>
-                                            {teamLeader.payment_status !==
-                                                "paid" && (
-                                                <div className="flex items-center space-x-2 mt-2">
-                                                    <button
-                                                        onClick={() =>
-                                                            verifyPayment(
-                                                                teamLeader.id
-                                                            )
-                                                        }
-                                                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm flex items-center"
-                                                    >
-                                                        <CheckCircle
-                                                            size={14}
-                                                            className="mr-1"
-                                                        />
-                                                        Verify Payment
-                                                    </button>
-                                                    {teamLeader.payment_status !==
-                                                        "failed" && (
-                                                        <button
-                                                            onClick={() =>
-                                                                rejectPayment(
-                                                                    teamLeader.id
-                                                                )
-                                                            }
-                                                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm flex items-center"
-                                                        >
-                                                            <XCircle
-                                                                size={14}
-                                                                className="mr-1"
-                                                            />
-                                                            Reject Payment
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -313,61 +442,22 @@ export default function TeamDetails({
                                                     {member.domicile}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center text-sm mt-2">
+                                            <div className="flex items-center text-sm">
+                                                <Url className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-400">
-                                                    Payment status:
+                                                    Twibbon Link:
                                                 </span>
-                                                <span
-                                                    className={`ml-1 ${
-                                                        member.payment_status ===
-                                                        "paid"
-                                                            ? "text-green-400"
-                                                            : member.payment_status ===
-                                                              "failed"
-                                                            ? "text-red-400"
-                                                            : "text-yellow-400"
-                                                    }`}
+                                                <Link
+                                                    href={
+                                                        member?.twibbon_link ||
+                                                        ""
+                                                    }
+                                                    className="ml-1 text-gray-300"
                                                 >
-                                                    {member.payment_status ||
-                                                        "pending"}
-                                                </span>
+                                                    {member.twibbon_link ||
+                                                        "Haven't uploaded"}
+                                                </Link>
                                             </div>
-                                            {member.payment_status !==
-                                                "paid" && (
-                                                <div className="flex items-center space-x-2 mt-2">
-                                                    <button
-                                                        onClick={() =>
-                                                            verifyPayment(
-                                                                member.id
-                                                            )
-                                                        }
-                                                        className="bg-green-600 hover:bg-green-700 text-white py-1 px-3 rounded text-sm flex items-center"
-                                                    >
-                                                        <CheckCircle
-                                                            size={14}
-                                                            className="mr-1"
-                                                        />
-                                                        Verify Payment
-                                                    </button>
-                                                    {member.payment_status !==
-                                                        "failed" && (
-                                                        <button
-                                                            onClick={() =>
-                                                                rejectPayment(
-                                                                    member.id
-                                                                )
-                                                            }
-                                                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm flex items-center"
-                                                        >
-                                                            <XCircle
-                                                                size={14}
-                                                                className="mr-1"
-                                                            />
-                                                            Reject Payment
-                                                        </button>
-                                                    )}
-                                                </div>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
