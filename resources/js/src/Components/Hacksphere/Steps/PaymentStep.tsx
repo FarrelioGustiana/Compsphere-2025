@@ -143,12 +143,20 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     Registration Fee:
                                 </p>
                                 <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                                    IDR 100,000
+                                    IDR 100,025
                                     <span className="text-xs sm:text-sm ml-2 font-normal text-gray-400">
-                                        (per person)
+                                        (per team)
                                     </span>
                                 </p>
                             </div>
+
+                            <div className="text-gray-300 text-sm mb-3">
+                                <p>
+                                    <strong>Seabank: </strong>901038393174 <br />
+                                    <strong>a/n: </strong> Ricky Richard Takahidangen
+                                </p>
+                            </div>
+
                             <div className="flex items-start space-x-2 text-amber-400">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -165,8 +173,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                                     />
                                 </svg>
                                 <p className="text-sm">
-                                    <strong>Important:</strong> Each team member
-                                    must pay IDR 100,000 individually.
+                                    <strong>Important:</strong> Each team must pay 100,025
                                 </p>
                             </div>
                         </motion.div>
@@ -191,11 +198,11 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
                             </h5>
                             <ol className="list-none space-y-3 text-gray-300">
                                 {[
-                                    "Make a payment of IDR 100,000 to our account",
+                                    "Make a single payment of IDR 100,025 (per team) to our account. The additional 25 is your team’s unique code so we can identify your payment.",
                                     "Take a screenshot or photo of your payment proof",
                                     "Send the proof through WhatsApp using the button below",
                                     "Include your team name and member name in the WhatsApp message",
-                                    "Each team member must make a separate payment and send proof individually",
+                                    "Only one payment per team is required. Please do not send multiple payments",
                                     "After sending proof, click 'Continue' to complete your registration",
                                 ].map((instruction, index) => (
                                     <motion.li

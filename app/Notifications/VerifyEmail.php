@@ -20,11 +20,14 @@ class VerifyEmail extends BaseVerifyEmail
     {
         $verificationUrl = $this->verificationUrl($notifiable);
         
+        $logoPath = public_path('assets/compsphere.png');
+
         return (new MailMessage)
             ->subject('Verify Your Email Address')
-            ->line('Thank you for registering at Compsphere. Please click the button below to verify your email address.')
-            ->action('Verify Email Address', $verificationUrl)
-            ->line('If you did not create an account, no further action is required.');
+            ->view('emails.verify-email', [
+                'url' => $verificationUrl,
+                'logo' => $logoPath
+            ]);
     }
 
     /**

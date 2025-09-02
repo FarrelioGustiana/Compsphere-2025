@@ -44,8 +44,21 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
 
     // No validation needed as twibbon is optional
     const handleContinue = () => {
-        nextStep();
+        if (
+            twibbonInfo.twibbon_leader_link.trim() &&
+            twibbonInfo.twibbon_member1_link.trim() &&
+            twibbonInfo.twibbon_member2_link.trim()
+        ) {
+            nextStep();
+        } else {
+            alert("Please fill all twibbon links!")
+        }
     };
+
+    const allFieldsFilled = 
+    twibbonInfo.twibbon_leader_link.trim() &&
+    twibbonInfo.twibbon_member1_link.trim() &&
+    twibbonInfo.twibbon_member2_link.trim()
     
     const handleSkip = () => {
         // Clear all twibbon links
@@ -100,7 +113,6 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                     variants={itemVariants}
                 >
                     Share your participation in Hacksphere by posting our event Twibbon on social media.
-                    <span className="text-blue-400 ml-1">This step is optional and can be completed later.</span>
                 </motion.p>
 
                 <motion.div
@@ -164,7 +176,6 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     "Post it on your social media with hashtag #Hacksphere2025",
                                     "Make sure your profile is public (at least until the event)",
                                     "Copy the post URL and paste it in the form below",
-                                    "You can complete this step later if you prefer"
                                 ].map((instruction, index) => (
                                     <motion.li
                                         key={index}
@@ -183,7 +194,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
 
                         <motion.div className="mb-6" variants={itemVariants}>
                             <a
-                                href="#"
+                                href="https://drive.google.com/file/d/1ayqn_tHe1sFoPdPXyJH6zwBtN03cGtXg/view?usp=drive_link"
                                 className="inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded hover:from-blue-600 hover:to-blue-700 transition-colors mb-6"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -258,28 +269,6 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     )}
                                 </div>
                             </div>
-                            
-                            <div className="bg-amber-900/30 border border-amber-500/30 rounded-lg p-4 mb-4">
-                                <div className="flex items-start">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 text-amber-400 mr-2 flex-shrink-0 mt-0.5"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                        />
-                                    </svg>
-                                    <p className="text-sm text-amber-300">
-                                        This step is optional. You can skip now and add your twibbon later from the Hacksphere page.
-                                    </p>
-                                </div>
-                            </div>
                         </motion.div>
                     </div>
                 </motion.div>
@@ -296,18 +285,15 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                 </motion.button>
                 <div className="space-x-3">
                     <motion.button
-                        onClick={handleSkip}
-                        className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.98 }}
-                    >
-                        Skip for Now
-                    </motion.button>
-                    <motion.button
                         onClick={handleContinue}
-                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded hover:from-blue-600 hover:to-purple-700 transition-colors"
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.98 }}
+                        disabled={!allFieldsFilled}
+                        className={`px-4 py-2 rounded transition-colors ${
+                            allFieldsFilled
+                                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700"
+                                : "bg-gray-500 text-gray-300 cursor-not-allowed"
+                        }`}
+                        whileHover={allFieldsFilled ? { scale: 1.03 } : {}}
+                        whileTap={allFieldsFilled ? { scale: 0.98 } : {}}
                     >
                         Continue
                     </motion.button>
