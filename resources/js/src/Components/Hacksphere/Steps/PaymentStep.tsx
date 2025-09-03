@@ -31,7 +31,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({
     };
 
     // WhatsApp contact number - this should be configured somewhere else in production
-    const whatsappNumber = "628123456789"; // Replace with the actual WhatsApp number
+    const whatsappNumber = "6285693230231"; // Replace with the actual WhatsApp number
     const whatsappMessage = encodeURIComponent(
         "Hi, I would like to send payment proof for Hacksphere registration."
     );

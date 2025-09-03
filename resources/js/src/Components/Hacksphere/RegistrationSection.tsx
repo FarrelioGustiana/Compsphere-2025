@@ -246,7 +246,7 @@ function RegistrationSection({
                                 </div>
 
                                 <a
-                                    href="https://wa.me/6281234567890?text=Hello%2C%20I%20want%20to%20submit%20my%20payment%20proof%20for%20Hacksphere%20registration."
+                                    href="https://wa.me/6285693230231?text=Hello%2C%20I%20want%20to%20submit%20my%20payment%20proof%20for%20Hacksphere%20registration."
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg transform hover:scale-105 transition duration-300 text-sm sm:text-base"
