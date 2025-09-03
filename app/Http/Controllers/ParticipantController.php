@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use App\Rules\Nik;
 
 class ParticipantController extends Controller
 {
@@ -215,7 +216,7 @@ class ParticipantController extends Controller
     {
         $user = $request->user();
         $validated = $request->validate([
-            'nik' => 'required|string|max:16|unique:participants,nik',
+            'nik' => ['required', new Nik, 'unique:participants,nik'],
         ]);
 
         $participant = $user->participant;
@@ -250,18 +251,19 @@ class ParticipantController extends Controller
         // Validate the request data for team creation
         $validated = $request->validate([
             'team_name' => 'required|string|max:255',
-            'team_leader_nik' => 'required|string|max:16',
+            'team_leader_nik' => ['required', new Nik],
             'team_leader_category' => 'required|string|in:high_school,university,non_academic',
             'team_leader_domicile' => 'required|string|max:255',
             'member1_email' => 'required|email|exists:users,email',
-            'member1_nik' => 'required|string|max:16',
+            'member1_nik' => ['required', new Nik],
             'member1_category' => 'required|string|in:high_school,university,non_academic',
             'member1_domicile' => 'required|string|max:255',
             'member2_email' => 'required|email|exists:users,email',
-            'member2_nik' => 'required|string|max:16',
+            'member2_nik' => ['required', new Nik],
             'member2_category' => 'required|string|in:high_school,university,non_academic',
             'member2_domicile' => 'required|string|max:255',
             'payment_initiated' => 'boolean',
+            'payment_amount' => 'numeric',
             'twibbon_leader_link' => 'nullable|url|max:255',
             'twibbon_member1_link' => 'nullable|url|max:255',
             'twibbon_member2_link' => 'nullable|url|max:255',
@@ -299,8 +301,6 @@ class ParticipantController extends Controller
             'team_code' => $team_code,
             'event_id' => $hacksphereEvent->id,
         ]);
-
-
 
         // Process member 1
         $member1User = \App\Models\User::where('email', $validated['member1_email'])->first();
@@ -358,8 +358,7 @@ class ParticipantController extends Controller
 
         // Get payment information
         $paymentStatus = (isset($validated['payment_initiated']) && $validated['payment_initiated']) ? 'pending' : null;
-        // Team-based payment amount: fixed code 019
-        $paymentAmount = 100019;
+        $paymentAmount = isset($validated['payment_amount']) ? $validated['payment_amount'] : 150000; // Default to 150,000 IDR
 
         // Get Twibbon links
         $leaderTwibbonLink = $validated['twibbon_leader_link'] ?? null;
@@ -384,6 +383,10 @@ class ParticipantController extends Controller
         return redirect()->route('participant.hacksphere.payment-status', ['teamId' => $team->id])
             ->with('success', $successMessage);
     }
+    /**
+     * Handle the Hacksphere team registration process.
+     */
+
 
     /**
      * Update or create event registration record with payment information and twibbon link
@@ -462,7 +465,7 @@ class ParticipantController extends Controller
     public function validateTeamMemberNik(Request $request)
     {
         $validated = $request->validate([
-            'nik' => 'required|string|size:16',
+            'nik' => ['required', new Nik],
             'current_member_email' => 'required|string|email',
             'other_niks' => 'nullable|array'
         ]);

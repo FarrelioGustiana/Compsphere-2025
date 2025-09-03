@@ -6,8 +6,9 @@ use App\Models\User;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class AdminController extends Controller
 {
@@ -18,7 +19,7 @@ class AdminController extends Controller
     {
         $user = $request->user();
         $adminProfile = $user->adminProfile;
-        
+
         // Get statistics for the admin dashboard
         $userStats = [
             'total' => User::count(),
@@ -26,14 +27,14 @@ class AdminController extends Controller
             'judges' => User::where('role', 'judge')->count(),
             'admins' => User::where('role', 'admin')->count(),
         ];
-        
+
         return Inertia::render('Admin/Dashboard', [
             'user' => $user,
             'adminProfile' => $adminProfile,
             'userStats' => $userStats,
         ]);
     }
-    
+
     /**
      * Display the admin profile.
      */
@@ -41,17 +42,17 @@ class AdminController extends Controller
     {
         $user = $request->user();
         $adminProfile = $user->adminProfile;
-        
+
         return Inertia::render('Admin/Profile', [
             'user' => $user,
             'adminProfile' => $adminProfile,
         ]);
     }
-    
+
     /**
      * Display the user management page.
      */
-    
+
     /**
      * Display event participants for a specific event
      * 
@@ -59,30 +60,47 @@ class AdminController extends Controller
      * @param string $eventCode
      * @return \Inertia\Response
      */
-    
+
     /**
      * Display the user management page.
      */
     public function users(Request $request)
     {
+        // Get and sanitize filters
+        $search = $request->input('search');
+        $role = $request->input('role');
+
+        // Debug logging to track what's happening
+        Log::debug('Users filter request:', [
+            'search' => $search,
+            'role' => $role,
+            'all_parameters' => $request->all()
+        ]);
+
         $users = User::query()
-            ->when($request->input('search'), function ($query, $search) {
+            ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('first_name', 'like', "%{$search}%")
-                          ->orWhere('last_name', 'like', "%{$search}%")
-                          ->orWhere('email', 'like', "%{$search}%");
+                        ->orWhere('last_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             })
-            ->when($request->input('role'), function ($query, $role) {
+            ->when($role, function ($query, $role) {
                 $query->where('role', $role);
             })
             ->select('id', 'first_name', 'last_name', 'email', 'role', 'email_verified', 'created_at')
             ->paginate(10)
             ->withQueryString();
-            
+
+        // Explicitly set the filters to ensure they're preserved
+        $filters = [
+            'search' => $search,
+            'role' => $role
+        ];
+
         return Inertia::render('Admin/Users', [
             'users' => $users,
-            'filters' => $request->only(['search', 'role']),
+            'filters' => $filters,
         ]);
     }
 }

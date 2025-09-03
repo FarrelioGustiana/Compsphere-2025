@@ -31,7 +31,7 @@ export const events: EventItem[] = [
     {
         name: "FestSphere",
         description:
-            "Festival teknologi dengan berbagai aktivitas menarik dan showcase produk inovatif",
+            "Introducing and spreading knowledge related to the latest technological advancements.",
         icon: Lightbulb,
         color: "from-purple-500 to-indigo-500",
         date: "14 Oktober 2025",
@@ -39,7 +39,7 @@ export const events: EventItem[] = [
     {
         name: "Exposphere",
         description:
-            "Pameran teknologi dan startup showcase untuk memamerkan inovasi terbaru",
+            "Presenting real-world tech applications through student work.",
         icon: Globe,
         color: "from-green-500 to-teal-500",
         date: "12-14 Oktober 2025",

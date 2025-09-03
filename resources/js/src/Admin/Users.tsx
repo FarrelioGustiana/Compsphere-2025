@@ -39,11 +39,14 @@ export default function Users({ users, filters }: Props) {
     };
 
     const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setData("role", e.target.value);
-        get(route("admin.users"), {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        const newRole = e.target.value;
+
+        const url = new URL(route("admin.users"));
+        if (newRole) url.searchParams.set("role", newRole);
+        if (data.search) url.searchParams.set("search", data.search);
+        setData("role", newRole);
+
+        window.location.href = url.toString();
     };
 
     return (

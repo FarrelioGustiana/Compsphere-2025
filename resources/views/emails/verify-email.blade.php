@@ -5,22 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Verify Your Email - Compsphere 2025</title>
     <style>
-        @media only screen and (max-width: 600px) {
-            .inner-body {
-                width: 100% !important;
-            }
-            
-            .footer {
-                width: 100% !important;
-            }
-        }
-        
-        @media only screen and (max-width: 500px) {
-            .button {
-                width: 100% !important;
-            }
-        }
-        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
         /* Base */
         body, body *:not(html):not(style):not(br):not(tr):not(code) {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -28,10 +14,10 @@
         }
         
         body {
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #0f172a; /* A darker, more space-like blue */
+            color: #e2e8f0;
             height: 100%;
-            line-height: 1.4;
+            line-height: 1.5;
             margin: 0;
             padding: 0;
             width: 100% !important;
@@ -39,201 +25,113 @@
         
         /* Layout */
         .wrapper {
-            background-color: #121212;
+            background-color: #0f172a;
             margin: 0;
-            padding: 30px;
+            padding: 0;
             width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
         }
         
         .content {
             margin: 0;
             padding: 0;
             width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
         }
         
         /* Header */
         .header {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .header img {
+            max-width: 100px;
+        }
+        
+        /* Body */
+        .main-body {
+            background-color: #1e293b;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            margin: 0 auto;
+            padding: 40px;
+            width: 100%;
+            max-width: 570px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 40px rgba(59, 130, 246, 0.1) inset;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .main-body {
+                width: 100% !important;
+                padding: 25px;
+            }
+        }
+        
+        /* Content */
+        h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 0;
+        }
+
+        p {
+            color: #cbd5e1;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .button-container {
             padding: 25px 0;
             text-align: center;
         }
         
-        .header a {
+        .button {
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 8px;
             color: #ffffff;
-            font-size: 19px;
-            font-weight: bold;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 600;
+            padding: 14px 28px;
             text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         }
-        
-        /* Body */
-        .body {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
         }
-        
-        .inner-body {
-            background-color: #1a1a1a;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(66, 153, 225, 0.2);
-            margin: 0 auto;
-            padding: 0;
-            width: 570px;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 570px;
-            overflow: hidden;
-        }
-        
-        /* Subcopy */
+
         .subcopy {
-            border-top: 1px solid rgba(66, 153, 225, 0.2);
-            margin-top: 25px;
-            padding-top: 25px;
+            margin-top: 20px;
+            text-align: center;
         }
-        
+
         .subcopy p {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .subcopy a {
+            color: #3b82f6;
+            text-decoration: none;
         }
         
         /* Footer */
         .footer {
-            margin: 0 auto;
+            margin: 30px auto 0;
             padding: 0;
             text-align: center;
-            width: 570px;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 570px;
+            width: 100%;
+            max-width: 570px;
         }
         
         .footer p {
-            color: rgba(255, 255, 255, 0.5);
+            color: #64748b;
             font-size: 12px;
-            text-align: center;
         }
-        
-        /* Tables */
-        .table table {
-            margin: 30px auto;
-            width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
-        }
-        
-        .table td {
-            color: #ffffff;
-            font-size: 15px;
-            line-height: 18px;
-            padding: 10px 0;
-        }
-        
-        /* Buttons */
-        .action {
-            margin: 30px auto;
-            padding: 0;
-            text-align: center;
-            width: 100%;
-            -premailer-cellpadding: 0;
-            -premailer-cellspacing: 0;
-            -premailer-width: 100%;
-        }
-        
-        .button {
-            border-radius: 8px;
-            color: #ffffff;
-            display: inline-block;
-            text-decoration: none;
-            background: linear-gradient(90deg, #3b82f6 0%, #a855f7 50%, #ef4444 100%);
-            border: none;
-            padding: 12px 24px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .button:hover {
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
-            transform: translateY(-1px);
-        }
-        
-        /* Panels */
-        .panel {
-            margin: 0 0 20px;
-        }
-        
-        .panel-content {
-            background-color: rgba(66, 153, 225, 0.1);
-            border-radius: 8px;
-            padding: 16px;
-        }
-        
-        .panel-item {
-            padding: 0;
-        }
-        
-        .panel-item p:last-of-type {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        /* Cosmos glow effect */
-        .cosmos-header {
-            position: relative;
-            padding: 30px 20px;
-            background-color: #0f172a;
-            background-image: radial-gradient(circle at 50% 50%, rgba(66, 153, 225, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-            text-align: center;
-        }
-        
-        .logo-container {
-            display: inline-block;
-            position: relative;
-        }
-        
-        .logo-glow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(10px);
-            border-radius: 50%;
-            z-index: 0;
-        }
-        
-        .logo {
-            position: relative;
-            z-index: 1;
-            max-width: 120px;
-            height: auto;
-        }
-        
-        h1 {
-            margin-top: 20px;
-            font-size: 24px;
-            font-weight: 700;
-            background: linear-gradient(90deg, #3b82f6, #a855f7, #ef4444);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
+
     </style>
 </head>
 <body>
@@ -245,56 +143,36 @@
                     <tr>
                         <td class="header">
                             <a href="{{ config('app.url') }}">
-                                <img src="{{ config('app.url') }}/assets/compsphere.png" alt="Compsphere Logo" width="70">
+                                <img src="{{ $message->embed($logo) }}" alt="Compsphere Logo">
                             </a>
                         </td>
                     </tr>
 
                     <!-- Email Body -->
                     <tr>
-                        <td class="body" width="100%" cellpadding="0" cellspacing="0">
-                            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                        <td width="100%" cellpadding="0" cellspacing="0">
+                            <table class="main-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                                 <!-- Body content -->
                                 <tr>
-                                    <td class="cosmos-header">
-                                        <div class="logo-container">
-                                            <div class="logo-glow"></div>
-                                            <img src="{{ config('app.url') }}/assets/compsphere.png" alt="Compsphere Logo" class="logo">
-                                        </div>
+                                    <td>
                                         <h1>Verify Your Email Address</h1>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="content-cell" style="padding: 30px;">
-                                        <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6; margin-top: 0;">
-                                            Hi there!
-                                        </p>
-                                        <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6;">
-                                            Thank you for registering for <strong>Compsphere 2025</strong>! Before you can fully access your account and explore everything we have to offer, we need to verify your email address.
-                                        </p>
-                                        <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6;">
-                                            Please click the button below to verify your email:
+                                        <p>
+                                            Thank you for registering for <strong>Compsphere 2025</strong>! We're excited to have you on board. Please click the button below to verify your email address and activate your account.
                                         </p>
 
-                                        <table class="action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                        <table class="button-container" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td align="center">
-                                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                                                        <tr>
-                                                            <td align="center">
-                                                                <a href="{{ $url }}" class="button" target="_blank">Verify Email Address</a>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
+                                                    <a href="{{ $url }}" class="button" target="_blank">Verify Email Address</a>
                                                 </td>
                                             </tr>
                                         </table>
 
-                                        <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6;">
-                                            If you did not create an account, no further action is required.
+                                        <p>
+                                            If you did not create an account, you can safely ignore this email.
                                         </p>
                                         
-                                        <p style="color: #e2e8f0; font-size: 16px; line-height: 1.6; margin-bottom: 0;">
+                                        <p>
                                             Best regards,<br>
                                             The Compsphere Team
                                         </p>
@@ -302,8 +180,9 @@
                                         <table class="subcopy" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td>
-                                                    <p style="color: rgba(255, 255, 255, 0.5); font-size: 13px; line-height: 1.5;">
-                                                        If you're having trouble clicking the "Verify Email Address" button, copy and paste the URL below into your web browser: <span class="break-all" style="word-break: break-all;"><a href="{{ $url }}" style="color: #3b82f6; text-decoration: underline;">{{ $url }}</a></span>
+                                                    <p>
+                                                        If you're having trouble, copy and paste this URL into your browser:<br>
+                                                        <a href="{{ $url }}">{{ $url }}</a>
                                                     </p>
                                                 </td>
                                             </tr>
@@ -319,8 +198,8 @@
                         <td>
                             <table class="footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
                                 <tr>
-                                    <td class="content-cell" align="center" style="padding: 25px;">
-                                        <p style="color: rgba(255, 255, 255, 0.5); font-size: 13px; line-height: 1.5; margin-bottom: 0;">
+                                    <td align="center">
+                                        <p>
                                             &copy; {{ date('Y') }} Compsphere. All rights reserved.
                                         </p>
                                     </td>

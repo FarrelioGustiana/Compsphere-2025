@@ -58,4 +58,18 @@ class AuthController extends Controller
 
         return redirect('/');
     }
+    
+    /**
+     * Handle a registration request.
+     */
+    public function register(Request $request)
+    {
+        $creator = app(\App\Actions\Fortify\CreateNewUser::class);
+        
+        $user = $creator->create($request->all());
+        
+        Auth::login($user);
+        
+        return redirect()->route('verification.notice');
+    }
 }

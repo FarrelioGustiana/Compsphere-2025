@@ -215,16 +215,6 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                 );
             case 5:
                 return (
-                    <PaymentStep
-                        nextStep={nextStep}
-                        prevStep={prevStep}
-                        paymentInfo={paymentInfo}
-                        setPaymentInfo={setPaymentInfo}
-                        errors={errors}
-                    />
-                );
-            case 6:
-                return (
                     <TwibbonStep
                         twibbonInfo={twibbonInfo}
                         setTwibbonInfo={setTwibbonInfo}
@@ -233,6 +223,16 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                         member2Name={member2Info.member2_name}
                         nextStep={nextStep}
                         prevStep={prevStep}
+                        errors={errors}
+                    />
+                );
+            case 6:
+                return (
+                    <PaymentStep
+                        nextStep={nextStep}
+                        prevStep={prevStep}
+                        paymentInfo={paymentInfo}
+                        setPaymentInfo={setPaymentInfo}
                         errors={errors}
                     />
                 );
@@ -285,8 +285,8 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         "Leader",
         "Member 1",
         "Member 2",
-        "Payment",
         "Twibbon",
+        "Payment",
         "Summary",
     ];
 

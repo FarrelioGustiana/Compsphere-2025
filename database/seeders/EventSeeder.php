@@ -55,7 +55,7 @@ class EventSeeder extends Seeder
         Event::create([
             'event_code' => 'exposphere',
             'event_name' => 'Exposphere',
-            'description' => 'Pameran teknologi dan startup showcase untuk memamerkan inovasi terbaru',
+            'description' => 'An Exhibition showcasing innovative technology projects from the faculty of computer science which consist of IoT, AI, Cyber Security, and Game Development',
             'registration_open_date' => '2025-07-14 00:00:00',
             'registration_close_date' => '2025-07-31 23:59:59',
             'start_date' => '2025-10-1',
