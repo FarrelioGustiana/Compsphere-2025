@@ -68,7 +68,7 @@ function RegistrationSection({
     };
 
     // Payment amount
-    const paymentAmount = eventRegistration?.payment_amount || 100019;
+    const paymentAmount = eventRegistration?.payment_amount || 100025;
     const formattedPayment = formatCurrency(paymentAmount);
 
     console.log(eventRegistration);
