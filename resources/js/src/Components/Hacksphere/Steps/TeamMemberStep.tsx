@@ -202,6 +202,35 @@ function TeamMemberStep<T extends AnyMemberInfo>({
     };
 
     // Collect NIKs from other members to check for duplicates
+        const validateNikFormat = (nik: string): { valid: boolean; message: string } => {
+        if (!/^[0-9]{16}$/.test(nik)) {
+            return { valid: false, message: "NIK must be a 16-digit number." };
+        }
+
+        let day = parseInt(nik.substring(6, 8), 10);
+        const month = parseInt(nik.substring(8, 10), 10);
+        const year = parseInt(nik.substring(10, 12), 10);
+
+        if (day > 40) {
+            day -= 40; // Adjust for female birth date
+        }
+
+        if (month < 1 || month > 12) {
+            return { valid: false, message: "Invalid month in NIK." };
+        }
+
+        // Basic check for day validity based on month
+        const daysInMonth = new Date(2000, month, 0).getDate(); // Use a leap year for Feb check
+        if (day < 1 || day > daysInMonth) {
+            return { valid: false, message: "Invalid day in NIK." };
+        }
+
+        // This is a simplified check. A full check would need a proper Date object and year handling.
+        // For now, we assume the backend will do the definitive check.
+
+        return { valid: true, message: "" };
+    };
+
     const collectOtherNiks = (): string[] => {
         const niks: string[] = [];
 
@@ -239,8 +268,9 @@ function TeamMemberStep<T extends AnyMemberInfo>({
             return;
         }
 
-        if (nik.length !== 16) {
-            setNikError("NIK must be exactly 16 digits");
+                const formatValidation = validateNikFormat(nik);
+        if (!formatValidation.valid) {
+            setNikError(formatValidation.message);
             return;
         }
 

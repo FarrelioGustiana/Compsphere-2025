@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use App\Rules\Nik;
 
 class ParticipantController extends Controller
 {
@@ -223,7 +224,7 @@ class ParticipantController extends Controller
     {
         $user = $request->user();
         $validated = $request->validate([
-            'nik' => 'required|string|max:16|unique:participants,nik',
+            'nik' => ['required', new Nik, 'unique:participants,nik'],
         ]);
 
         $participant = $user->participant;
@@ -258,15 +259,15 @@ public function registerHacksphere(Request $request)
     // Validate the request data for team creation
     $validated = $request->validate([
         'team_name' => 'required|string|max:255',
-        'team_leader_nik' => 'required|string|max:16',
+        'team_leader_nik' => ['required', new Nik],
         'team_leader_category' => 'required|string|in:high_school,university,non_academic',
         'team_leader_domicile' => 'required|string|max:255',
         'member1_email' => 'required|email|exists:users,email',
-        'member1_nik' => 'required|string|max:16',
+        'member1_nik' => ['required', new Nik],
         'member1_category' => 'required|string|in:high_school,university,non_academic',
         'member1_domicile' => 'required|string|max:255',
         'member2_email' => 'required|email|exists:users,email',
-        'member2_nik' => 'required|string|max:16',
+        'member2_nik' => ['required', new Nik],
         'member2_category' => 'required|string|in:high_school,university,non_academic',
         'member2_domicile' => 'required|string|max:255',
         'payment_initiated' => 'boolean',
@@ -464,7 +465,7 @@ public function validateTeamMemberEmail(Request $request)
     public function validateTeamMemberNik(Request $request)
     {
         $validated = $request->validate([
-            'nik' => 'required|string|size:16',
+            'nik' => ['required', new Nik],
             'current_member_email' => 'required|string|email',
             'other_niks' => 'nullable|array'
         ]);
