@@ -202,7 +202,7 @@
     .bg-gradient-four-colors {
         background: linear-gradient(
             to bottom,
-            #7ecef4 0%,
+            nd7ecef4 0%,
             #1e88e5 10%,
             #d32f2f 30%,
             #a259ff 55%,
@@ -330,6 +330,27 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Sponsor logos mask for natural edge fading */
+.mask-sponsors {
+    -webkit-mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 1) 15%,
+        rgba(0, 0, 0, 1) 85%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 0, 0, 1) 15%,
+        rgba(0, 0, 0, 1) 85%,
+        transparent 100%
+    );
+    width: 100%;
+    overflow: hidden;
+}
+
 /* Performance-optimized animations using CSS instead of framer-motion */
 @keyframes fadeIn {
     from {

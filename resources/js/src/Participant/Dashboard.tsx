@@ -4,8 +4,16 @@ import { Event, Participant, User } from "@/types/models";
 import EventCard from "@/src/Components/Home/EventCard";
 import { getColorAndIcon } from "@/src/Pages/Home";
 import { Link } from "@inertiajs/react";
-import { Users } from "lucide-react";
+import {
+    Users,
+    Award,
+    User as UserIcon,
+    Calendar,
+    Bell,
+    Zap,
+} from "lucide-react";
 import VerificationReminder from "@/src/Components/UI/VerificationReminder";
+import { motion } from "framer-motion";
 
 interface ParticipantDashboardProps {
     user: User;
@@ -25,6 +33,30 @@ interface ParticipantDashboardProps {
     };
 }
 
+// Animation variants for staggered animations
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2,
+        },
+    },
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring" as const,
+            stiffness: 100,
+        },
+    },
+};
+
 export default function Dashboard({
     user,
     participantDetails,
@@ -38,13 +70,26 @@ export default function Dashboard({
             <Head title="Participant Dashboard" />
 
             <div className="py-6">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-2xl font-semibold text-gray-200">
-                        Welcome, {user.first_name + " " + user.last_name}!
-                    </h1>
-                    <p className="mt-1 text-gray-400">
-                        This is your participant dashboard for Compsphere 2025.
-                    </p>
+                {/* Hero Section with Gradient Background */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 max-w-7xl mx-2 sm:mx-6 lg:mx-8  mb-8 rounded-xl shadow-xl">
+                    <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-20"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent"></div>
+                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-center sm:text-left"
+                        >
+                            <h1 className="text-4xl font-extrabold text-white tracking-tight">
+                                Welcome,{" "}
+                                {user.first_name + " " + user.last_name}!
+                            </h1>
+                            <p className="mt-3 max-w-3xl text-xl text-blue-100">
+                                Your Compsphere 2025 journey starts here
+                            </p>
+                        </motion.div>
+                    </div>
                 </div>
 
                 {/* Profile Completion Warning */}
@@ -52,129 +97,413 @@ export default function Dashboard({
                     !participantDetails.category ||
                     !participantDetails.phone_number ||
                     !participantDetails.date_of_birth) && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6 ">
-                        <div className="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-200 p-4 rounded">
-                            <div className="font-semibold mb-1">
-                                Complete Your Profile
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6"
+                    >
+                        <div className="bg-gradient-to-r from-amber-700 to-yellow-900 border-l-4 border-yellow-400 shadow-lg p-5 rounded-lg flex items-start gap-4">
+                            <div className="p-2 bg-yellow-800 rounded-full">
+                                <Bell className="h-6 w-6 text-yellow-200" />
                             </div>
                             <div>
-                                You must complete your participant profile
-                                before you can register for events.{" "}
-                                <a
-                                    href="/participant/profile"
-                                    className="underline text-yellow-300"
+                                <div className="font-bold text-lg text-yellow-100 mb-1">
+                                    Complete Your Profile
+                                </div>
+                                <div className="text-yellow-200">
+                                    You must complete your participant profile
+                                    before you can register for events.{" "}
+                                    <Link
+                                        href="/participant/profile"
+                                        className="font-medium text-yellow-300 hover:text-white transition-colors underline underline-offset-4"
+                                    >
+                                        Go to your profile
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8"
+                >
+                    <div className="flex items-center mb-6">
+                        <div className="p-2 bg-cyan-800/50 rounded-md mr-3">
+                            <Zap className="h-5 w-5 text-cyan-200" />
+                        </div>
+                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-400">
+                            Hacksphere Team
+                        </h2>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm border border-cyan-500/20 rounded-xl shadow-xl overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
+                        <div className="px-6 py-6 sm:px-8 sm:py-8 relative z-10">
+                            {hacksphereTeam ? (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="flex flex-col md:flex-row justify-between items-start gap-6"
                                 >
-                                    Go to your profile
-                                </a>
-                                .
-                            </div>
+                                    <div className="flex-1">
+                                        <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-900/50 border border-cyan-500/30 text-cyan-300 text-xs font-medium mb-4">
+                                            {hacksphereTeam.is_leader
+                                                ? "Team Leader"
+                                                : "Team Member"}
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-white mb-2">
+                                            {hacksphereTeam.team_name}
+                                        </h3>
+                                        <div className="flex items-center gap-2 mb-4">
+                                            <div className="text-gray-300 text-sm">
+                                                Team Code:
+                                            </div>
+                                            <div className="bg-cyan-900/50 px-3 py-1 rounded-md border border-cyan-700/50 font-mono text-cyan-300">
+                                                {hacksphereTeam.team_code}
+                                            </div>
+                                        </div>
+                                        <p className="text-gray-300 mb-5">
+                                            Your team is registered for the
+                                            Hacksphere hackathon. Make sure all
+                                            team members are prepared for this
+                                            exciting challenge!
+                                        </p>
+                                        <Link
+                                            href={`/participant/team/${hacksphereTeam.id}`}
+                                            className="inline-flex items-center px-5 py-2.5 border border-cyan-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-cyan-600 hover:bg-cyan-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 focus:ring-offset-cyan-900"
+                                        >
+                                            <Users className="mr-2 h-4 w-4" />
+                                            View Team Details
+                                        </Link>
+                                    </div>
+                                    <div className="flex-shrink-0 bg-gradient-to-br from-cyan-800/40 to-blue-900/30 p-5 rounded-lg border border-cyan-600/20 shadow-lg">
+                                        <h4 className="text-cyan-200 font-medium mb-3 flex items-center">
+                                            <Award className="mr-2 h-4 w-4" />{" "}
+                                            Team Status
+                                        </h4>
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex items-center text-sm">
+                                                <div className="h-2 w-2 rounded-full bg-green-400 mr-2"></div>
+                                                <span className="text-gray-200">
+                                                    Registration Complete
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center text-sm">
+                                                <div className="h-2 w-2 rounded-full bg-green-400 mr-2"></div>
+                                                <span className="text-gray-200">
+                                                    Team Formed
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center text-sm">
+                                                <div className="h-2 w-2 rounded-full bg-amber-400 mr-2"></div>
+                                                <span className="text-gray-200">
+                                                    Waiting for Event Start
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="flex flex-col md:flex-row items-center justify-between gap-6"
+                                >
+                                    <div className="flex-1">
+                                        <h3 className="text-xl font-bold text-white mb-3">
+                                            Join Hacksphere Hackathon
+                                        </h3>
+                                        <p className="text-gray-300 mb-5">
+                                            You're not part of a Hacksphere team
+                                            yet. Form a team of talented
+                                            developers and register for our
+                                            premiere hackathon event!
+                                        </p>
+                                        <Link
+                                            href="/events/hacksphere"
+                                            className="inline-flex items-center px-5 py-2.5 border border-cyan-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-cyan-600 hover:bg-cyan-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 focus:ring-offset-cyan-900"
+                                        >
+                                            <Zap className="mr-2 h-4 w-4" />
+                                            Register for Hacksphere
+                                        </Link>
+                                    </div>
+                                    <div className="flex-shrink-0 hidden md:block">
+                                        <div className="w-48 h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/10 rounded-full flex items-center justify-center">
+                                            <Users className="h-20 w-20 text-cyan-300/50" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
                     </div>
-                )}
-                
-                {/* Email Verification Reminder */}
-                {auth?.user && auth.user.email_verified === false && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6">
-                        <VerificationReminder />
-                    </div>
-                )}
+                </motion.div>
 
-                {/* Hacksphere Team Card */}
-                {hacksphereTeam && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                        <div className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg shadow-lg p-6">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-                                <div>
-                                    <h2 className="text-xl font-semibold text-white mb-2 flex items-center">
-                                        <Users className="mr-2 h-5 w-5" />
-                                        Your Hacksphere Team
-                                    </h2>
-                                    <p className="text-blue-200 mb-4">
-                                        {hacksphereTeam.team_name} {hacksphereTeam.is_leader && <span className="bg-yellow-600 text-yellow-100 text-xs px-2 py-0.5 rounded ml-2">Team Leader</span>}
-                                    </p>
-                                    <p className="text-sm text-blue-300">
-                                        Team Code: <span className="font-mono">{hacksphereTeam.team_code}</span>
-                                    </p>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8"
+                >
+                    <div className="flex items-center mb-6">
+                        <div className="p-2 bg-purple-800/50 rounded-md mr-3">
+                            <Calendar className="h-5 w-5 text-purple-200" />
+                        </div>
+                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-400">
+                            Events
+                        </h2>
+                    </div>
+
+                    {allEvents.map((event, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 * index }}
+                            className="mb-6 last:mb-0"
+                        >
+                            <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm border border-purple-500/20 rounded-xl shadow-xl overflow-hidden">
+                                <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
+                                <div className="px-6 py-6 sm:px-8 sm:py-8 relative z-10">
+                                    <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                                        <div className="flex-1">
+                                            {/* Check if user is registered for this event */}
+                                            {registeredEvents.some(
+                                                (regEvent) =>
+                                                    regEvent.id === event.id
+                                            ) && (
+                                                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-900/50 border border-green-500/30 text-green-300 text-xs font-medium mb-4">
+                                                    Registered
+                                                </div>
+                                            )}
+                                            <h3 className="text-2xl font-bold text-white mb-2">
+                                                {event.event_name}
+                                            </h3>
+                                            <p className="text-gray-300 mb-5">
+                                                {/* Different description based on event type */}
+                                                {event.event_code ===
+                                                "hacksphere"
+                                                    ? "Form a team of talented developers and participate in our premiere hackathon event!"
+                                                    : `Join this exciting ${
+                                                          event.event_code
+                                                              .charAt(0)
+                                                              .toUpperCase() +
+                                                          event.event_code.slice(
+                                                              1
+                                                          )
+                                                      } event and showcase your skills!`}
+                                            </p>
+                                            <Link
+                                                href={`/events/${event.event_code}`}
+                                                className="inline-flex items-center px-5 py-2.5 border border-purple-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900"
+                                            >
+                                                {registeredEvents.some(
+                                                    (regEvent) =>
+                                                        regEvent.id === event.id
+                                                ) ? (
+                                                    <>
+                                                        <Users className="mr-2 h-4 w-4" />
+                                                        View Details
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Zap className="mr-2 h-4 w-4" />
+                                                        Register Now
+                                                    </>
+                                                )}
+                                            </Link>
+                                        </div>
+                                        <div className="flex-shrink-0 bg-gradient-to-br from-purple-800/40 to-indigo-900/30 p-5 rounded-lg border border-purple-600/20 shadow-lg">
+                                            <h4 className="text-purple-200 font-medium mb-3 flex items-center">
+                                                <Award className="mr-2 h-4 w-4" />{" "}
+                                                Event Info
+                                            </h4>
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex items-center text-sm">
+                                                    <div className="h-2 w-2 rounded-full bg-purple-400 mr-2"></div>
+                                                    <span className="text-gray-200">
+                                                        {event.event_code ===
+                                                        "hacksphere"
+                                                            ? "Team Event"
+                                                            : "Individual Event"}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center text-sm">
+                                                    <div className="h-2 w-2 rounded-full bg-purple-400 mr-2"></div>
+                                                    <span className="text-gray-200">
+                                                        {new Date(
+                                                            event.start_date
+                                                        ).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center text-sm">
+                                                    <div className="h-2 w-2 rounded-full bg-purple-400 mr-2"></div>
+                                                    <span className="text-gray-200">
+                                                        {event.location ||
+                                                            "Online"}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="mt-4 md:mt-0 flex space-x-3">
-                                    <Link
-                                        href={`/participant/team/${hacksphereTeam.id}`}
-                                        className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:border-blue-800 focus:ring focus:ring-blue-300 transition"
-                                    >
-                                        Team Dashboard
-                                    </Link>
-                                    <Link
-                                        href={`/participant/teams/${hacksphereTeam.id}/qr-codes/`}
-                                        className="inline-flex items-center px-4 py-2 bg-gray-700 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-600 active:bg-gray-800 focus:outline-none focus:border-gray-800 focus:ring focus:ring-gray-300 transition"
-                                    >
-                                        Team QR Codes
-                                    </Link>
-                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+
+                    {allEvents.length === 0 && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm border border-purple-500/20 rounded-xl shadow-xl overflow-hidden"
+                        >
+                            <div className="px-6 py-10 text-center">
+                                <p className="text-purple-200 text-lg">
+                                    No upcoming events at this time. Check back
+                                    later!
+                                </p>
+                            </div>
+                        </motion.div>
+                    )}
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.5 }}
+                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-12"
+                >
+                    <div className="flex items-center mb-6">
+                        <div className="p-2 bg-indigo-800/50 rounded-md mr-3">
+                            <UserIcon className="h-5 w-5 text-indigo-200" />
+                        </div>
+                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-blue-400">
+                            Your Profile
+                        </h2>
+                    </div>
+
+                    <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-950 rounded-xl shadow-xl border border-indigo-500/10">
+                        <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
+                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-40 h-40 bg-indigo-600 rounded-full opacity-10 blur-3xl"></div>
+                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-40 h-40 bg-blue-500 rounded-full opacity-10 blur-3xl"></div>
+                        <div className="relative p-6 sm:p-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <motion.div
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.7 }}
+                                    className="bg-indigo-900/30 backdrop-blur-sm p-6 rounded-lg border border-indigo-500/20 shadow-lg"
+                                >
+                                    <h3 className="text-lg font-semibold text-indigo-200 flex items-center gap-2 mb-4">
+                                        <UserIcon className="h-5 w-5" />{" "}
+                                        Personal Information
+                                    </h3>
+                                    <div className="mt-4 space-y-5">
+                                        <div className="border-b border-indigo-800/40 pb-3">
+                                            <div className="text-sm font-medium text-indigo-400">
+                                                Full Name
+                                            </div>
+                                            <div className="text-lg font-medium text-white mt-1">
+                                                {user.first_name +
+                                                    " " +
+                                                    user.last_name}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-medium text-indigo-400">
+                                                Email Address
+                                            </div>
+                                            <div className="text-base text-indigo-100 mt-1 flex items-center gap-2">
+                                                {user.email}
+                                                {auth?.user &&
+                                                    auth.user.email_verified ===
+                                                        true && (
+                                                        <span className="inline-flex items-center bg-green-900/50 text-green-400 text-xs px-2 py-0.5 rounded-full border border-green-500/30">
+                                                            Verified
+                                                        </span>
+                                                    )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.8 }}
+                                    className="bg-indigo-900/30 backdrop-blur-sm p-6 rounded-lg border border-indigo-500/20 shadow-lg"
+                                >
+                                    <h3 className="text-lg font-semibold text-indigo-200 flex items-center gap-2 mb-4">
+                                        <Users className="h-5 w-5" />{" "}
+                                        Participant Details
+                                    </h3>
+                                    <div className="mt-4 space-y-5">
+                                        {participantDetails ? (
+                                            <>
+                                                <div className="border-b border-indigo-800/40 pb-3">
+                                                    <div className="text-sm font-medium text-indigo-400">
+                                                        Category
+                                                    </div>
+                                                    <div className="text-base text-indigo-100 mt-1">
+                                                        {
+                                                            participantDetails.category
+                                                        }
+                                                    </div>
+                                                </div>
+                                                {participantDetails.date_of_birth && (
+                                                    <div className="border-b border-indigo-800/40 pb-3">
+                                                        <div className="text-sm font-medium text-indigo-400">
+                                                            Date of Birth
+                                                        </div>
+                                                        <div className="text-base text-indigo-100 mt-1">
+                                                            {
+                                                                participantDetails.date_of_birth
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )}
+                                                {participantDetails.phone_number && (
+                                                    <div>
+                                                        <div className="text-sm font-medium text-indigo-400">
+                                                            Phone Number
+                                                        </div>
+                                                        <div className="text-base text-indigo-100 mt-1">
+                                                            {
+                                                                participantDetails.phone_number
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <div className="flex flex-col items-center justify-center h-40 text-center">
+                                                <div className="text-yellow-300 mb-4">
+                                                    Complete your profile to see
+                                                    participant details
+                                                </div>
+                                                <Link
+                                                    href="/participant/profile"
+                                                    className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+                                                >
+                                                    Update Profile
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                </motion.div>
                             </div>
                         </div>
                     </div>
-                )}
+                </motion.div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
-                        Registered Events
-                    </h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {registeredEvents.map((event, index) => (
-                            <EventCard
-                                key={index}
-                                event={event}
-                                index={index}
-                                icon={getColorAndIcon(event.event_code).icon}
-                                color={getColorAndIcon(event.event_code).color}
-                                isRegistered={true}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
-                        Available Events
-                    </h2>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {allEvents.map((event, index) => (
-                            <EventCard
-                                key={index}
-                                event={event}
-                                index={index}
-                                icon={getColorAndIcon(event.event_code).icon}
-                                color={getColorAndIcon(event.event_code).color}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-                    <h2 className="text-xl font-semibold text-gray-200 mb-4">
-                        Your Profile
-                    </h2>
-
-                    <div className="bg-gray-800 rounded-lg shadow-md p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <h3 className="text-lg font-medium text-gray-300 mb-2">
-                                    Personal Information
-                                </h3>
-                                <p className="text-gray-400">
-                                    <span className="font-medium">Name:</span>{" "}
-                                    {user.first_name + " " + user.last_name}
-                                </p>
-                                <p className="text-gray-400">
-                                    <span className="font-medium">Email:</span>{" "}
-                                    {user.email}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/* End of Dashboard Content */}
             </div>
         </DashboardLayout>
     );

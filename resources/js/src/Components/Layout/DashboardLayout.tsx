@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
     Home,
@@ -7,13 +7,12 @@ import {
     Menu,
     X,
     Users,
-    Award,
-    Settings,
     ChevronDown,
     ChevronUp,
     Zap,
     Globe,
     Lightbulb,
+    Shield,
 } from "lucide-react";
 import { PageProps } from "@/types";
 import { route } from "ziggy-js";
@@ -68,13 +67,28 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 name: "Hacksphere",
                 icon: Zap,
                 subNav: [
-                    { name: "Activities", href: route("admin.hacksphere.activities") },
+                    {
+                        name: "Activities",
+                        href: route("admin.hacksphere.activities"),
+                    },
                     { name: "Teams", href: route("admin.hacksphere.teams") },
                 ],
             },
-            { name: "Talksphere", href: route("admin.talksphere.participants"), icon: Users },
-            { name: "Exposphere", href: route("admin.exposphere.participants"), icon: Globe },
-            { name: "Festsphere", href: route("admin.festsphere.participants"), icon: Lightbulb },
+            {
+                name: "Talksphere",
+                href: route("admin.talksphere.participants"),
+                icon: Users,
+            },
+            {
+                name: "Exposphere",
+                href: route("admin.exposphere.participants"),
+                icon: Globe,
+            },
+            {
+                name: "Festsphere",
+                href: route("admin.festsphere.participants"),
+                icon: Lightbulb,
+            },
         ],
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },
@@ -87,7 +101,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         navigation.participant;
 
     return (
-        <div className="min-h-screen bg-gray-900">
+        <div className="min-h-screen bg-gray-900 bg-[url('/assets/blue-grid.png')] bg-fixed bg-cover bg-blend-overlay">
             {/* Mobile sidebar */}
             <div
                 className={`fixed inset-0 flex z-40 md:hidden ${
@@ -95,11 +109,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 }`}
             >
                 <div
-                    className="fixed inset-0 bg-gray-600 bg-opacity-75"
+                    className="fixed inset-0 bg-gray-600 bg-opacity-75 backdrop-blur-sm transition-opacity duration-300"
                     onClick={() => setSidebarOpen(false)}
                 ></div>
 
-                <div className="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800">
+                <div className="relative flex-1 flex flex-col max-w-xs w-full bg-gradient-to-b from-gray-800 via-gray-900 to-black border-r border-indigo-900/30 shadow-xl">
                     <div className="absolute top-0 right-0 -mr-12 pt-2">
                         <button
                             type="button"
@@ -112,10 +126,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
 
                     <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
-                        <div className="flex-shrink-0 flex items-center px-4">
-                            <span className="text-xl font-bold text-white">
-                                Compsphere 2025
-                            </span>
+                        <div className="flex-shrink-0 flex items-center px-4 py-2">
+                            <div className="flex items-center space-x-2">
+                                <Shield className="h-8 w-8 text-indigo-400" />
+                                <div>
+                                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                                        Compsphere 2025
+                                    </span>
+                                    <div className="text-xs text-indigo-400 font-medium">Competitive Technology Event</div>
+                                </div>
+                            </div>
                         </div>
                         <nav className="mt-5 px-2 space-y-1">
                             {currentNavigation.map((item) => (
@@ -123,7 +143,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                     {item.href ? (
                                         <Link
                                             href={item.href}
-                                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
+                                            className="group flex items-center px-3 py-3 text-base font-medium rounded-md text-white transition-all duration-200 hover:bg-indigo-900/40 hover:translate-x-1"
                                         >
                                             <item.icon className="mr-4 h-6 w-6 text-gray-400" />
                                             {item.name}
@@ -134,7 +154,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                                 onClick={() =>
                                                     toggleDropdown(item.name)
                                                 }
-                                                className="w-full group flex items-center justify-between px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
+                                                className="w-full group flex items-center justify-between px-3 py-3 text-base font-medium rounded-md text-white transition-all duration-200 hover:bg-indigo-900/40 hover:translate-x-1"
                                             >
                                                 <div className="flex items-center">
                                                     <item.icon className="mr-4 h-6 w-6 text-gray-400" />
@@ -160,7 +180,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                                                     href={
                                                                         subItem.href
                                                                     }
-                                                                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:text-white hover:bg-gray-700"
+                                                                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 transition-all duration-200 hover:text-white hover:bg-indigo-800/40 hover:translate-x-1"
                                                                 >
                                                                     {
                                                                         subItem.name
@@ -179,9 +199,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 href={route("logout")}
                                 method="post"
                                 as="button"
-                                className="w-full group flex items-center px-2 py-2 text-base font-medium rounded-md text-white hover:bg-gray-700"
+                                className="w-full group flex items-center px-3 py-3 text-base font-medium rounded-md text-white transition-all duration-200 hover:bg-red-900/40 hover:translate-x-1"
                             >
-                                <LogOut className="mr-4 h-6 w-6 text-gray-400" />
+                                <LogOut className="mr-4 h-6 w-6 text-red-400 group-hover:text-red-300 transition-colors duration-200" />
                                 Logout
                             </Link>
                         </nav>
@@ -214,22 +234,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
             {/* Static sidebar for desktop */}
             <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
-                <div className="flex-1 flex flex-col min-h-0 bg-gray-800">
+                <div className="flex-1 flex flex-col min-h-0 bg-gradient-to-b from-gray-800 via-gray-900 to-black border-r border-indigo-900/30 shadow-xl">
                     <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-                        <div className="flex items-center flex-shrink-0 px-4">
-                            <span className="text-xl font-bold text-white">
-                                Compsphere 2025
-                            </span>
+                        <div className="flex items-center flex-shrink-0 px-4 py-6 relative">
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-900/30 to-transparent"></div>
+                            <div className="flex items-center space-x-2 relative z-10">
+                                <Shield className="h-8 w-8 text-indigo-400" />
+                                <div>
+                                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500">
+                                        Compsphere 2025
+                                    </span>
+                                    <div className="text-xs text-indigo-400 font-medium">Competitive Technology Event</div>
+                                </div>
+                            </div>
                         </div>
-                        <nav className="mt-5 flex-1 px-2 space-y-1">
+                        <nav className="mt-5 flex-1 px-2 space-y-0.5">
                             {currentNavigation.map((item) => (
                                 <div key={item.name}>
                                     {item.href ? (
                                         <Link
                                             href={item.href}
-                                            className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
+                                            className="group flex items-center px-3 py-3 text-sm font-medium rounded-md text-white transition-all duration-200 hover:bg-indigo-900/40 hover:translate-x-1"
                                         >
-                                            <item.icon className="mr-3 h-6 w-6 text-gray-400" />
+                                            <item.icon className="mr-3 h-5 w-5 text-indigo-400 group-hover:text-indigo-300 transition-colors duration-200" />
                                             {item.name}
                                         </Link>
                                     ) : (
@@ -238,7 +265,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                                 onClick={() =>
                                                     toggleDropdown(item.name)
                                                 }
-                                                className="w-full group flex items-center justify-between px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
+                                                className="w-full group flex items-center justify-between px-3 py-3 text-sm font-medium rounded-md text-white transition-all duration-200 hover:bg-indigo-900/40 hover:translate-x-1"
                                             >
                                                 <div className="flex items-center">
                                                     <item.icon className="mr-3 h-6 w-6 text-gray-400" />
@@ -283,9 +310,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 href={route("logout")}
                                 method="post"
                                 as="button"
-                                className="w-full group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-gray-700"
+                                className="w-full group flex items-center px-3 py-3 text-sm font-medium rounded-md text-white transition-all duration-200 hover:bg-red-900/40 hover:translate-x-1 mt-4"
                             >
-                                <LogOut className="mr-3 h-6 w-6 text-gray-400" />
+                                <LogOut className="mr-3 h-5 w-5 text-red-400 group-hover:text-red-300 transition-colors duration-200" />
                                 Logout
                             </Link>
                         </nav>
@@ -317,7 +344,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </div>
 
             <div className="md:pl-64 flex flex-col flex-1">
-                <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-900">
+                <div className="sticky top-0 z-10 md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3 bg-gray-900/80 backdrop-blur-sm">
                     <button
                         type="button"
                         className="-ml-0.5 -mt-0.5 h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"

@@ -80,7 +80,13 @@ export interface EventRegistration {
     event_id: number;
     registration_date: string;
     registration_status: "pending" | "registered" | "cancelled";
-    payment_status: "pending" | "paid" | "failed" | "verified" | "rejected" | null;
+    payment_status:
+        | "pending"
+        | "paid"
+        | "failed"
+        | "verified"
+        | "rejected"
+        | null;
     payment_amount: number | null;
     payment_date: string | null;
     invoice_id: string | null;
@@ -122,4 +128,11 @@ export interface TeamActivityVerification {
     team?: Team;
     activity?: Activity;
     verifier?: User;
+}
+
+export interface Partner {
+    id: string | number;
+    name?: string;
+    logo?: string;
+    url?: string;
 }

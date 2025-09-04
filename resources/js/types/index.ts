@@ -6,7 +6,7 @@ export interface AdminProfile {
 }
 
 // Re-export all types from models.ts
-export * from './models';
+export * from "./models";
 
 export interface User {
     id: number;

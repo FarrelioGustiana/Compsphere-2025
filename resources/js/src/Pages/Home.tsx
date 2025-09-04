@@ -17,42 +17,8 @@ import Timeline from "@/src/Components/Home/TimeLine";
 import { usePage } from "@inertiajs/react";
 import { Event } from "@/types/models";
 import Navigation from "../Components/Layout/Navigation";
-
-// Mock data - replace with your actual data
-const mockEvents = [
-    {
-        id: 1,
-        event_name: "Hacksphere",
-        event_code: "hacksphere",
-        description:
-            "Immerse yourself in a 48-hour coding marathon where the brightest minds collaborate to build innovative solutions.",
-        start_date: "12-14 Oktober 2025",
-    },
-    {
-        id: 2,
-        event_name: "Talksphere",
-        event_code: "talksphere",
-        description:
-            "Join visionary tech leaders and innovators for cutting-edge talks and panels.",
-        start_date: "13 Oktober 2025",
-    },
-    {
-        id: 3,
-        event_name: "Festsphere",
-        event_code: "festsphere",
-        description:
-            "Celebrate the fusion of technology, art, and culture at Festsphere!",
-        start_date: "April 15-16, 2025",
-    },
-    {
-        id: 4,
-        event_name: "Exposphere",
-        event_code: "exposphere",
-        description:
-            "Showcase of cutting-edge innovations, startups, and industry leaders.",
-        start_date: "April 17, 2025",
-    },
-];
+import { partners } from "../Constants/partners";
+import Sponsors from "../Components/Home/Sponsors";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -162,14 +128,6 @@ const Home: React.FC = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Scroll indicator */}
-                    <button
-                        onClick={scrollToEvents}
-                        className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 animate-bounce-slow opacity-0 animate-fadeIn animation-delay-1000"
-                    >
-                        <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
-                    </button>
                 </section>
 
                 {/* Events Section */}
@@ -201,6 +159,32 @@ const Home: React.FC = () => {
                     </Suspense>
                 </div>
 
+                {/* Sponsors or Partners */}
+                <section className="py-16 sm:py-24 relative overflow-hidden">
+                    <div className="relative z-10">
+                        {/* Section heading with floating animation */}
+                        <div className="text-center mb-16 relative">
+                            <h2 className="text-3xl font-airborne sm:text-4xl md:text-5xl font-bold">
+                                <span className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                                    OUR PARTNERS
+                                </span>
+                            </h2>
+                            <div className="h-1 w-20 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 mx-auto mt-4 rounded-full"></div>
+                            <p className="text-lg text-gray-300 max-w-3xl mx-auto mt-6">
+                                Meet the visionary organizations powering the
+                                future of technology with Compsphere
+                            </p>
+                        </div>
+
+                        {/* Simple marquee for partner logos with gradient mask */}
+                        <div className="relative overflow-hidden py-8 mb-16 max-w-5xl mx-auto">
+                            <div className="mask-sponsors">
+                                <Sponsors sponsors={partners} />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Footer */}
                 <footer className="relative py-8 sm:py-16 px-4 border-t border-white/10">
                     <div className="max-w-7xl mx-auto">
@@ -211,7 +195,8 @@ const Home: React.FC = () => {
                                     className="justify-center md:justify-start mb-4"
                                 />
                                 <p className="text-gray-400 mb-6">
-                                    Empowering Intelligence to Innovate Imagination
+                                    Empowering Intelligence to Innovate
+                                    Imagination
                                 </p>
                             </div>
 
