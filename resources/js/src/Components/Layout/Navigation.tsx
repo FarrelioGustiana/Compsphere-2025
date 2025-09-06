@@ -64,7 +64,6 @@ const Navigation: React.FC = () => {
             items: eventPrograms,
         },
         { href: "/about", label: "About", dropdown: false },
-        { href: "/faq", label: "FAQ", dropdown: false },
         { href: "/contact", label: "Contact Us", dropdown: false },
     ];
 

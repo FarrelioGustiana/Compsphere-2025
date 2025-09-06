@@ -6,7 +6,7 @@ interface SponsorsProps {
 }
 
 const Sponsors = ({ sponsors }: SponsorsProps) => {
-    const partners = [
+    const partners: Partner[] = [
         ...sponsors,
         ...sponsors,
         ...sponsors,

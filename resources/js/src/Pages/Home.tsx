@@ -2,14 +2,7 @@
 
 import type React from "react";
 import { Suspense, useMemo } from "react";
-import {
-    ChevronDown,
-    ArrowRight,
-    MapPin,
-    Calendar,
-    Clock,
-    User,
-} from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Clock } from "lucide-react";
 import OptimizedBackground from "@/src/Components/UI/EnhancedBackground";
 import Logo from "@/src/Components/UI/Logo";
 import EventShowcase from "@/src/Components/Home/ImmersiveEventSection";
@@ -19,6 +12,7 @@ import { Event } from "@/types/models";
 import Navigation from "../Components/Layout/Navigation";
 import { partners } from "../Constants/partners";
 import Sponsors from "../Components/Home/Sponsors";
+import KAI from "../Components/KAI";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -76,6 +70,7 @@ const Home: React.FC = () => {
                                     className="justify-center relative z-10"
                                 />
                             </div>
+                            <KAI />
                         </div>
 
                         {/* Title */}
@@ -255,10 +250,15 @@ const Home: React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="pt-4 sm:pt-8 border-t border-white/10 text-center">
+                        <div className="pt-4 sm:pt-8 border-t border-white/10 text-center flex flex-col md:flex-row items-center justify-center md:justify-between">
                             <p className="text-gray-500">
-                                2025 Compsphere. All rights reserved.
+                                © 2025 Compsphere. All rights reserved.
                             </p>
+
+                            <KAI
+                                containerClassName="mt-4 md:mt-0"
+                                imageClassName="h-3"
+                            />
                         </div>
                     </div>
                 </footer>
