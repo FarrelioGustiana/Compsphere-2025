@@ -1,6 +1,23 @@
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
 import "@css/app.css";
+import { router } from "@inertiajs/react";
+
+router.on("navigate", (event) => {
+    const url = event.detail.page.url;
+
+    switch (url) {
+        case "/":
+            document.title = "Compsphere 2025";
+            break;
+        case "/events":
+            document.title = "Events - Compsphere 2025";
+            break;
+        // Add more cases as needed
+        default:
+            document.title = "Compsphere 2025";
+    }
+});
 
 createInertiaApp({
     resolve: (name) => {

@@ -13,8 +13,3 @@
     @inertia
 </body>
 </html>
-
-    @routes
-    @inertia
-</body>
-</html>
