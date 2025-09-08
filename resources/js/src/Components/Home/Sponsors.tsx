@@ -1,5 +1,5 @@
 import { Partner } from "@/types";
-import "../css/sponsors.css";
+import "@/css/sponsors.css";
 
 interface SponsorsProps {
     sponsors: Partner[];
