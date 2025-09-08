@@ -1,19 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "jsx": "react-jsx",
-    "strict": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["resources/js/*"],
-      "@css/*": ["resources/css/*"]
-    }
-  },
-  "include": ["resources/js/**/*", "vite-env.d.ts"],
-  "types": ["vite/client"]
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "jsx": "react-jsx",
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/js/*"],
+            "@css/*": ["resources/css/*"]
+        }
+    },
+    "include": ["resources/js/**/*", "vite-env.d.ts"],
+    "types": ["vite/client"]
 }
