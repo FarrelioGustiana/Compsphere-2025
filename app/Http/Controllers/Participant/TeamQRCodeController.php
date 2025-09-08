@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-// SimpleSoftwareIO\QrCode dependency removed
+
 
 class TeamQRCodeController extends Controller
 {
@@ -34,7 +34,7 @@ class TeamQRCodeController extends Controller
     {
         $user = Auth::user();
         $team = Team::findOrFail($teamId);
-        
+
         // Check if user is team member or leader
         if ($team->team_leader_id !== $user->id && !$team->members()->where('team_members.user_id', $user->id)->exists()) {
             return redirect()->route('participant.dashboard')->with('error', 'You do not have permission to view this team\'s QR codes.');
@@ -42,31 +42,31 @@ class TeamQRCodeController extends Controller
 
         // Get Hacksphere event
         $event = Event::where('event_code', 'hacksphere')->firstOrFail();
-        
+
         // Get all activities for Hacksphere
         $activities = Activity::where('event_id', $event->id)->get();
-        
+
         // Get all verifications for this team
         $verifications = TeamActivityVerification::where('team_id', $teamId)
             ->whereIn('activity_id', $activities->pluck('id'))
             ->with(['activity'])
             ->get();
-        
+
         // Organize data for the view
         $qrCodesData = [];
         foreach ($activities as $activity) {
             $verification = $verifications->first(function ($v) use ($activity) {
                 return $v->activity_id === $activity->id && $v->status === 'active';
             });
-            
+
             if (!$verification) {
                 // Generate a new verification if none exists or none is active
                 $qrData = $this->qrCodeService->generateTeamActivityQR($teamId, $activity->id);
-                
+
                 if ($qrData) {
                     // Buat objek verification dari data yang dikembalikan
                     $verificationObj = TeamActivityVerification::find($qrData['verification_id']);
-                    
+
                     $qrCodesData[] = [
                         'activity' => $activity,
                         'verification' => $verificationObj,
@@ -76,7 +76,7 @@ class TeamQRCodeController extends Controller
             } else {
                 // Generate QR code for existing verification
                 $verificationUrl = $verification->getVerificationUrl();
-                
+
                 $qrCodesData[] = [
                     'activity' => $activity,
                     'verification' => $verification,
@@ -84,7 +84,7 @@ class TeamQRCodeController extends Controller
                 ];
             }
         }
-        
+
         return Inertia::render('Participant/TeamQRCodes', [
             'team' => $team,
             'event' => $event,
@@ -110,7 +110,7 @@ class TeamQRCodeController extends Controller
 
         $user = Auth::user();
         $team = Team::findOrFail($teamId);
-        
+
         // Check if user is team leader (only team leader can regenerate QR codes)
         if ($team->team_leader_id !== $user->id) {
             return redirect()->back()->with('error', 'Only team leader can regenerate QR codes.');
@@ -133,7 +133,7 @@ class TeamQRCodeController extends Controller
     {
         $user = Auth::user();
         $team = Team::findOrFail($teamId);
-        
+
         // Check if user is team member or leader
         if ($team->team_leader_id !== $user->id && !$team->members()->where('team_members.user_id', $user->id)->exists()) {
             return redirect()->route('participant.dashboard')->with('error', 'You do not have permission to download this team\'s QR codes.');
@@ -153,7 +153,7 @@ class TeamQRCodeController extends Controller
         }
 
         $verificationUrl = $verification->getVerificationUrl();
-        
+
         // QR Code generation moved to client-side
         // Return a JSON response with verification URL instead
         return response()->json([
