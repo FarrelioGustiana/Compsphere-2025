@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'paths' => ['*'],
+    'paths' => ['*', 'api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
@@ -22,6 +22,10 @@ return [
         env('APP_URL', 'https://compsphere.id'),
         'https://compsphere.id',
         'https://*.compsphere.id',
+        'https://*.hcaptcha.com',
+        'https://js.hcaptcha.com',
+        'https://newassets.hcaptcha.com',
+        '*',
     ],
 
     'allowed_origins_patterns' => [],
