@@ -5,11 +5,9 @@ interface SponsorsProps {
 }
 
 const Sponsors = ({ sponsors }: SponsorsProps) => {
-    // Split sponsors into two rows
     const firstHalf = sponsors.slice(0, Math.ceil(sponsors.length / 2));
     const secondHalf = sponsors.slice(Math.ceil(sponsors.length / 2));
 
-    // Create duplicated arrays for continuous scrolling
     const firstRowLogos = [...firstHalf, ...firstHalf];
     const secondRowLogos = [...secondHalf, ...secondHalf];
 
