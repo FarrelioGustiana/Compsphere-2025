@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    @viteReactRefresh
+    @if(app()->environment('local'))
+        @viteReactRefresh
+    @endif
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @vite('resources/js/app.tsx')
+    @vite(['resources/js/app.tsx'])
     <link rel="icon" type="image/png" href="/assets/compsphere.png">
     @inertiaHead
 </head>
