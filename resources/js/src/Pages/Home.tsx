@@ -11,6 +11,7 @@ import { usePage } from "@inertiajs/react";
 import { Event } from "@/types/models";
 import Navigation from "../Components/Layout/Navigation";
 import { partners } from "../Constants/partners";
+import Sponsors from "../Components/Home/Sponsors";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -170,7 +171,9 @@ const Home: React.FC = () => {
 
                         {/* Partner logos in a grid layout */}
                         <div className="relative py-8 mb-16 max-w-5xl mx-auto">
-                            {/* <Sponsors sponsors={partners} /> */}
+                            <div className="mask-sponsors">
+                                <Sponsors sponsors={partners} />
+                            </div>
                         </div>
                     </div>
                 </section>
