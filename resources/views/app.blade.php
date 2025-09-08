@@ -10,6 +10,7 @@
     <link rel="icon" type="image/png" href="/assets/compsphere.png">
     @inertiaHead
 </head>
+{{-- Root --}}
 <body style="background-color: #101828;">
     @routes
     @inertia
