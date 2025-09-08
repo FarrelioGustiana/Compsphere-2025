@@ -12,7 +12,6 @@ import { Event } from "@/types/models";
 import Navigation from "../Components/Layout/Navigation";
 import { partners } from "../Constants/partners";
 import Sponsors from "../Components/Home/Sponsors";
-import KAI from "../Components/KAI";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -70,7 +69,6 @@ const Home: React.FC = () => {
                                     className="justify-center relative z-10"
                                 />
                             </div>
-                            <KAI />
                         </div>
 
                         {/* Title */}
@@ -171,11 +169,9 @@ const Home: React.FC = () => {
                             </p>
                         </div>
 
-                        {/* Simple marquee for partner logos with gradient mask */}
-                        <div className="relative overflow-hidden py-8 mb-16 max-w-5xl mx-auto">
-                            <div className="mask-sponsors">
-                                <Sponsors sponsors={partners} />
-                            </div>
+                        {/* Partner logos in a grid layout */}
+                        <div className="relative py-8 mb-16 max-w-5xl mx-auto">
+                            <Sponsors sponsors={partners} />
                         </div>
                     </div>
                 </section>
@@ -255,10 +251,6 @@ const Home: React.FC = () => {
                                 © 2025 Compsphere. All rights reserved.
                             </p>
 
-                            <KAI
-                                containerClassName="mt-4 md:mt-0"
-                                imageClassName="h-3"
-                            />
                         </div>
                     </div>
                 </footer>
