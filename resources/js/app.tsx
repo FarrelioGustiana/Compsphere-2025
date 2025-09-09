@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import "@css/app.css";
 
 createInertiaApp({
+    title: (title) =>
+        title ? `${title} - Compsphere 2025` : "Compsphere 2025",
     resolve: (name) => {
         const pages = import.meta.glob("./src/**/*.tsx", {
             eager: true,
