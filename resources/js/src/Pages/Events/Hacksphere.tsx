@@ -16,6 +16,7 @@ import FeaturesSection from "@/src/Components/Hacksphere/FeaturesSection";
 import PrizesSection from "@/src/Components/Hacksphere/PrizesSection";
 import EventLayout from "@/src/Components/Layout/EventLayout";
 import StarGrid from "@/src/Components/StarGrid";
+import KAI from "@/src/Components/KAI";
 
 // CountdownTimer component for Hacksphere event
 const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
@@ -208,6 +209,18 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                             >
                                 Empowering Intelligence to Innovate Imagination
                             </motion.p>
+
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.4, duration: 0.8 }}
+                                className="mb-6"
+                            >
+                                <KAI
+                                    containerClassName="mx-auto"
+                                    textClassName="text-blue-300"
+                                />
+                            </motion.div>
 
                             {/* Countdown Timer */}
                             <motion.div
