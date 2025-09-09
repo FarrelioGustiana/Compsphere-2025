@@ -1,40 +1,53 @@
 import { Partner } from "@/types";
-import { motion } from "framer-motion";
 
 interface SponsorsProps {
     sponsors: Partner[];
 }
 
 const Sponsors = ({ sponsors }: SponsorsProps) => {
-    const partners: Partner[] = [
-        ...sponsors,
-        ...sponsors,
-        ...sponsors,
-        ...sponsors,
-        ...sponsors,
-    ];
+    const firstHalf = sponsors.slice(0, Math.ceil(sponsors.length / 2));
+    const secondHalf = sponsors.slice(Math.ceil(sponsors.length / 2));
+
+    const firstRowLogos = [...firstHalf, ...firstHalf];
+    const secondRowLogos = [...secondHalf, ...secondHalf];
+
     return (
-        <div className="w-full flex h-20 items-center relative overflow-hidden">
-            {partners.map((sponsor, index) => (
-                <motion.img
-                    key={`sponsor-${index}`}
-                    src={sponsor.logo}
-                    alt={sponsor.name}
-                    initial={{ left: "-50px" }}
-                    animate={{ left: "95%" }}
-                    transition={{
-                        duration: 12,
-                        delay:
-                            (12 / partners.length) *
-                            (partners.length - index) *
-                            -1 *
-                            3,
-                        repeat: Infinity,
-                        ease: "linear",
-                    }}
-                    className="absolute h-16"
-                />
-            ))}
+        <div className="w-full py-8">
+            {/* First row - left to right */}
+            <div className="marquee-container h-28 mb-8">
+                <div className="marquee-left">
+                    {firstRowLogos.map((sponsor, index) => (
+                        <div
+                            key={`sponsor-row1-${index}`}
+                            className="sponsor-card"
+                        >
+                            <img
+                                src={sponsor.logo}
+                                alt={sponsor.name}
+                                className="sponsor-image"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Second row - right to left */}
+            <div className="marquee-container h-28">
+                <div className="marquee-right">
+                    {secondRowLogos.map((sponsor, index) => (
+                        <div
+                            key={`sponsor-row2-${index}`}
+                            className="sponsor-card"
+                        >
+                            <img
+                                src={sponsor.logo}
+                                alt={sponsor.name}
+                                className="sponsor-image"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };
