@@ -69,23 +69,23 @@ export default function Dashboard({
         <DashboardLayout>
             <Head title="Participant Dashboard" />
 
-            <div className="py-6">
+            <div className="py-4 sm:py-6 w-full overflow-hidden">
                 {/* Hero Section with Gradient Background */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 max-w-7xl mx-2 sm:mx-6 lg:mx-8  mb-8 rounded-xl shadow-xl">
+                <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 max-w-7xl mx-2 sm:mx-6 lg:mx-8 mb-4 sm:mb-8 rounded-lg sm:rounded-xl shadow-xl">
                     <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-20"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent"></div>
-                    <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                    <div className="relative max-w-7xl mx-auto px-3 py-10 sm:px-6 sm:py-16 lg:px-8">
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
                             className="text-center sm:text-left"
                         >
-                            <h1 className="text-4xl font-extrabold text-white tracking-tight">
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight break-words">
                                 Welcome,{" "}
-                                {user.first_name + " " + user.last_name}!
+                                <span className="inline-block">{user.first_name + " " + user.last_name}!</span>
                             </h1>
-                            <p className="mt-3 max-w-3xl text-xl text-blue-100">
+                            <p className="mt-2 sm:mt-3 max-w-3xl text-base sm:text-lg md:text-xl text-blue-100">
                                 Your Compsphere 2025 journey starts here
                             </p>
                         </motion.div>
@@ -103,7 +103,7 @@ export default function Dashboard({
                         transition={{ delay: 0.2 }}
                         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6"
                     >
-                        <div className="bg-gradient-to-r from-amber-700 to-yellow-900 border-l-4 border-yellow-400 shadow-lg p-5 rounded-lg flex items-start gap-4">
+                        <div className="bg-gradient-to-r from-amber-700 to-yellow-900 border-l-4 border-yellow-400 shadow-lg p-4 sm:p-5 rounded-lg flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
                             <div className="p-2 bg-yellow-800 rounded-full">
                                 <Bell className="h-6 w-6 text-yellow-200" />
                             </div>
@@ -133,23 +133,23 @@ export default function Dashboard({
                     className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8"
                 >
                     <div className="flex items-center mb-6">
-                        <div className="p-2 bg-cyan-800/50 rounded-md mr-3">
-                            <Zap className="h-5 w-5 text-cyan-200" />
+                        <div className="p-1.5 sm:p-2 bg-cyan-800/50 rounded-md mr-2 sm:mr-3">
+                            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-200" />
                         </div>
-                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-400">
+                        <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-400">
                             Hacksphere Team
                         </h2>
                     </div>
 
-                    <div className="bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm border border-cyan-500/20 rounded-xl shadow-xl overflow-hidden">
+                    <div className="responsive-card bg-gradient-to-br from-cyan-900/40 to-blue-900/40 backdrop-blur-sm border border-cyan-500/20 rounded-lg sm:rounded-xl shadow-xl overflow-hidden">
                         <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
-                        <div className="px-6 py-6 sm:px-8 sm:py-8 relative z-10">
+                        <div className="px-6 py-6 sm:px-8 sm:py-8 relative z-10 responsive-card-content">
                             {hacksphereTeam ? (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.2 }}
-                                    className="flex flex-col md:flex-row justify-between items-start gap-6"
+                                    className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-6 md:gap-8"
                                 >
                                     <div className="flex-1">
                                         <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-900/50 border border-cyan-500/30 text-cyan-300 text-xs font-medium mb-4">
@@ -157,7 +157,7 @@ export default function Dashboard({
                                                 ? "Team Leader"
                                                 : "Team Member"}
                                         </div>
-                                        <h3 className="text-2xl font-bold text-white mb-2">
+                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                                             {hacksphereTeam.team_name}
                                         </h3>
                                         <div className="flex items-center gap-2 mb-4">
@@ -182,7 +182,7 @@ export default function Dashboard({
                                             View Team Details
                                         </Link>
                                     </div>
-                                    <div className="flex-shrink-0 bg-gradient-to-br from-cyan-800/40 to-blue-900/30 p-5 rounded-lg border border-cyan-600/20 shadow-lg">
+                                    <div className="flex-shrink-0 w-full lg:w-auto bg-gradient-to-br from-cyan-800/40 to-blue-900/30 p-4 sm:p-5 rounded-lg border border-cyan-600/20 shadow-lg">
                                         <h4 className="text-cyan-200 font-medium mb-3 flex items-center">
                                             <Award className="mr-2 h-4 w-4" />{" "}
                                             Team Status
@@ -214,10 +214,10 @@ export default function Dashboard({
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.2 }}
-                                    className="flex flex-col md:flex-row items-center justify-between gap-6"
+                                    className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6"
                                 >
                                     <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-white mb-3">
+                                        <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3">
                                             Join Hacksphere Hackathon
                                         </h3>
                                         <p className="text-gray-300 mb-5">
@@ -234,9 +234,9 @@ export default function Dashboard({
                                             Register for Hacksphere
                                         </Link>
                                     </div>
-                                    <div className="flex-shrink-0 hidden md:block">
-                                        <div className="w-48 h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/10 rounded-full flex items-center justify-center">
-                                            <Users className="h-20 w-20 text-cyan-300/50" />
+                                    <div className="flex-shrink-0 w-full md:w-auto flex justify-center md:block mt-4 md:mt-0">
+                                        <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/10 rounded-full flex items-center justify-center">
+                                            <Users className="h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 text-cyan-300/50" />
                                         </div>
                                     </div>
                                 </motion.div>
@@ -252,10 +252,10 @@ export default function Dashboard({
                     className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-8"
                 >
                     <div className="flex items-center mb-6">
-                        <div className="p-2 bg-purple-800/50 rounded-md mr-3">
-                            <Calendar className="h-5 w-5 text-purple-200" />
+                        <div className="p-1.5 sm:p-2 bg-purple-800/50 rounded-md mr-2 sm:mr-3">
+                            <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-purple-200" />
                         </div>
-                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-400">
+                        <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-400">
                             Events
                         </h2>
                     </div>
@@ -270,8 +270,8 @@ export default function Dashboard({
                         >
                             <div className="bg-gradient-to-br from-purple-900/40 to-indigo-900/40 backdrop-blur-sm border border-purple-500/20 rounded-xl shadow-xl overflow-hidden">
                                 <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
-                                <div className="px-6 py-6 sm:px-8 sm:py-8 relative z-10">
-                                    <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                                <div className="px-4 py-5 sm:px-6 md:px-8 md:py-8 relative z-10">
+                                    <div className="flex flex-col lg:flex-row justify-between items-start gap-4 sm:gap-6">
                                         <div className="flex-1">
                                             {/* Check if user is registered for this event */}
                                             {registeredEvents.some(
@@ -282,7 +282,7 @@ export default function Dashboard({
                                                     Registered
                                                 </div>
                                             )}
-                                            <h3 className="text-2xl font-bold text-white mb-2">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                                                 {event.event_name}
                                             </h3>
                                             <p className="text-gray-300 mb-5">
@@ -301,7 +301,7 @@ export default function Dashboard({
                                             </p>
                                             <Link
                                                 href={`/events/${event.event_code}`}
-                                                className="inline-flex items-center px-5 py-2.5 border border-purple-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900"
+                                                className="inline-flex items-center px-4 sm:px-5 py-2 sm:py-2.5 border border-purple-400/30 shadow-lg text-xs sm:text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900 w-full sm:w-auto text-center justify-center sm:justify-start"
                                             >
                                                 {registeredEvents.some(
                                                     (regEvent) =>
@@ -319,7 +319,7 @@ export default function Dashboard({
                                                 )}
                                             </Link>
                                         </div>
-                                        <div className="flex-shrink-0 bg-gradient-to-br from-purple-800/40 to-indigo-900/30 p-5 rounded-lg border border-purple-600/20 shadow-lg">
+                                        <div className="flex-shrink-0 w-full lg:w-auto bg-gradient-to-br from-purple-800/40 to-indigo-900/30 p-4 sm:p-5 rounded-lg border border-purple-600/20 shadow-lg mt-4 lg:mt-0">
                                             <h4 className="text-purple-200 font-medium mb-3 flex items-center">
                                                 <Award className="mr-2 h-4 w-4" />{" "}
                                                 Event Info
@@ -378,23 +378,23 @@ export default function Dashboard({
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6, duration: 0.5 }}
-                    className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 mb-12"
+                    className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-6 sm:mt-10 mb-8 sm:mb-12"
                 >
                     <div className="flex items-center mb-6">
-                        <div className="p-2 bg-indigo-800/50 rounded-md mr-3">
-                            <UserIcon className="h-5 w-5 text-indigo-200" />
+                        <div className="p-1.5 sm:p-2 bg-indigo-800/50 rounded-md mr-2 sm:mr-3">
+                            <UserIcon className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-200" />
                         </div>
-                        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-blue-400">
+                        <h2 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-blue-400">
                             Your Profile
                         </h2>
                     </div>
 
-                    <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-950 rounded-xl shadow-xl border border-indigo-500/10">
+                    <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 to-indigo-950 rounded-lg sm:rounded-xl shadow-xl border border-indigo-500/10">
                         <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-5"></div>
                         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-40 h-40 bg-indigo-600 rounded-full opacity-10 blur-3xl"></div>
                         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-40 h-40 bg-blue-500 rounded-full opacity-10 blur-3xl"></div>
-                        <div className="relative p-6 sm:p-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="relative p-4 sm:p-6 md:p-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
                                 <motion.div
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
@@ -490,7 +490,7 @@ export default function Dashboard({
                                                 </div>
                                                 <Link
                                                     href="/participant/profile"
-                                                    className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+                                                    className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 transition-colors w-full sm:w-auto justify-center"
                                                 >
                                                     Update Profile
                                                 </Link>
