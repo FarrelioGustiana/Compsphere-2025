@@ -5,6 +5,18 @@
 
     RewriteEngine On
 
+    # Add CORS Headers
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, PUT, DELETE"
+        Header set Access-Control-Allow-Headers "X-Requested-With, Content-Type, X-Token-Auth, Authorization"
+        
+        # Add cache control for static assets
+        <FilesMatch "\.(css|js|jsx|ts|tsx|ico|pdf|jpg|jpeg|png|gif|svg|woff|woff2|ttf|eot)$">
+            Header set Cache-Control "max-age=31536000, public"
+        </FilesMatch>
+    </IfModule>
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -21,5 +33,8 @@
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
+   
+    RewriteRule ^(.*)$ /public/$1 
+    
+    RewriteRule ^(/)?$ public/index.php [L] 
 </IfModule>

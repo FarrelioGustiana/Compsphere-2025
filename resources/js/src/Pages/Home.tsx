@@ -171,7 +171,9 @@ const Home: React.FC = () => {
 
                         {/* Partner logos in a grid layout */}
                         <div className="relative py-8 mb-16 max-w-5xl mx-auto">
-                            <Sponsors sponsors={partners} />
+                            <div className="mask-sponsors">
+                                <Sponsors sponsors={partners} />
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -250,7 +252,6 @@ const Home: React.FC = () => {
                             <p className="text-gray-500">
                                 © 2025 Compsphere. All rights reserved.
                             </p>
-
                         </div>
                     </div>
                 </footer>
