@@ -104,7 +104,7 @@ class PaymentStatusController extends Controller
             ],
             'team_members' => $teamMembers,
             'all_payments_verified' => $allPaymentsVerified,
-            'payment_amount' => 100000, // IDR 100,000 per person
+            'payment_amount' => 100025, // IDR 100,000 per person
             'whatsapp_number' => '6285693230231', // Replace with actual WhatsApp number
             'is_leader' => $team->team_leader_id === $user->id,
         ]);

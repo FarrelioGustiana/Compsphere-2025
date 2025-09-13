@@ -5,6 +5,7 @@ use App\Http\Controllers\Participant\TeamDashboardController;
 use App\Http\Controllers\Participant\ActivityQrController;
 use App\Http\Controllers\Participant\EventRegistrationQRController;
 use App\Http\Controllers\Participant\PaymentStatusController;
+use App\Http\Controllers\Participant\ProjectSubmissionController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Support\Facades\Route;
 
@@ -88,5 +89,17 @@ Route::group([
             ->name('participant.validate-team-member-email');
         Route::post('/validate-team-member-nik', [\App\Http\Controllers\ParticipantController::class, 'validateTeamMemberNik'])
             ->name('participant.validate-team-member-nik');
+            
+        // Project Submission Routes (with payment verification middleware)
+        Route::prefix('team/{teamId}/submission')->middleware('\App\Http\Middleware\VerifyHackspherePayment')->group(function () {
+            Route::get('/', [ProjectSubmissionController::class, 'show'])
+                ->name('participant.team.submission');
+            Route::post('/', [ProjectSubmissionController::class, 'store'])
+                ->name('participant.team.submission.store');
+            Route::put('/', [ProjectSubmissionController::class, 'update'])
+                ->name('participant.team.submission.update');
+            Route::post('/draft', [ProjectSubmissionController::class, 'saveDraft'])
+                ->name('participant.team.submission.draft');
+        });
     });
 });

@@ -130,6 +130,12 @@ export default function TeamDashboard({ team, event, activities, progress, auth 
               </div>
               
               <div className="mt-4 md:mt-0 flex space-x-3">
+                <Link href={`/participant/team/${team.id}/submission`}>
+                  <Button className="flex items-center">
+                    <Award className="h-4 w-4 mr-2" />
+                    Project Submission
+                  </Button>
+                </Link>
                 <Link href={`/participant/teams/${team.id}/qr-codes`}>
                   <Button variant="secondary" className="flex items-center">
                     <QrCode className="h-4 w-4 mr-2" />

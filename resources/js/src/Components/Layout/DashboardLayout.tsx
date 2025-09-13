@@ -72,6 +72,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         href: route("admin.hacksphere.activities"),
                     },
                     { name: "Teams", href: route("admin.hacksphere.teams") },
+                    { name: "Submissions", href: route("admin.hacksphere.submissions") },
+                    { name: "Leaderboard", href: route("admin.hacksphere.leaderboard") },
+                    { name: "Payments", href: route("admin.hacksphere.payments") },
                 ],
             },
             {
@@ -93,6 +96,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },
             { name: "Profile", href: route("judge.profile"), icon: User },
+            {
+                name: "Hacksphere",
+                icon: Zap,
+                subNav: [
+                    { name: "Submissions", href: route("judge.hacksphere.submissions") },
+                    { name: "Leaderboard", href: route("judge.hacksphere.leaderboard") },
+                ],
+            },
         ],
     };
 
