@@ -8,15 +8,23 @@ interface Assignment {
     event: string;
     category: string;
     status: string;
+    pending_count?: number;
+    url?: string;
 }
 
 interface JudgeDashboardProps {
     user: User;
     judgeProfile: any;
     assignments: Assignment[];
+    stats?: {
+        totalSubmissions: number;
+        evaluatedSubmissions: number;
+        pendingSubmissions: number;
+        completionPercentage: number;
+    };
 }
 
-export default function Dashboard({ user, judgeProfile, assignments }: JudgeDashboardProps) {
+export default function Dashboard({ user, judgeProfile, assignments, stats }: JudgeDashboardProps) {
     const getStatusIcon = (status: string) => {
         switch (status.toLowerCase()) {
             case 'completed':
@@ -43,6 +51,23 @@ export default function Dashboard({ user, judgeProfile, assignments }: JudgeDash
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
                     <h2 className="text-xl font-semibold text-gray-200 mb-4">Your Assignments</h2>
                     
+                    {stats && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                            <div className="bg-gray-800 p-4 rounded-lg shadow">
+                                <p className="text-sm text-gray-400">Total Submissions</p>
+                                <p className="text-2xl font-bold text-white">{stats.totalSubmissions}</p>
+                            </div>
+                            <div className="bg-gray-800 p-4 rounded-lg shadow">
+                                <p className="text-sm text-gray-400">Evaluated</p>
+                                <p className="text-2xl font-bold text-green-500">{stats.evaluatedSubmissions}</p>
+                            </div>
+                            <div className="bg-gray-800 p-4 rounded-lg shadow">
+                                <p className="text-sm text-gray-400">Pending</p>
+                                <p className="text-2xl font-bold text-yellow-500">{stats.pendingSubmissions}</p>
+                            </div>
+                        </div>
+                    )}
+                    
                     <div className="bg-gray-800 shadow overflow-hidden sm:rounded-md">
                         <ul className="divide-y divide-gray-700">
                             {assignments.map((assignment, index) => (
@@ -68,11 +93,12 @@ export default function Dashboard({ user, judgeProfile, assignments }: JudgeDash
                                                 </p>
                                             </div>
                                             <div className="mt-2 flex items-center text-sm text-gray-400 sm:mt-0">
-                                                <button
+                                                <a
+                                                    href={assignment.url}
                                                     className="px-3 py-1 text-sm text-blue-400 hover:text-blue-300 focus:outline-none"
                                                 >
-                                                    View Details
-                                                </button>
+                                                    View Submissions
+                                                </a>
                                             </div>
                                         </div>
                                     </div>

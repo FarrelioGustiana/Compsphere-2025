@@ -16,6 +16,32 @@ export default defineConfig({
     resolve: {
         alias: {
             "@css": path.resolve(__dirname, "resources/css"),
+            "/assets": path.resolve(__dirname, "public/assets"),
+            "/fonts": path.resolve(__dirname, "public/fonts"),
         },
+    },
+    server: {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+        },
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: [
+                        'react', 
+                        'react-dom',
+                        'lucide-react',
+                        '@inertiajs/react'
+                    ],
+                    ui: [
+                        '@/src/Components/UI',
+                        '@/src/Components/Layout'
+                    ]
+                }
+            }
+        },
+        chunkSizeWarningLimit: 1000,
     },
 });
