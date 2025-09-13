@@ -322,9 +322,7 @@ function RegistrationSection({
                     {/* Discord Invitation Section - Only shown when payment is verified */}
                     {eventRegistration &&
                         eventRegistration.payment_status === "paid" && (
-                        eventRegistration.payment_status === "paid" && (
                             <motion.div
-                                className="mt-6 bg-gradient-to-br from-indigo-900/20 to-blue-800/20 border border-indigo-600/50 rounded-xl p-4 sm:p-6 shadow-lg"
                                 className="mt-6 bg-gradient-to-br from-indigo-900/20 to-blue-800/20 border border-indigo-600/50 rounded-xl p-4 sm:p-6 shadow-lg"
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -346,8 +344,6 @@ function RegistrationSection({
                                             </svg>
                                         </div>
                                         <div>
-                                            <h4 className="text-lg sm:text-xl font-bold mb-1 text-indigo-400">
-                                                Discord Community
                                             <h4 className="text-lg sm:text-xl font-bold mb-1 text-indigo-400">
                                                 Discord Community
                                             </h4>
