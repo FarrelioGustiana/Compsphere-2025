@@ -71,7 +71,7 @@ export default function Dashboard({
 
             <div className="py-4 sm:py-6 w-full overflow-hidden">
                 {/* Hero Section with Gradient Background */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 max-w-7xl mx-2 sm:mx-6 lg:mx-8 mb-4 sm:mb-8 rounded-lg sm:rounded-xl shadow-xl">
+                <div className="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 max-w-7xl mx-auto mb-4 sm:mb-8 rounded-lg sm:rounded-xl shadow-xl">
                     <div className="absolute inset-0 bg-[url('/assets/blue-grid.png')] opacity-20"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent"></div>
                     <div className="relative max-w-7xl mx-auto px-3 py-10 sm:px-6 sm:py-16 lg:px-8">
