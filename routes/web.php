@@ -18,13 +18,16 @@ require __DIR__ . '/web/participant.php';
 require __DIR__ . '/web/admin.php';
 require __DIR__ . '/web/judge.php';
 
-// Fallback route for authenticated users
-
+// Fallback route for SPA navigation
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::fallback(function () {
+    // If user is authenticated, redirect to their dashboard
     if (request()->user()) {
         return redirect()->route(request()->user()->role . '.dashboard');
     }
-    return redirect('/');
+
+    // For SPA navigation return the NotFound page
+    return Inertia::render('NotFound');
 });

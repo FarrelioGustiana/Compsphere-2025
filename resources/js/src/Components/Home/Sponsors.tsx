@@ -48,6 +48,42 @@ const Sponsors = ({ sponsors }: SponsorsProps) => {
                     ))}
                 </div>
             </div>
+        <div className="w-full py-8">
+            {/* First row - left to right */}
+            <div className="marquee-container h-28 mb-8">
+                <div className="marquee-left">
+                    {firstRowLogos.map((sponsor, index) => (
+                        <div
+                            key={`sponsor-row1-${index}`}
+                            className="sponsor-card"
+                        >
+                            <img
+                                src={sponsor.logo}
+                                alt={sponsor.name}
+                                className="sponsor-image"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Second row - right to left */}
+            <div className="marquee-container h-28">
+                <div className="marquee-right">
+                    {secondRowLogos.map((sponsor, index) => (
+                        <div
+                            key={`sponsor-row2-${index}`}
+                            className="sponsor-card"
+                        >
+                            <img
+                                src={sponsor.logo}
+                                alt={sponsor.name}
+                                className="sponsor-image"
+                            />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

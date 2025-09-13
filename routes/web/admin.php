@@ -42,10 +42,6 @@ Route::group([
         Route::get('/verify/{eventCode}/{activityCode}/{verificationToken}', [QRVerificationController::class, 'showVerificationPage'])
             ->name('admin.qr-verification.page');
 
-        // New descriptive URL format for QR Code scanning
-        Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])
-            ->name('admin.qr-verification.team-code');
-
         // Event Registration QR Code Verification Routes
         Route::get('/verify-registration/{eventCode}/{userId}/{token}', [QRVerificationController::class, 'showEventRegistrationVerificationPage'])
             ->name('admin.qr-verification.event-registration');
@@ -54,6 +50,7 @@ Route::group([
 
         // Hacksphere Admin Routes
         Route::prefix('hacksphere')->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'dashboard'])->name('admin.hacksphere.dashboard');
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
             Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
             Route::get('/teams/{team_id}/members', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
@@ -63,6 +60,12 @@ Route::group([
             Route::post('/verify-team-payment/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'verifyTeamPayment'])->name('admin.hacksphere.verify-team-payment');
             Route::post('/reject-team-payment/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'rejectTeamPayment'])->name('admin.hacksphere.reject-team-payment');
             Route::post('/change-team-registration-status', [\App\Http\Controllers\Admin\HacksphereController::class, 'changeTeamRegistrationStatus'])->name('admin.hacksphere.change-team-registration-status');
+            
+            // Project Submission Routes
+            Route::get('/submissions', [\App\Http\Controllers\Admin\HacksphereController::class, 'submissions'])->name('admin.hacksphere.submissions');
+            Route::get('/submissions/{submission_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'submissionDetails'])->name('admin.hacksphere.submissions.show');
+            Route::get('/leaderboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'leaderboard'])->name('admin.hacksphere.leaderboard');
+            Route::get('/payments', [\App\Http\Controllers\Admin\HacksphereController::class, 'payments'])->name('admin.hacksphere.payments');
         });
 
         // Talksphere Admin Routes
@@ -73,5 +76,9 @@ Route::group([
 
         // Exposphere Admin Routes
         Route::get('/exposphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.exposphere.participants')->defaults('eventCode', 'exposphere');
+        
+        // New descriptive URL format for QR Code scanning - must be LAST because it's a catch-all
+        Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])
+            ->name('admin.qr-verification.team-code');
     });
 });

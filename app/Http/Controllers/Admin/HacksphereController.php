@@ -11,10 +11,90 @@ use App\Models\TeamActivityVerification;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class HacksphereController extends Controller
 {
+    /**
+     * Display the dashboard with team statistics by category
+     *
+     * @return \Inertia\Response
+     */
+    public function dashboard()
+    {
+        // Get the Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+
+        if (!$hacksphereEvent) {
+            return back()->with('error', 'Hacksphere event not found.');
+        }
+
+        // Get team statistics by category
+        $teamsByCategory = Team::where('event_id', $hacksphereEvent->id)
+            ->select('category', DB::raw('count(*) as total'))
+            ->groupBy('category')
+            ->get()
+            ->pluck('total', 'category')
+            ->toArray();
+
+        // Format category names for display
+        $formattedCategories = [];
+        $categoryLabels = [
+            'high_school' => 'High School',
+            'university' => 'University',
+            'non_academic' => 'Non-Academic'
+        ];
+
+        foreach ($categoryLabels as $key => $label) {
+            $formattedCategories[$label] = $teamsByCategory[$key] ?? 0;
+        }
+
+        // Get total teams count
+        $totalTeams = array_sum($teamsByCategory);
+
+        // Get teams with payment status
+        $teamsWithPaymentStatus = Team::where('event_id', $hacksphereEvent->id)
+            ->with(['leader.user'])
+            ->get()
+            ->map(function ($team) use ($hacksphereEvent) {
+                // Get payment status from team leader
+                $paymentStatus = 'pending';
+                if ($team->leader) {
+                    $leaderRegistration = EventRegistration::where('user_id', $team->leader->user_id)
+                        ->where('event_id', $hacksphereEvent->id)
+                        ->first();
+                    
+                    if ($leaderRegistration) {
+                        $paymentStatus = $leaderRegistration->payment_status;
+                    }
+                }
+
+                return [
+                    'id' => $team->id,
+                    'team_name' => $team->team_name,
+                    'category' => $team->category,
+                    'category_label' => $categoryLabels[$team->category] ?? $team->category,
+                    'payment_status' => $paymentStatus,
+                    'leader_name' => $team->leader ? $team->leader->user->full_name : 'No leader',
+                ];
+            });
+
+        // Get payment statistics
+        $paymentStats = [
+            'paid' => $teamsWithPaymentStatus->where('payment_status', 'paid')->count(),
+            'pending' => $teamsWithPaymentStatus->where('payment_status', 'pending')->count(),
+            'failed' => $teamsWithPaymentStatus->where('payment_status', 'failed')->count(),
+        ];
+
+        return Inertia::render('Admin/Hacksphere/Dashboard', [
+            'teamsByCategory' => $formattedCategories,
+            'totalTeams' => $totalTeams,
+            'paymentStats' => $paymentStats,
+            'recentTeams' => $teamsWithPaymentStatus->take(5),
+        ]);
+    }
+
     /**
      * Display the activities page for Hacksphere event
      *
@@ -120,9 +200,19 @@ class HacksphereController extends Controller
         // Get all activities for Hacksphere
         $activities = Activity::where('event_id', $hacksphereEvent->id)->get();
 
+        // Get filter parameters
+        $categoryFilter = $request->input('category');
+        
+        // Build query for teams
+        $teamsQuery = Team::where('event_id', $hacksphereEvent->id);
+        
+        // Apply category filter if provided
+        if ($categoryFilter) {
+            $teamsQuery->where('category', $categoryFilter);
+        }
+        
         // Get all teams for Hacksphere with relations
-        $teams = Team::where('event_id', $hacksphereEvent->id)
-            ->with([
+        $teams = $teamsQuery->with([
                 'leader.user',
                 'members.user',
                 'activities' => function ($query) {
@@ -148,6 +238,7 @@ class HacksphereController extends Controller
                 'id' => $team->id,
                 'team_name' => $team->team_name,
                 'team_code' => $team->team_code,
+                'category' => $team->category, // Menambahkan kategori tim
                 'leader_name' => $team->leader ? $team->leader->user->full_name : 'No leader',
                 'member_count' => $team->members->count() + ($team->leader ? 1 : 0), // Leader + members
                 'progress_percentage' => $progress,
@@ -155,9 +246,32 @@ class HacksphereController extends Controller
             ];
         });
 
+        // Get category counts for filtering
+        $categoryLabels = [
+            'high_school' => 'High School',
+            'university' => 'University',
+            'non_academic' => 'Non-Academic'
+        ];
+        
+        // Get count of teams by category
+        $categoryCounts = Team::where('event_id', $hacksphereEvent->id)
+            ->select('category', DB::raw('count(*) as count'))
+            ->groupBy('category')
+            ->get()
+            ->mapWithKeys(function ($item) use ($categoryLabels) {
+                $label = $categoryLabels[$item->category] ?? $item->category;
+                return [$item->category => [
+                    'label' => $label,
+                    'count' => $item->count
+                ]];
+            })
+            ->toArray();
+            
         return Inertia::render('Admin/Hacksphere/Teams', [
             'teams' => $formattedTeams,
             'total_teams' => $teams->count(),
+            'categories' => $categoryCounts,
+            'activeFilter' => $categoryFilter,
         ]);
     }
 
@@ -538,5 +652,402 @@ class HacksphereController extends Controller
         }
 
         return back()->with('success', 'Team registration status changed successfully.');
+    }
+
+    /**
+     * Display the payments page for Hacksphere event
+     * 
+     * @return \Inertia\Response
+     */
+    public function payments()
+    {
+        // Get the Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+
+        if (!$hacksphereEvent) {
+            return back()->with('error', 'Hacksphere event not found.');
+        }
+
+        // Get all teams for Hacksphere with payment information
+        $teams = Team::where('event_id', $hacksphereEvent->id)
+            ->with(['leader.user', 'members.user'])
+            ->get();
+            
+        $formattedTeams = $teams->map(function($team) use ($hacksphereEvent) {
+            // Get payment statuses for all team members
+            $teamMembers = [];
+            $verifiedPayments = 0;
+            $pendingPayments = 0;
+            
+            // Process leader
+            if ($team->leader) {
+                $leaderRegistration = EventRegistration::where('user_id', $team->leader->user_id)
+                    ->where('event_id', $hacksphereEvent->id)
+                    ->first();
+                    
+                $paymentStatus = $leaderRegistration ? $leaderRegistration->payment_status : 'pending';
+                $paymentVerifiedAt = $leaderRegistration && $leaderRegistration->payment_date ? $leaderRegistration->payment_date : null;
+                
+                if ($paymentStatus === 'paid') {
+                    $verifiedPayments++;
+                } else {
+                    $pendingPayments++;
+                }
+                
+                $teamMembers[] = [
+                    'id' => $team->leader->id,
+                    'user_id' => $team->leader->user_id,
+                    'name' => $team->leader->user->full_name,
+                    'email' => $team->leader->user->email,
+                    'role' => 'Leader',
+                    'payment_status' => $paymentStatus,
+                    'payment_verified_at' => $paymentVerifiedAt
+                ];
+            }
+            
+            // Process members
+            foreach ($team->members as $member) {
+                $memberRegistration = EventRegistration::where('user_id', $member->user_id)
+                    ->where('event_id', $hacksphereEvent->id)
+                    ->first();
+                    
+                $paymentStatus = $memberRegistration ? $memberRegistration->payment_status : 'pending';
+                $paymentVerifiedAt = $memberRegistration && $memberRegistration->payment_date ? $memberRegistration->payment_date : null;
+                
+                if ($paymentStatus === 'paid') {
+                    $verifiedPayments++;
+                } else {
+                    $pendingPayments++;
+                }
+                
+                $teamMembers[] = [
+                    'id' => $member->id,
+                    'user_id' => $member->user_id,
+                    'name' => $member->user->full_name,
+                    'email' => $member->user->email,
+                    'role' => 'Member',
+                    'payment_status' => $paymentStatus,
+                    'payment_verified_at' => $paymentVerifiedAt
+                ];
+            }
+            
+            $totalMembers = count($teamMembers);
+            
+            return [
+                'id' => $team->id,
+                'team_name' => $team->team_name,
+                'team_code' => $team->team_code,
+                'leader_name' => $team->leader ? $team->leader->user->full_name : 'No leader',
+                'total_members' => $totalMembers,
+                'verified_payments' => $verifiedPayments,
+                'pending_payments' => $pendingPayments,
+                'all_payments_verified' => $verifiedPayments === $totalMembers,
+                'team_members' => $teamMembers,
+                'created_at' => $team->created_at->format('Y-m-d H:i:s')
+            ];
+        });
+        
+        return Inertia::render('Admin/Hacksphere/Payments', [
+            'teams' => $formattedTeams,
+            'total_teams' => $teams->count(),
+        ]);
+    }
+    
+    /**
+     * Display the project submissions list page
+     * 
+     * @return \Inertia\Response
+     */
+    public function submissions()
+    {
+        // Get the Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+
+        if (!$hacksphereEvent) {
+            return back()->with('error', 'Hacksphere event not found.');
+        }
+        
+        // Get all project submissions with evaluations
+        $submissions = \App\Models\ProjectSubmission::with([
+            'team.leader.user', 
+            'team.members.user',
+            'evaluations.judge.user'
+        ])->get();
+        
+        // Calculate statistics
+        $totalSubmissions = $submissions->count();
+        $evaluatedSubmissions = 0;
+        $pendingEvaluations = 0;
+        $totalScore = 0;
+        $evaluatedCount = 0;
+        
+        $formattedSubmissions = $submissions->map(function($submission) use (&$evaluatedSubmissions, &$pendingEvaluations, &$totalScore, &$evaluatedCount) {
+            // Calculate average scores
+            $evaluations = $submission->evaluations;
+            $evaluationsCount = $evaluations->count();
+            
+            $averageScore = 0;
+            $criteriaScores = [
+                'whole_system_functionality_score' => 0,
+                'ui_ux_design_score' => 0,
+                'backend_logic_score' => 0,
+                'ai_model_performance_score' => 0,
+                'automation_integration_score' => 0,
+            ];
+            
+            if ($evaluationsCount > 0) {
+                $evaluatedSubmissions++;
+                
+                foreach ($criteriaScores as $criterion => $score) {
+                    $criteriaScores[$criterion] = $evaluations->avg($criterion);
+                }
+                
+                // Apply weights from config
+                $weights = config('hacksphere.evaluation_weights', [
+                    'whole_system_functionality_score' => 0.30,
+                    'ui_ux_design_score' => 0.20,
+                    'backend_logic_score' => 0.25,
+                    'ai_model_performance_score' => 0.15,
+                    'automation_integration_score' => 0.10,
+                ]);
+                
+                $weightedTotal = 0;
+                foreach ($criteriaScores as $criterion => $score) {
+                    $weightedTotal += $score * $weights[$criterion];
+                }
+                
+                $averageScore = $weightedTotal;
+                $totalScore += $averageScore;
+                $evaluatedCount++;
+            } else {
+                $pendingEvaluations++;
+            }
+            
+            return [
+                'id' => $submission->id,
+                'project_title' => $submission->project_title,
+                'submitted_at' => $submission->submitted_at,
+                'team' => [
+                    'id' => $submission->team->id,
+                    'team_name' => $submission->team->team_name,
+                    'leader' => [
+                        'name' => $submission->team->leader ? $submission->team->leader->user->full_name : 'No leader',
+                    ],
+                ],
+                'evaluations_count' => $evaluationsCount,
+                'average_score' => $averageScore,
+                'criteria_scores' => $criteriaScores,
+            ];
+        });
+        
+        // Calculate average score across all evaluated submissions
+        $averageScore = $evaluatedCount > 0 ? $totalScore / $evaluatedCount : 0;
+        
+        // Prepare stats for the frontend
+        $stats = [
+            'totalSubmissions' => $totalSubmissions,
+            'evaluatedSubmissions' => $evaluatedSubmissions,
+            'pendingEvaluations' => $pendingEvaluations,
+            'averageScore' => $averageScore,
+        ];
+        
+        return Inertia::render('Admin/Hacksphere/Submissions', [
+            'submissions' => $formattedSubmissions,
+            'stats' => $stats,
+        ]);
+    }
+    
+    /**
+     * Display the project submission details page
+     * 
+     * @param int $submission_id
+     * @return \Inertia\Response
+     */
+    public function submissionDetails($submission_id)
+    {
+        $submission = \App\Models\ProjectSubmission::with([
+            'team.leader.user',
+            'team.members.user',
+            'evaluations.judge.user'
+        ])->findOrFail($submission_id);
+        
+        // Format team members
+        $teamMembers = [];
+        if ($submission->team->leader) {
+            $teamMembers[] = [
+                'id' => $submission->team->leader->id,
+                'name' => $submission->team->leader->user->full_name,
+                'email' => $submission->team->leader->user->email,
+                'role' => 'Leader',
+            ];
+        }
+        
+        foreach ($submission->team->members as $member) {
+            $teamMembers[] = [
+                'id' => $member->id,
+                'name' => $member->user->full_name,
+                'email' => $member->user->email,
+                'role' => 'Member',
+            ];
+        }
+        
+        // Format evaluations
+        $evaluations = $submission->evaluations->map(function($evaluation) {
+            return [
+                'id' => $evaluation->id,
+                'judge_name' => $evaluation->judge->user->full_name,
+                'whole_system_functionality_score' => $evaluation->whole_system_functionality_score,
+                'ui_ux_design_score' => $evaluation->ui_ux_design_score,
+                'backend_logic_score' => $evaluation->backend_logic_score,
+                'ai_model_performance_score' => $evaluation->ai_model_performance_score,
+                'automation_integration_score' => $evaluation->automation_integration_score,
+                'comments' => $evaluation->comments,
+                'created_at' => $evaluation->created_at,
+            ];
+        });
+        
+        // Calculate average scores
+        $evaluationsCount = $evaluations->count();
+        $criteriaScores = [
+            'whole_system_functionality_score' => 0,
+            'ui_ux_design_score' => 0,
+            'backend_logic_score' => 0,
+            'ai_model_performance_score' => 0,
+            'automation_integration_score' => 0,
+        ];
+        
+        if ($evaluationsCount > 0) {
+            foreach ($criteriaScores as $criterion => $score) {
+                $criteriaScores[$criterion] = $submission->evaluations->avg($criterion);
+            }
+        }
+        
+        // Apply weights from config
+        $weights = config('hacksphere.evaluation_weights', [
+            'whole_system_functionality_score' => 0.30,
+            'ui_ux_design_score' => 0.20,
+            'backend_logic_score' => 0.25,
+            'ai_model_performance_score' => 0.15,
+            'automation_integration_score' => 0.10,
+        ]);
+        
+        $weightedTotal = 0;
+        foreach ($criteriaScores as $criterion => $score) {
+            $weightedTotal += $score * $weights[$criterion];
+        }
+        
+        $averageScore = $evaluationsCount > 0 ? $weightedTotal : 0;
+        
+        $formattedSubmission = [
+            'id' => $submission->id,
+            'project_title' => $submission->project_title,
+            'project_description' => $submission->project_description,
+            'presentation_url' => $submission->presentation_url,
+            'youtube_url' => $submission->youtube_url,
+            'github_url' => $submission->github_url,
+            'submitted_at' => $submission->submitted_at,
+            'team' => [
+                'id' => $submission->team->id,
+                'team_name' => $submission->team->team_name,
+            ],
+            'team_members' => $teamMembers,
+            'evaluations' => $evaluations,
+            'evaluations_count' => $evaluationsCount,
+            'average_score' => $averageScore,
+            'criteria_scores' => $criteriaScores,
+            'criteria_weights' => $weights,
+        ];
+        
+        return Inertia::render('Admin/Hacksphere/SubmissionDetails', [
+            'submission' => $formattedSubmission,
+        ]);
+    }
+    
+    /**
+     * Display the leaderboard page
+     * 
+     * @return \Inertia\Response
+     */
+    public function leaderboard()
+    {
+        // Get all project submissions with evaluations
+        $submissions = \App\Models\ProjectSubmission::with([
+            'team.leader.user', 
+            'evaluations'
+        ])->get();
+        
+        $rankedSubmissions = $submissions->map(function($submission) {
+            // Calculate average scores
+            $evaluations = $submission->evaluations;
+            $evaluationsCount = $evaluations->count();
+            
+            $averageScore = 0;
+            $criteriaScores = [
+                'whole_system_functionality_score' => 0,
+                'ui_ux_design_score' => 0,
+                'backend_logic_score' => 0,
+                'ai_model_performance_score' => 0,
+                'automation_integration_score' => 0,
+            ];
+            
+            if ($evaluationsCount > 0) {
+                foreach ($criteriaScores as $criterion => $score) {
+                    $criteriaScores[$criterion] = $evaluations->avg($criterion);
+                }
+                
+                // Apply weights from config
+                $weights = config('hacksphere.evaluation_weights', [
+                    'whole_system_functionality_score' => 0.30,
+                    'ui_ux_design_score' => 0.20,
+                    'backend_logic_score' => 0.25,
+                    'ai_model_performance_score' => 0.15,
+                    'automation_integration_score' => 0.10,
+                ]);
+                
+                $weightedTotal = 0;
+                foreach ($criteriaScores as $criterion => $score) {
+                    $weightedTotal += $score * $weights[$criterion];
+                }
+                
+                $averageScore = $weightedTotal;
+            }
+            
+            // Get team members
+            $members = $submission->team->members->map(function($member) {
+                return $member->user->full_name;
+            })->toArray();
+            
+            if ($submission->team->leader) {
+                array_unshift($members, $submission->team->leader->user->full_name);
+            }
+            
+            return [
+                'id' => $submission->id,
+                'project_title' => $submission->project_title,
+                'team_id' => $submission->team->id,
+                'team_name' => $submission->team->team_name,
+                'team_leader' => $submission->team->leader ? $submission->team->leader->user->full_name : 'No leader',
+                'members' => $members,
+                'evaluations_count' => $evaluationsCount,
+                'average_score' => $averageScore,
+                'criteria_scores' => $criteriaScores,
+                'rank' => 0, // Will be filled after sorting
+            ];
+        })->filter(function($submission) {
+            // Only include submissions with at least one evaluation
+            return $submission['evaluations_count'] > 0;
+        })->sortByDesc('average_score')->values();
+        
+        // Add ranks
+        $rankedSubmissionsArray = $rankedSubmissions->toArray();
+        $rank = 1;
+        foreach ($rankedSubmissionsArray as $index => $submission) {
+            $rankedSubmissionsArray[$index]['rank'] = $rank++;
+        }
+        $rankedSubmissions = collect($rankedSubmissionsArray);
+        
+        return Inertia::render('Admin/Hacksphere/Leaderboard', [
+            'rankedSubmissions' => $rankedSubmissions,
+        ]);
     }
 }

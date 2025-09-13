@@ -182,7 +182,7 @@ const PaymentStatus: React.FC<PaymentStatusProps> = ({
                                     1
                                 </div>
                                 <p className="text-gray-300">
-                                    Each team member must pay <span className="text-white font-semibold">IDR {payment_amount.toLocaleString()}</span> individually
+                                    One team must pay <span className="text-white font-semibold">IDR {payment_amount.toLocaleString()}</span> for the entire team (Not Individually)
                                 </p>
                             </div>
                             <div className="flex items-center p-4 bg-blue-900/30 rounded-lg border border-blue-500/20">

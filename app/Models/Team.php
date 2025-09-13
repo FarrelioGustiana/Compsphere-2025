@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Team extends Model
 {
@@ -23,6 +24,7 @@ class Team extends Model
         'team_leader_id',
         'team_code',
         'event_id',
+        'category'
     ];
 
     /**
@@ -110,5 +112,13 @@ class Team extends Model
         } while (TeamActivityVerification::where('verification_token', $token)->exists());
         
         return $token;
+    }
+    
+    /**
+     * Get the project submission for this team.
+     */
+    public function projectSubmission(): HasOne
+    {
+        return $this->hasOne(ProjectSubmission::class);
     }
 }

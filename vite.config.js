@@ -15,7 +15,31 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            "@": path.resolve(__dirname, "resources/js"),
             "@css": path.resolve(__dirname, "resources/css"),
+            "/assets": path.resolve(__dirname, "public/assets"),
+            "/fonts": path.resolve(__dirname, "public/fonts"),
         },
+    },
+    server: {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+        },
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    vendor: [
+                        'react', 
+                        'react-dom',
+                        'lucide-react',
+                        '@inertiajs/react'
+                    ]
+                    // Removed UI chunk that was causing issues
+                }
+            }
+        },
+        chunkSizeWarningLimit: 1000,
     },
 });
