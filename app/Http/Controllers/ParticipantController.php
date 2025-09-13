@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\HacksphereRegistration;
@@ -17,10 +18,56 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
 use App\Rules\Nik;
 
 class ParticipantController extends Controller
 {
+    /**
+     * Maximum team limits per category
+     */
+    protected $categoryLimits = [
+        'high_school' => 10,
+        'university' => 40, // Combined limit for university and non_academic
+        'non_academic' => 40, // Combined limit for university and non_academic
+    ];
+    
+    /**
+     * Check if category has reached maximum team limit
+     * 
+     * @param string $category Category to check
+     * @return bool True if limit reached, false otherwise
+     */
+    protected function categoryLimitReached($category)
+    {
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+        
+        if (!$hacksphereEvent) {
+            return false;
+        }
+        
+        // For high school category, check specific limit
+        if ($category === 'high_school') {
+            $teamCount = Team::where('event_id', $hacksphereEvent->id)
+                ->where('category', $category)
+                ->count();
+            
+            return $teamCount >= $this->categoryLimits[$category];
+        }
+        
+        // For university and non_academic, check combined limit
+        if ($category === 'university' || $category === 'non_academic') {
+            $combinedCount = Team::where('event_id', $hacksphereEvent->id)
+                ->whereIn('category', ['university', 'non_academic'])
+                ->count();
+            
+            return $combinedCount >= $this->categoryLimits[$category];
+        }
+        
+        return false;
+    }
+    
     /**
      * Update twibbon link for Hacksphere event registration.
      * 
@@ -248,6 +295,17 @@ class ParticipantController extends Controller
             return redirect()->route('participant.profile')->with('error', 'Please complete your profile before registering for Hacksphere.');
         }
 
+        // Check if category has reached maximum team limit
+        $category = $request->input('team_category');
+        if ($this->categoryLimitReached($category)) {
+            $categoryName = $category === 'high_school' ? 'High School' : ($category === 'university' ? 'University' : 'Non-Academic');
+            $message = $category === 'high_school'
+                ? "Registration for High School category has reached the maximum limit of {$this->categoryLimits[$category]} teams."
+                : "Registration for University and Non-Academic categories has reached the combined maximum limit of {$this->categoryLimits[$category]} teams.";
+            
+            return back()->with('error', $message);
+        }
+        
         // Validate the request data for team creation
         $validated = $request->validate([
             'team_name' => 'required|string|max:255',
