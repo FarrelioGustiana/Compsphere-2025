@@ -15,6 +15,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
+            "@": path.resolve(__dirname, "resources/js"),
             "@css": path.resolve(__dirname, "resources/css"),
             "/assets": path.resolve(__dirname, "public/assets"),
             "/fonts": path.resolve(__dirname, "public/fonts"),
@@ -34,11 +35,8 @@ export default defineConfig({
                         'react-dom',
                         'lucide-react',
                         '@inertiajs/react'
-                    ],
-                    ui: [
-                        '@/src/Components/UI',
-                        '@/src/Components/Layout'
                     ]
+                    // Removed UI chunk that was causing issues
                 }
             }
         },
