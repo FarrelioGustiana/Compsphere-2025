@@ -252,15 +252,16 @@ class ParticipantController extends Controller
         $validated = $request->validate([
             'team_name' => 'required|string|max:255',
             'team_leader_nik' => ['required', new Nik],
-            'team_leader_category' => 'required|string|in:high_school,university,non_academic',
+            'team_category' => 'required|string|in:high_school,university,non_academic',
+            'team_leader_category' => 'required|string|in:high_school,university,non_academic|same:team_category',
             'team_leader_domicile' => 'required|string|max:255',
             'member1_email' => 'required|email|exists:users,email',
             'member1_nik' => ['required', new Nik],
-            'member1_category' => 'required|string|in:high_school,university,non_academic',
+            'member1_category' => 'required|string|in:high_school,university,non_academic|same:team_category',
             'member1_domicile' => 'required|string|max:255',
             'member2_email' => 'required|email|exists:users,email',
             'member2_nik' => ['required', new Nik],
-            'member2_category' => 'required|string|in:high_school,university,non_academic',
+            'member2_category' => 'required|string|in:high_school,university,non_academic|same:team_category',
             'member2_domicile' => 'required|string|max:255',
             'payment_initiated' => 'boolean',
             'payment_amount' => 'numeric',
@@ -278,13 +279,13 @@ class ParticipantController extends Controller
         if (!$participant->nik) {
             $participant->update([
                 'nik' => $validated['team_leader_nik'],
-                'category' => $validated['team_leader_category'],
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['team_leader_domicile'],
             ]);
         } else {
             $participant->update([
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['team_leader_domicile'],
-
             ]);
         }
 
@@ -300,6 +301,7 @@ class ParticipantController extends Controller
             'team_leader_id' => $user->id,
             'team_code' => $team_code,
             'event_id' => $hacksphereEvent->id,
+            'category' => $validated['team_category'],
         ]);
 
         // Process member 1
@@ -313,14 +315,14 @@ class ParticipantController extends Controller
                 'user_id' => $member1User->id,
                 'encryption_code' => $encryption_code,
                 'nik' => $validated['member1_nik'],
-                'category' => $validated['member1_category'],
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['member1_domicile'],
             ]);
         } else {
             // Update existing participant record
             $member1Participant->update([
                 'nik' => $validated['member1_nik'],
-                'category' => $validated['member1_category'],
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['member1_domicile'],
             ]);
         }
@@ -336,14 +338,14 @@ class ParticipantController extends Controller
                 'user_id' => $member2User->id,
                 'encryption_code' => $encryption_code,
                 'nik' => $validated['member2_nik'],
-                'category' => $validated['member2_category'],
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['member2_domicile'],
             ]);
         } else {
             // Update existing participant record
             $member2Participant->update([
                 'nik' => $validated['member2_nik'],
-                'category' => $validated['member2_category'],
+                'category' => $validated['team_category'],  // Menggunakan kategori tim
                 'domicile' => $validated['member2_domicile'],
             ]);
         }
