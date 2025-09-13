@@ -40,7 +40,6 @@ const Home: React.FC = () => {
         events: Event[];
         auth: { user: any };
     };
-    // Check if user is logged in
     const isLoggedIn = useMemo(() => auth?.user !== null, [auth?.user]);
 
     const scrollToEvents = () => {
