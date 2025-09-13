@@ -6,10 +6,12 @@ import { motion } from "framer-motion";
 interface TeamInfoStepProps {
     teamInfo: {
         team_name: string;
+        team_category: string;
     };
     setTeamInfo: React.Dispatch<
         React.SetStateAction<{
             team_name: string;
+            team_category: string;
         }>
     >;
     nextStep: () => void;
@@ -42,14 +44,14 @@ const TeamInfoStep: React.FC<TeamInfoStepProps> = ({
         },
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setTeamInfo((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (teamInfo.team_name.trim() !== "") {
+        if (teamInfo.team_name.trim() !== "" && teamInfo.team_category !== "") {
             nextStep();
         }
     };
@@ -130,6 +132,77 @@ const TeamInfoStep: React.FC<TeamInfoStepProps> = ({
                     <p className="text-xs text-gray-400 mt-2">
                         Choose a creative and unique name for your hackathon
                         team
+                    </p>
+                </motion.div>
+                
+                <motion.div
+                    className="mb-6 sm:mb-8 relative group"
+                    variants={itemVariants}
+                >
+                    <label
+                        htmlFor="team_category"
+                        className="block text-sm font-medium text-blue-300 mb-2"
+                    >
+                        Team Category
+                    </label>
+                    <div className="relative">
+                        <select
+                            id="team_category"
+                            name="team_category"
+                            value={teamInfo.team_category}
+                            onChange={handleChange}
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 appearance-none text-sm sm:text-base"
+                            required
+                        >
+                            <option value="">Select team category</option>
+                            <option value="high_school">High School</option>
+                            <option value="university">University</option>
+                            <option value="non_academic">Non-Academic</option>
+                        </select>
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <svg
+                                className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 9l-7 7-7-7"
+                                />
+                            </svg>
+                        </div>
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300" />
+                    </div>
+                    {errors.team_category && (
+                        <motion.div
+                            className="text-red-400 text-xs sm:text-sm mt-2 flex items-start"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ type: "spring", stiffness: 100 }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            <span className="break-words">
+                                {errors.team_category}
+                            </span>
+                        </motion.div>
+                    )}
+                    <p className="text-xs text-gray-400 mt-2">
+                        Select the category for your team. All team members must be from this category.
                     </p>
                 </motion.div>
             </motion.div>

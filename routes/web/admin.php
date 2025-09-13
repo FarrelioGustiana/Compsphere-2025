@@ -50,6 +50,7 @@ Route::group([
 
         // Hacksphere Admin Routes
         Route::prefix('hacksphere')->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'dashboard'])->name('admin.hacksphere.dashboard');
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
             Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
             Route::get('/teams/{team_id}/members', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');

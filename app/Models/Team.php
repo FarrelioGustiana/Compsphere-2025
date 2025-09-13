@@ -24,6 +24,7 @@ class Team extends Model
         'team_leader_id',
         'team_code',
         'event_id',
+        'category'
     ];
 
     /**

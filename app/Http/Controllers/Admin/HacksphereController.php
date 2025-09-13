@@ -11,10 +11,90 @@ use App\Models\TeamActivityVerification;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class HacksphereController extends Controller
 {
+    /**
+     * Display the dashboard with team statistics by category
+     *
+     * @return \Inertia\Response
+     */
+    public function dashboard()
+    {
+        // Get the Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+
+        if (!$hacksphereEvent) {
+            return back()->with('error', 'Hacksphere event not found.');
+        }
+
+        // Get team statistics by category
+        $teamsByCategory = Team::where('event_id', $hacksphereEvent->id)
+            ->select('category', DB::raw('count(*) as total'))
+            ->groupBy('category')
+            ->get()
+            ->pluck('total', 'category')
+            ->toArray();
+
+        // Format category names for display
+        $formattedCategories = [];
+        $categoryLabels = [
+            'high_school' => 'High School',
+            'university' => 'University',
+            'non_academic' => 'Non-Academic'
+        ];
+
+        foreach ($categoryLabels as $key => $label) {
+            $formattedCategories[$label] = $teamsByCategory[$key] ?? 0;
+        }
+
+        // Get total teams count
+        $totalTeams = array_sum($teamsByCategory);
+
+        // Get teams with payment status
+        $teamsWithPaymentStatus = Team::where('event_id', $hacksphereEvent->id)
+            ->with(['leader.user'])
+            ->get()
+            ->map(function ($team) use ($hacksphereEvent) {
+                // Get payment status from team leader
+                $paymentStatus = 'pending';
+                if ($team->leader) {
+                    $leaderRegistration = EventRegistration::where('user_id', $team->leader->user_id)
+                        ->where('event_id', $hacksphereEvent->id)
+                        ->first();
+                    
+                    if ($leaderRegistration) {
+                        $paymentStatus = $leaderRegistration->payment_status;
+                    }
+                }
+
+                return [
+                    'id' => $team->id,
+                    'team_name' => $team->team_name,
+                    'category' => $team->category,
+                    'category_label' => $categoryLabels[$team->category] ?? $team->category,
+                    'payment_status' => $paymentStatus,
+                    'leader_name' => $team->leader ? $team->leader->user->full_name : 'No leader',
+                ];
+            });
+
+        // Get payment statistics
+        $paymentStats = [
+            'paid' => $teamsWithPaymentStatus->where('payment_status', 'paid')->count(),
+            'pending' => $teamsWithPaymentStatus->where('payment_status', 'pending')->count(),
+            'failed' => $teamsWithPaymentStatus->where('payment_status', 'failed')->count(),
+        ];
+
+        return Inertia::render('Admin/Hacksphere/Dashboard', [
+            'teamsByCategory' => $formattedCategories,
+            'totalTeams' => $totalTeams,
+            'paymentStats' => $paymentStats,
+            'recentTeams' => $teamsWithPaymentStatus->take(5),
+        ]);
+    }
+
     /**
      * Display the activities page for Hacksphere event
      *
@@ -120,9 +200,19 @@ class HacksphereController extends Controller
         // Get all activities for Hacksphere
         $activities = Activity::where('event_id', $hacksphereEvent->id)->get();
 
+        // Get filter parameters
+        $categoryFilter = $request->input('category');
+        
+        // Build query for teams
+        $teamsQuery = Team::where('event_id', $hacksphereEvent->id);
+        
+        // Apply category filter if provided
+        if ($categoryFilter) {
+            $teamsQuery->where('category', $categoryFilter);
+        }
+        
         // Get all teams for Hacksphere with relations
-        $teams = Team::where('event_id', $hacksphereEvent->id)
-            ->with([
+        $teams = $teamsQuery->with([
                 'leader.user',
                 'members.user',
                 'activities' => function ($query) {
@@ -148,6 +238,7 @@ class HacksphereController extends Controller
                 'id' => $team->id,
                 'team_name' => $team->team_name,
                 'team_code' => $team->team_code,
+                'category' => $team->category, // Menambahkan kategori tim
                 'leader_name' => $team->leader ? $team->leader->user->full_name : 'No leader',
                 'member_count' => $team->members->count() + ($team->leader ? 1 : 0), // Leader + members
                 'progress_percentage' => $progress,
@@ -155,9 +246,32 @@ class HacksphereController extends Controller
             ];
         });
 
+        // Get category counts for filtering
+        $categoryLabels = [
+            'high_school' => 'High School',
+            'university' => 'University',
+            'non_academic' => 'Non-Academic'
+        ];
+        
+        // Get count of teams by category
+        $categoryCounts = Team::where('event_id', $hacksphereEvent->id)
+            ->select('category', DB::raw('count(*) as count'))
+            ->groupBy('category')
+            ->get()
+            ->mapWithKeys(function ($item) use ($categoryLabels) {
+                $label = $categoryLabels[$item->category] ?? $item->category;
+                return [$item->category => [
+                    'label' => $label,
+                    'count' => $item->count
+                ]];
+            })
+            ->toArray();
+            
         return Inertia::render('Admin/Hacksphere/Teams', [
             'teams' => $formattedTeams,
             'total_teams' => $teams->count(),
+            'categories' => $categoryCounts,
+            'activeFilter' => $categoryFilter,
         ]);
     }
 

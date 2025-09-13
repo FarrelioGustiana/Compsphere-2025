@@ -23,25 +23,43 @@ interface Team {
     created_at: string;
 }
 
+interface Category {
+    label: string;
+    count: number;
+}
+
+interface Categories {
+    [key: string]: Category;
+}
+
 interface TeamsPageProps {
     teams: Team[];
     total_teams: number;
+    categories?: Categories;
+    activeFilter?: string | null;
 }
 
-export default function Teams({ teams, total_teams }: TeamsPageProps) {
+export default function Teams({ teams, total_teams, categories = {}, activeFilter = null }: TeamsPageProps) {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortConfig, setSortConfig] = useState<{
         key: string;
         direction: "asc" | "desc";
     }>({ key: "team_name", direction: "asc" });
 
-    // Filter teams based on search term
+    // State for category filter
+    const [categoryFilter, setCategoryFilter] = useState<string | null>(activeFilter);
+    
+    // Filter teams based on search term and category
     const filteredTeams = teams.filter((team) => {
-        return (
+        const matchesSearch = 
             team.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             team.leader_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            team.team_code.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+            team.team_code.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        // Apply category filter if selected
+        const matchesCategory = !categoryFilter || (team as any).category === categoryFilter;
+        
+        return matchesSearch && matchesCategory;
     });
 
     // Sort teams based on sort config
@@ -154,24 +172,63 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
                             </h2>
                         </div>
 
-                        {/* Search Filter */}
+                        {/* Search and Filter */}
                         <div className="p-4">
-                            <div className="relative max-w-md">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Search
-                                        size={18}
-                                        className="text-gray-400"
+                            <div className="flex flex-col md:flex-row gap-4">
+                                {/* Search Input */}
+                                <div className="relative max-w-md flex-grow">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Search
+                                            size={18}
+                                            className="text-gray-400"
+                                        />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        className="block w-full bg-gray-700 border-gray-600 rounded-md pl-10 pr-4 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Search teams by name, code or leader..."
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
                                     />
                                 </div>
-                                <input
-                                    type="text"
-                                    className="block w-full bg-gray-700 border-gray-600 rounded-md pl-10 pr-4 py-2 text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Search teams by name, code or leader..."
-                                    value={searchTerm}
-                                    onChange={(e) =>
-                                        setSearchTerm(e.target.value)
-                                    }
-                                />
+                                
+                                {/* Category Filter */}
+                                {Object.keys(categories).length > 0 && (
+                                    <div className="flex items-center space-x-2">
+                                        <label className="text-sm text-gray-300 whitespace-nowrap">Filter by category:</label>
+                                        <select
+                                            value={categoryFilter || ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value || null;
+                                                setCategoryFilter(value);
+                                                // Optional: Update URL with filter
+                                                // window.history.pushState({}, '', value ? `?category=${value}` : window.location.pathname);
+                                            }}
+                                            className="bg-gray-700 border-gray-600 text-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        >
+                                            <option value="">All Categories</option>
+                                            {Object.entries(categories).map(([key, category]) => (
+                                                <option key={key} value={key}>
+                                                    {category.label} ({category.count})
+                                                </option>
+                                            ))}
+                                        </select>
+                                        
+                                        {categoryFilter && (
+                                            <button
+                                                onClick={() => setCategoryFilter(null)}
+                                                className="text-gray-400 hover:text-gray-200 text-sm flex items-center"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                                Clear
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
