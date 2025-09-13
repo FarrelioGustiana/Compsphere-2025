@@ -31,6 +31,22 @@ Route::group([
             return app()->make(AdminController::class)->users(request());
         })->name('admin.users');
 
+        // Super Admin only routes for user management
+        Route::middleware(\App\Http\Middleware\CheckAdminLevel::class . ':super_admin')->group(function () {
+            // Admin management
+            Route::get('/manage/admins', [\App\Http\Controllers\Admin\UserManagementController::class, 'adminManagement'])->name('admin.manage.admins');
+            Route::get('/manage/admins/create', [\App\Http\Controllers\Admin\UserManagementController::class, 'showCreateAdmin'])->name('admin.manage.admins.create');
+            Route::post('/manage/admins/create', [\App\Http\Controllers\Admin\UserManagementController::class, 'createAdmin'])->name('admin.manage.admins.store');
+
+            // Judge management
+            Route::get('/manage/judges', [\App\Http\Controllers\Admin\UserManagementController::class, 'judgeManagement'])->name('admin.manage.judges');
+            Route::get('/manage/judges/create', [\App\Http\Controllers\Admin\UserManagementController::class, 'showCreateJudge'])->name('admin.manage.judges.create');
+            Route::post('/manage/judges/create', [\App\Http\Controllers\Admin\UserManagementController::class, 'createJudge'])->name('admin.manage.judges.store');
+
+            // User deletion
+            Route::delete('/manage/users/{user}', [\App\Http\Controllers\Admin\UserManagementController::class, 'deleteUser'])->name('admin.manage.users.delete');
+        });
+
         // QR Code Verification Routes
         Route::get('/qr-scanner', [QRVerificationController::class, 'showScanner'])->name('admin.qr.scanner');
         Route::get('/qr-verify/{event_code}/{activity_code}/{token}', [QRVerificationController::class, 'showVerificationConfirm'])->name('admin.qr.verify');

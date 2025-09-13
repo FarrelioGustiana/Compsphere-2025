@@ -63,6 +63,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             { name: "Dashboard", href: route("admin.dashboard"), icon: Home },
             { name: "Users", href: route("admin.users"), icon: Users },
             { name: "Profile", href: route("admin.profile"), icon: User },
+            ...(adminProfile && String(adminProfile.admin_level) === 'super_admin' ? [
+                {
+                    name: "User Management",
+                    icon: Shield,
+                    subNav: [
+                        { name: "Admins", href: route("admin.manage.admins") },
+                        { name: "Judges", href: route("admin.manage.judges") },
+                    ],
+                },
+            ] : []),
             {
                 name: "Hacksphere",
                 icon: Zap,
@@ -93,7 +103,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         judge: [
             { name: "Dashboard", href: route("judge.dashboard"), icon: Home },
             { name: "Profile", href: route("judge.profile"), icon: User },
-        ],
+        ],     
     };
 
     const currentNavigation =

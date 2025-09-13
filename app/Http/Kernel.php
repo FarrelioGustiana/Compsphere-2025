@@ -70,6 +70,7 @@ class Kernel extends HttpKernel
         'email.verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         'session.secure' => \App\Http\Middleware\EnsureSessionSecurity::class,
         'role' => \App\Http\Middleware\CheckRole::class,
+        'admin.level' => \App\Http\Middleware\CheckAdminLevel::class,
 
     ];
 }
