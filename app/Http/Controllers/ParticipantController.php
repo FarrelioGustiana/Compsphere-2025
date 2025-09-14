@@ -254,20 +254,30 @@ class ParticipantController extends Controller
             'team_leader_nik' => ['required', new Nik],
             'team_leader_category' => 'required|string|in:high_school,university,non_academic',
             'team_leader_domicile' => 'required|string|max:255',
+            'team_leader_institution' => 'required|string|max:255',
             'member1_email' => 'required|email|exists:users,email',
             'member1_nik' => ['required', new Nik],
             'member1_category' => 'required|string|in:high_school,university,non_academic',
             'member1_domicile' => 'required|string|max:255',
+            'member1_institution' => 'required|string|max:255',
             'member2_email' => 'required|email|exists:users,email',
             'member2_nik' => ['required', new Nik],
             'member2_category' => 'required|string|in:high_school,university,non_academic',
             'member2_domicile' => 'required|string|max:255',
+            'member2_institution' => 'required|string|max:255',
             'payment_initiated' => 'boolean',
             'payment_amount' => 'numeric',
             'twibbon_leader_link' => 'nullable|url|max:255',
             'twibbon_member1_link' => 'nullable|url|max:255',
             'twibbon_member2_link' => 'nullable|url|max:255',
         ]);
+        
+        // Verify all team members are from the same institution
+        $leaderInstitution = $validated['team_leader_institution'];
+        if ($validated['member1_institution'] !== $leaderInstitution || 
+            $validated['member2_institution'] !== $leaderInstitution) {
+            return back()->withInput()->with('error', 'All team members must be from the same institution.');
+        }
 
         // Check if the team leader is the authenticated user
         if ($participant->nik && $participant->nik !== $validated['team_leader_nik']) {
@@ -280,11 +290,12 @@ class ParticipantController extends Controller
                 'nik' => $validated['team_leader_nik'],
                 'category' => $validated['team_leader_category'],
                 'domicile' => $validated['team_leader_domicile'],
+                'job_or_institution' => $validated['team_leader_institution'],
             ]);
         } else {
             $participant->update([
                 'domicile' => $validated['team_leader_domicile'],
-
+                'job_or_institution' => $validated['team_leader_institution'],
             ]);
         }
 
@@ -300,6 +311,8 @@ class ParticipantController extends Controller
             'team_leader_id' => $user->id,
             'team_code' => $team_code,
             'event_id' => $hacksphereEvent->id,
+            'category' => $validated['team_leader_category'],
+            'institution' => $validated['team_leader_institution'],
         ]);
 
         // Process member 1
@@ -315,6 +328,7 @@ class ParticipantController extends Controller
                 'nik' => $validated['member1_nik'],
                 'category' => $validated['member1_category'],
                 'domicile' => $validated['member1_domicile'],
+                'job_or_institution' => $validated['member1_institution'],
             ]);
         } else {
             // Update existing participant record
@@ -322,6 +336,7 @@ class ParticipantController extends Controller
                 'nik' => $validated['member1_nik'],
                 'category' => $validated['member1_category'],
                 'domicile' => $validated['member1_domicile'],
+                'job_or_institution' => $validated['member1_institution'],
             ]);
         }
 
@@ -338,6 +353,7 @@ class ParticipantController extends Controller
                 'nik' => $validated['member2_nik'],
                 'category' => $validated['member2_category'],
                 'domicile' => $validated['member2_domicile'],
+                'job_or_institution' => $validated['member2_institution'],
             ]);
         } else {
             // Update existing participant record
@@ -345,6 +361,7 @@ class ParticipantController extends Controller
                 'nik' => $validated['member2_nik'],
                 'category' => $validated['member2_category'],
                 'domicile' => $validated['member2_domicile'],
+                'job_or_institution' => $validated['member2_institution'],
             ]);
         }
 

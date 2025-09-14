@@ -28,6 +28,8 @@ interface TeamInfo {
     payment_status?: string;
     invoice_id?: string;
     registration_status?: string;
+    category?: string;
+    institution?: string;
 }
 
 interface TeamMember {
@@ -163,6 +165,26 @@ export default function TeamDetails({
                                             {members.length} Team Members
                                         </span>
                                     </div>
+                                    {team.category && (
+                                        <div className="mt-2 flex items-center text-sm">
+                                            <Briefcase className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                            <span className="text-gray-400">Category:</span>
+                                            <span className="ml-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 font-semibold">
+                                                {team.category === "high_school" ? "High School" : 
+                                                team.category === "university" ? "University" : 
+                                                team.category === "non_academic" ? "Non-Academic" : team.category}
+                                            </span>
+                                        </div>
+                                    )}
+                                    {team.institution && (
+                                        <div className="mt-2 flex items-center text-sm">
+                                            <MapPin className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                                            <span className="text-gray-400">Institution:</span>
+                                            <span className="ml-1 text-gray-300">
+                                                {team.institution}
+                                            </span>
+                                        </div>
+                                    )}
                                     {team.payment_amount && (
                                         <div className="mt-2 flex items-center text-sm">
                                             <CreditCard className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />

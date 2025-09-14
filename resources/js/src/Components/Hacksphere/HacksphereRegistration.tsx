@@ -24,17 +24,20 @@ interface HacksphereFormData extends Record<string, any> {
     team_leader_nik: string;
     team_leader_category: string;
     team_leader_domicile: string;
+    team_leader_institution: string;
     member1_email: string;
     member1_name: string;
     member1_nik: string;
     member1_category: string;
     member1_domicile: string;
+    member1_institution: string;
     member1_user_id: number;
     member2_email: string;
     member2_name: string;
     member2_nik: string;
     member2_category: string;
     member2_domicile: string;
+    member2_institution: string;
     member2_user_id: number;
     payment_initiated: boolean;
     payment_amount?: number;
@@ -54,6 +57,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         team_leader_nik: participantDetails?.nik || "",
         team_leader_category: participantDetails?.category || "",
         team_leader_domicile: participantDetails?.domicile || "",
+        team_leader_institution: participantDetails?.job_or_institution || "",
     });
     const [member1Info, setMember1Info] = useState({
         member1_email: "",
@@ -61,6 +65,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         member1_nik: "",
         member1_category: "",
         member1_domicile: "",
+        member1_institution: "",
         member1_user_id: 0,
     });
     const [member2Info, setMember2Info] = useState({
@@ -69,6 +74,7 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
         member2_nik: "",
         member2_category: "",
         member2_domicile: "",
+        member2_institution: "",
         member2_user_id: 0,
     });
 
@@ -184,6 +190,8 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                                     leaderInfo.team_leader_category,
                                 team_leader_domicile:
                                     leaderInfo.team_leader_domicile,
+                                team_leader_institution:
+                                    leaderInfo.team_leader_institution,
                             } as any,
                         ]}
                     />
@@ -209,6 +217,8 @@ const HacksphereRegistration: React.FC<HacksphereRegistrationProps> = ({
                                     leaderInfo.team_leader_category,
                                 team_leader_domicile:
                                     leaderInfo.team_leader_domicile,
+                                team_leader_institution:
+                                    leaderInfo.team_leader_institution,
                             } as any,
                         ]}
                     />

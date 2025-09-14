@@ -28,6 +28,7 @@ interface ValidationResponse {
         nik?: string;
         category?: string;
         domicile?: string;
+        job_or_institution?: string;
     };
     flash?: {
         valid?: boolean;
@@ -79,6 +80,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
             [`${prefix}_nik`]: memberInfo[`${prefix}_nik`],
             [`${prefix}_category`]: memberInfo[`${prefix}_category`],
             [`${prefix}_domicile`]: memberInfo[`${prefix}_domicile`],
+            [`${prefix}_institution`]: memberInfo[`${prefix}_institution`],
             [`${prefix}_name`]: memberInfo[`${prefix}_name`],
             [`${prefix}_user_id`]: memberInfo[`${prefix}_user_id`],
         }));
@@ -140,6 +142,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                         [`original_${prefix}_nik`]: data.user.nik || "", // Store original NIK to detect changes
                         [`${prefix}_category`]: data.user.category || "",
                         [`${prefix}_domicile`]: data.user.domicile || "",
+                        [`${prefix}_institution`]: data.user.job_or_institution || "",
                         [`${prefix}_email`]: data.user.email || "",
                     }));
                 } else {
@@ -349,6 +352,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
             memberInfo[`${prefix}_nik`] &&
             memberInfo[`${prefix}_category`] &&
             memberInfo[`${prefix}_domicile`] &&
+            memberInfo[`${prefix}_institution`] &&
             emailValidated &&
             nikValidated
         ) {
@@ -543,6 +547,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                                         [`original_${prefix}_nik`]: "",
                                         [`${prefix}_category`]: "",
                                         [`${prefix}_domicile`]: "",
+                                        [`${prefix}_institution`]: "",
                                     }));
                                     setNikValidated(false);
                                     setNikError("");
@@ -933,7 +938,7 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                 </motion.div>
 
                 <motion.div
-                    className="mb-8 relative group"
+                    className="mb-6 relative group"
                     variants={itemVariants}
                 >
                     <label
@@ -982,6 +987,75 @@ function TeamMemberStep<T extends AnyMemberInfo>({
                             {errors[`${prefix}_domicile`]}
                         </motion.div>
                     )}
+                </motion.div>
+                
+                <motion.div
+                    className="mb-8 relative group"
+                    variants={itemVariants}
+                >
+                    <label
+                        htmlFor={`${prefix}_institution`}
+                        className="block text-sm font-medium text-blue-300 mb-2"
+                    >
+                        Institution/School
+                    </label>
+                    <div className="relative">
+                        <input
+                            id={`${prefix}_institution`}
+                            name={`${prefix}_institution`}
+                            type="text"
+                            value={memberInfo[`${prefix}_institution`] as string}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 disabled:opacity-70"
+                            placeholder="Enter school or institution name"
+                            required
+                            disabled={!emailValidated}
+                        />
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 pointer-events-none transition-opacity duration-300" />
+                    </div>
+
+                    {errors[`${prefix}_institution`] && (
+                        <motion.div
+                            className="text-red-400 text-sm mt-2 flex items-center"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors[`${prefix}_institution`]}
+                        </motion.div>
+                    )}
+                    <div className="text-xs text-gray-400 mt-2 flex items-center">
+                        <svg
+                            className="w-3 h-3 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        All team members must be from the same institution
+                    </div>
                 </motion.div>
             </motion.div>
 

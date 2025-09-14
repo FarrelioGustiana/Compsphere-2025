@@ -9,12 +9,14 @@ interface TeamLeaderStepProps {
         team_leader_nik: string;
         team_leader_category: string;
         team_leader_domicile: string;
+        team_leader_institution: string;
     };
     setLeaderInfo: React.Dispatch<
         React.SetStateAction<{
             team_leader_nik: string;
             team_leader_category: string;
             team_leader_domicile: string;
+            team_leader_institution: string;
         }>
     >;
     nextStep: () => void;
@@ -63,7 +65,8 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
         if (
             leaderInfo.team_leader_nik.trim() !== "" &&
             leaderInfo.team_leader_category !== "" &&
-            leaderInfo.team_leader_domicile.trim() !== ""
+            leaderInfo.team_leader_domicile.trim() !== "" &&
+            leaderInfo.team_leader_institution.trim() !== ""
         ) {
             nextStep();
         }
@@ -267,7 +270,7 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
                 </motion.div>
 
                 <motion.div
-                    className="mb-6 sm:mb-8 relative group"
+                    className="mb-6 relative group"
                     variants={itemVariants}
                 >
                     <label
@@ -316,6 +319,75 @@ const TeamLeaderStep: React.FC<TeamLeaderStepProps> = ({
                             </span>
                         </motion.div>
                     )}
+                </motion.div>
+
+                <motion.div
+                    className="mb-6 sm:mb-8 relative group"
+                    variants={itemVariants}
+                >
+                    <label
+                        htmlFor="team_leader_institution"
+                        className="block text-sm font-medium text-blue-300 mb-2"
+                    >
+                        Institution/School
+                    </label>
+                    <div className="relative">
+                        <input
+                            id="team_leader_institution"
+                            name="team_leader_institution"
+                            type="text"
+                            value={leaderInfo.team_leader_institution}
+                            onChange={handleChange}
+                            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg bg-gray-800/60 text-white border border-gray-700 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 shadow-lg transition-all duration-300 text-sm sm:text-base"
+                            placeholder="Enter your school or institution name"
+                            required
+                        />
+                        <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-300" />
+                    </div>
+                    {errors.team_leader_institution && (
+                        <motion.div
+                            className="text-red-400 text-xs sm:text-sm mt-2 flex items-start"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring" as const,
+                                stiffness: 100,
+                            }}
+                        >
+                            <svg
+                                className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            <span className="break-words">
+                                {errors.team_leader_institution}
+                            </span>
+                        </motion.div>
+                    )}
+                    <div className="text-xs text-gray-400 mt-2 flex items-start">
+                        <svg
+                            className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                        </svg>
+                        <span>All team members must be from the same institution</span>
+                    </div>
                 </motion.div>
             </motion.div>
 

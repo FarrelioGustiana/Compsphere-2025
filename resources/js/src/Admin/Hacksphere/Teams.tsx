@@ -21,6 +21,8 @@ interface Team {
     member_count: number;
     progress_percentage: number;
     created_at: string;
+    category?: string;
+    institution?: string;
 }
 
 interface TeamsPageProps {
@@ -40,7 +42,9 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
         return (
             team.team_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             team.leader_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            team.team_code.toLowerCase().includes(searchTerm.toLowerCase())
+            team.team_code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (team.category?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+            (team.institution?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
         );
     });
 
@@ -68,6 +72,18 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
             return sortConfig.direction === "asc"
                 ? dateA - dateB
                 : dateB - dateA;
+        } else if (sortConfig.key === "category") {
+            const categoryA = a.category || "";
+            const categoryB = b.category || "";
+            return sortConfig.direction === "asc"
+                ? categoryA.localeCompare(categoryB)
+                : categoryB.localeCompare(categoryA);
+        } else if (sortConfig.key === "institution") {
+            const institutionA = a.institution || "";
+            const institutionB = b.institution || "";
+            return sortConfig.direction === "asc"
+                ? institutionA.localeCompare(institutionB)
+                : institutionB.localeCompare(institutionA);
         }
         return 0;
     });
@@ -207,6 +223,26 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
                                         <th
                                             scope="col"
                                             className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer"
+                                            onClick={() => requestSort("category")}
+                                        >
+                                            <div className="flex items-center">
+                                                Category
+                                                {getSortIcon("category")}
+                                            </div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer"
+                                            onClick={() => requestSort("institution")}
+                                        >
+                                            <div className="flex items-center">
+                                                Institution
+                                                {getSortIcon("institution")}
+                                            </div>
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider cursor-pointer"
                                             onClick={() =>
                                                 requestSort(
                                                     "progress_percentage"
@@ -252,6 +288,26 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="text-sm text-gray-300">
                                                         {team.leader_name}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm text-gray-300">
+                                                        {team.category ? (
+                                                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                                {team.category === "high_school" ? "High School" : 
+                                                                team.category === "university" ? "University" : 
+                                                                team.category === "non_academic" ? "Non-Academic" : team.category}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="text-gray-400">Not set</span>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <div className="text-sm text-gray-300">
+                                                        {team.institution ? team.institution : (
+                                                            <span className="text-gray-400">Not set</span>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -304,7 +360,7 @@ export default function Teams({ teams, total_teams }: TeamsPageProps) {
                                     ) : (
                                         <tr>
                                             <td
-                                                colSpan={6}
+                                                colSpan={8}
                                                 className="px-6 py-4 text-center text-gray-400"
                                             >
                                                 No teams found matching your
