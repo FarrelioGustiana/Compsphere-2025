@@ -60,11 +60,6 @@ Route::group([
             Route::post('/reject-team-payment/{team_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'rejectTeamPayment'])->name('admin.hacksphere.reject-team-payment');
             Route::post('/change-team-registration-status', [\App\Http\Controllers\Admin\HacksphereController::class, 'changeTeamRegistrationStatus'])->name('admin.hacksphere.change-team-registration-status');
             
-            // Project Submission Routes
-            Route::get('/submissions', [\App\Http\Controllers\Admin\HacksphereController::class, 'submissions'])->name('admin.hacksphere.submissions');
-            Route::get('/submissions/{submission_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'submissionDetails'])->name('admin.hacksphere.submissions.show');
-            Route::get('/leaderboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'leaderboard'])->name('admin.hacksphere.leaderboard');
-            Route::get('/payments', [\App\Http\Controllers\Admin\HacksphereController::class, 'payments'])->name('admin.hacksphere.payments');
         });
 
         // Talksphere Admin Routes

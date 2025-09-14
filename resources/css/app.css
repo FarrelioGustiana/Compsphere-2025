@@ -663,7 +663,6 @@ html {
 
 .sponsor-card {
     flex: 0 0 auto;
-    margin-right: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
