@@ -179,7 +179,7 @@ function PrizesSection({ fadeInUpVariant }: Props) {
             {/* Kategori Kuliah */}
             <div className="mb-10">
                 <h3 className="text-xl font-bold mb-4 text-center text-indigo-300 bg-indigo-900/30 py-2 rounded-lg">
-                    University Category
+                    Public & University Category
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
                     <motion.div
