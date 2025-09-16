@@ -22,69 +22,44 @@ class HacksphereActivitySeeder extends Seeder
             return;
         }
         
-        // Create activities for Hacksphere
-        Activity::create([
-            'name' => 'Opening Ceremony',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Pembukaan acara Hacksphere dan pengenalan tema hackathon',
-            'activity_code' => 'opening-ceremony',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Team Registration',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Registrasi dan check-in tim peserta',
-            'activity_code' => 'team-registration',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Workshop Session',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Workshop teknis untuk mempersiapkan peserta',
-            'activity_code' => 'workshop',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Hacking Session Day 1',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Sesi pengembangan solusi hari pertama',
-            'activity_code' => 'hacking-day1',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Mentoring Session',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Sesi mentoring dengan para ahli industri',
-            'activity_code' => 'mentoring',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Hacking Session Day 2',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Sesi pengembangan solusi hari kedua',
-            'activity_code' => 'hacking-day2',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Final Presentation',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Presentasi final solusi yang dikembangkan',
-            'activity_code' => 'final-presentation',
-            'is_active' => true,
-        ]);
-        
-        Activity::create([
-            'name' => 'Closing Ceremony',
-            'event_id' => $hacksphereEvent->id,
-            'description' => 'Pengumuman pemenang dan penutupan acara',
-            'activity_code' => 'closing-ceremony',
-            'is_active' => true,
-        ]);
+        // New activity data
+        $activities = [
+            [
+                'name' => 'Re-registration',
+                'description' => 'Participant re-registration at the event venue',
+                'activity_code' => 're-registration',
+            ],
+            [
+                'name' => 'Check Point 1',
+                'description' => 'First stage progress check',
+                'activity_code' => 'checkpoint-1',
+            ],
+            [
+                'name' => 'Check Point 2',
+                'description' => 'Second stage progress check',
+                'activity_code' => 'checkpoint-2',
+            ],
+            [
+                'name' => 'Check Point 3',
+                'description' => 'Third stage progress check',
+                'activity_code' => 'checkpoint-3',
+            ],
+            [
+                'name' => 'Check Point 4',
+                'description' => 'Final stage progress check',
+                'activity_code' => 'checkpoint-4',
+            ],
+        ];
+
+        // Loop to create activities
+        foreach ($activities as $activity) {
+            Activity::create([
+                'name' => $activity['name'],
+                'event_id' => $hacksphereEvent->id,
+                'description' => $activity['description'],
+                'activity_code' => $activity['activity_code'],
+                'is_active' => true,
+            ]);
+        }
     }
 }
