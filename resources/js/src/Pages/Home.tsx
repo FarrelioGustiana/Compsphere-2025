@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { Suspense, useMemo } from "react";
-import { ArrowRight, MapPin, Calendar, Clock } from "lucide-react";
+import { ArrowRight, MapPin, Calendar, Clock, Instagram, Linkedin, Mail, ExternalLink } from "lucide-react";
 import OptimizedBackground from "@/src/Components/UI/EnhancedBackground";
 import Logo from "@/src/Components/UI/Logo";
 import EventShowcase from "@/src/Components/Home/ImmersiveEventSection";
@@ -11,7 +11,10 @@ import { usePage } from "@inertiajs/react";
 import { Event } from "@/types/models";
 import Navigation from "../Components/Layout/Navigation";
 import { partners } from "../Constants/partners";
+import { sponsors } from "../Constants/sponsor";
 import Sponsors from "../Components/Home/Sponsors";
+import SponsorSection from "../Components/Home/SponsorSection";
+import { FaTiktok } from "react-icons/fa";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -123,6 +126,14 @@ const Home: React.FC = () => {
                     </div>
                 </section>
 
+                {/* Sponsor Section */}
+                <section className="py-16 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-blue-900/5 to-black/0 z-0"></div>
+                    <div className="relative z-10">
+                        <SponsorSection sponsors={sponsors} />
+                    </div>
+                </section>
+
                 {/* Events Section */}
                 <section id="events-section" className="relative">
                     <div className="text-center py-16 opacity-0 animate-fadeInView space-y-2">
@@ -194,55 +205,66 @@ const Home: React.FC = () => {
                             </div>
 
                             <div className="text-center md:text-left">
-                                <h3 className="text-lg font-bold mb-4 text-white">
-                                    Quick Links
-                                </h3>
-                                <ul className="space-y-2">
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-gray-400 hover:text-blue-400 transition-colors"
-                                        >
-                                            About Us
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#events"
-                                            className="text-gray-400 hover:text-blue-400 transition-colors"
-                                        >
-                                            Our Events
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-gray-400 hover:text-blue-400 transition-colors"
-                                        >
-                                            Schedule
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a
-                                            href="#"
-                                            className="text-gray-400 hover:text-blue-400 transition-colors"
-                                        >
-                                            Contact
-                                        </a>
-                                    </li>
-                                </ul>
                             </div>
 
                             <div className="text-center md:text-left">
                                 <h3 className="text-lg font-bold mb-4 text-white">
                                     Contact Us
                                 </h3>
-                                <div className="space-y-3">
+                                <div className="space-y-4">
                                     <div className="flex items-center justify-center md:justify-start text-gray-400">
                                         <MapPin className="w-5 h-5 mr-2 text-blue-400" />
                                         <span>
                                             President University, Cikarang
                                         </span>
+                                    </div>
+                                    
+                                    {/* Social Media Links */}
+                                    <div className="mt-4">
+                                        <p className="text-gray-400 mb-3">Follow us:</p>
+                                        <div className="flex items-center justify-center md:justify-start space-x-4">
+                                            {/* Instagram */}
+                                            <a 
+                                                href="https://www.instagram.com/compsphere/" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="social-icon-link group"
+                                                aria-label="Instagram"
+                                            >
+                                                    <Instagram className="w-5 h-5 text-white" />
+                                            </a>
+                                            
+                                            {/* TikTok */}
+                                            <a 
+                                                href="https://www.tiktok.com/@compsphere" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="social-icon-link group"
+                                                aria-label="TikTok"
+                                            >
+                                                    <FaTiktok className="w-5 h-5 text-white" />
+                                            </a>
+                                            
+                                            {/* LinkedIn */}
+                                            <a 
+                                                href="https://www.linkedin.com/company/compsphere" 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="social-icon-link group"
+                                                aria-label="LinkedIn"
+                                            >
+                                                <Linkedin className="w-5 h-5 text-white" />
+                                            </a>
+                                            
+                                            {/* Email */}
+                                            <a 
+                                                href="mailto:contact@compsphere.id" 
+                                                className="social-icon-link group"
+                                                aria-label="Email"
+                                            >
+                                                <Mail className="w-5 h-5 text-white" />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

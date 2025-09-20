@@ -136,3 +136,10 @@ export interface Partner {
     logo?: string;
     url?: string;
 }
+
+export interface Sponsor {
+    id: string | number;
+    name? : string;
+    logo? : string;
+    url? : string;
+}
