@@ -524,12 +524,6 @@ html {
     background: linear-gradient(to bottom, #2563eb, #dc2626, #16a34a);
 }
 
-.caption {
-    ::-webkit-scrollbar {
-        width: 1px;
-    }
-}
-
 /* Performance optimizations */
 * {
     box-sizing: border-box;

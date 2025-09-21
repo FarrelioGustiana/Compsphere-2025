@@ -387,7 +387,7 @@ function RegistrationSection({
                                     <div className="flex flex-col space-y-3">
                                         <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
                                             <a
-                                                href="https://discord.com/invite/ApD3shP5cr"
+                                                href="https://discord.com/invite/8jv3AqmG"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-indigo-700 to-blue-800 hover:from-indigo-600 hover:to-blue-700 text-white rounded-lg text-sm transition duration-300"
