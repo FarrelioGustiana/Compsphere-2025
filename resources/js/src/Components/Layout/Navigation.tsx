@@ -63,8 +63,6 @@ const Navigation: React.FC = () => {
             dropdown: true,
             items: eventPrograms,
         },
-        { href: "/about", label: "About", dropdown: false },
-        { href: "/contact", label: "Contact Us", dropdown: false },
     ];
 
     const postLoginNavItems = [

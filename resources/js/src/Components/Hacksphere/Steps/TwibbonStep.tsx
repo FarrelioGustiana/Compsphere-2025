@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Copy, Check } from "lucide-react";
 
 interface TwibbonStepProps {
     twibbonInfo: {
@@ -32,6 +33,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
     prevStep,
     errors,
 }) => {
+    const [copied, setCopied] = useState(false);
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement>,
         field: string
@@ -51,15 +53,15 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
         ) {
             nextStep();
         } else {
-            alert("Please fill all twibbon links!")
+            alert("Please fill all twibbon links!");
         }
     };
 
-    const allFieldsFilled = 
-    twibbonInfo.twibbon_leader_link.trim() &&
-    twibbonInfo.twibbon_member1_link.trim() &&
-    twibbonInfo.twibbon_member2_link.trim()
-    
+    const allFieldsFilled =
+        twibbonInfo.twibbon_leader_link.trim() &&
+        twibbonInfo.twibbon_member1_link.trim() &&
+        twibbonInfo.twibbon_member2_link.trim();
+
     const handleSkip = () => {
         // Clear all twibbon links
         setTwibbonInfo({
@@ -69,7 +71,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
         });
         nextStep();
     };
-    
+
     // Animation variants for framer-motion
     const formVariants = {
         hidden: { opacity: 0 },
@@ -112,7 +114,8 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                     className="text-gray-300 mb-6"
                     variants={itemVariants}
                 >
-                    Share your participation in Hacksphere by posting our event Twibbon on social media.
+                    Share your participation in Hacksphere by posting our event
+                    Twibbon on social media.
                 </motion.p>
 
                 <motion.div
@@ -126,6 +129,10 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                     </div>
 
                     <div className="relative z-10">
+                        <motion.div
+                            className="mb-6"
+                            variants={itemVariants}
+                        ></motion.div>
                         <motion.div
                             className="flex items-center mb-6"
                             variants={itemVariants}
@@ -150,7 +157,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                 Twibbon Details
                             </h4>
                         </motion.div>
-                        
+
                         <motion.div className="mb-6" variants={itemVariants}>
                             <h5 className="text-lg font-semibold text-blue-400 mb-3 flex items-center">
                                 <svg
@@ -173,7 +180,6 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                 {[
                                     "Download our Hacksphere Twibbon from the link below",
                                     "Apply the Twibbon to your photo using any photo editing app",
-                                    "Post it on your social media with hashtag #Hacksphere2025",
                                     "Make sure your profile is public (at least until the event)",
                                     "Copy the post URL and paste it in the form below",
                                 ].map((instruction, index) => (
@@ -186,9 +192,82 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                         <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white font-semibold mr-3 mt-0.5 text-xs">
                                             {index + 1}
                                         </div>
-                                        <span>{instruction}</span>
+                                        <p>{instruction}</p>
                                     </motion.li>
                                 ))}
+                                <motion.li>
+                                    <div className="flex items-center mb-4">
+
+                                    <div className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-blue-500 text-white font-semibold mr-3 mt-0.5 text-xs">
+                                        5
+                                    </div>
+                                    <h4 className="text-blue-400 text-sm font-semibold">Copy This Caption For Your Post</h4>
+                                    </div>
+                                    <div className="relative bg-gray-800/60 caption rounded-lg px-2 py-4 border border-gray-700 font-mono text-sm">
+                                        <pre className="text-white whitespace-pre-wrap overflow-x-auto max-h-60 overflow-y-auto">
+                                            {`Greetings, Innovators! 👋🏻
+
+Saya [tulis nama kamu di sini], siap berpartisipasi di Hacksphere 2025! 
+Hacksphere 2025 adalah bagian dari COMPSPHERE 2025, event tahunan terbesar dari Fakultas Ilmu Komputer President University.
+
+Dengan tema "Accelerating Innovation Through Intelligent Technology", COMPSPHERE mengajak kamu untuk mengasah kreativitas, kemampuan problem-solving, dan inovasi teknologi terbaikmu! 
+
+Total hadiah hingga Rp20.000.000 menanti para pemenang!
+
+📅 Registrasi: 14 – 25 September 2025
+
+Jangan lewatkan kesempatan ini!
+Daftarkan dirimu sekarang di:
+👉 compsphere.id/events/hacksphere
+
+Dan jangan lupa, tag 2 temanmu untuk ikut bareng! 
+
+@Compsphere
+compsphere.id
+#Hacksphere2025`}
+                                        </pre>
+                                        <button
+                                            onClick={() => {
+                                                const caption = `Greetings, Innovators! 👋🏻
+
+Saya [tulis nama kamu di sini], siap berpartisipasi di Hacksphere 2025! 
+Hacksphere 2025 adalah bagian dari COMPSPHERE 2025, event tahunan terbesar dari Fakultas Ilmu Komputer President University.
+
+Dengan tema "Accelerating Innovation Through Intelligent Technology", COMPSPHERE mengajak kamu untuk mengasah kreativitas, kemampuan problem-solving, dan inovasi teknologi terbaikmu! 
+
+Total hadiah hingga Rp20.000.000 menanti para pemenang!
+
+📅 Registrasi: 14 – 25 September 2025
+
+Jangan lewatkan kesempatan ini!
+Daftarkan dirimu sekarang di:
+👉 compsphere.id/events/hacksphere
+
+Dan jangan lupa, tag 2 temanmu untuk ikut bareng! 
+
+@Compsphere
+compsphere.id
+#Hacksphere2025`;
+                                                navigator.clipboard.writeText(
+                                                    caption
+                                                );
+                                                setCopied(true);
+                                                setTimeout(
+                                                    () => setCopied(false),
+                                                    2000
+                                                );
+                                            }}
+                                            className="absolute top-2 right-2 p-2 text-gray-400 hover:text-white rounded-md hover:bg-gray-700 transition-colors"
+                                            title="Copy caption"
+                                        >
+                                            {copied ? (
+                                                <Check className="w-5 h-5 text-green-500" />
+                                            ) : (
+                                                <Copy className="w-5 h-5" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </motion.li>
                             </ol>
                         </motion.div>
 
@@ -213,7 +292,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                 </svg>
                                 Download Twibbon Template
                             </a>
-                            
+
                             <div className="space-y-4 mb-6">
                                 <div className="mb-4">
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
@@ -222,7 +301,12 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     <input
                                         type="url"
                                         value={twibbonInfo.twibbon_leader_link}
-                                        onChange={(e) => handleInputChange(e, "twibbon_leader_link")}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                e,
+                                                "twibbon_leader_link"
+                                            )
+                                        }
                                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="https://www.instagram.com/p/..."
                                     />
@@ -232,7 +316,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 <div className="mb-4">
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
                                         Team Member 1: {member1Name}
@@ -240,7 +324,12 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     <input
                                         type="url"
                                         value={twibbonInfo.twibbon_member1_link}
-                                        onChange={(e) => handleInputChange(e, "twibbon_member1_link")}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                e,
+                                                "twibbon_member1_link"
+                                            )
+                                        }
                                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="https://www.instagram.com/p/..."
                                     />
@@ -250,7 +339,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 <div className="mb-4">
                                     <label className="block text-gray-300 text-sm font-medium mb-2">
                                         Team Member 2: {member2Name}
@@ -258,7 +347,12 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     <input
                                         type="url"
                                         value={twibbonInfo.twibbon_member2_link}
-                                        onChange={(e) => handleInputChange(e, "twibbon_member2_link")}
+                                        onChange={(e) =>
+                                            handleInputChange(
+                                                e,
+                                                "twibbon_member2_link"
+                                            )
+                                        }
                                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="https://www.instagram.com/p/..."
                                     />

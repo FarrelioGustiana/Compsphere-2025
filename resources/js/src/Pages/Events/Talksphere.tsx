@@ -412,7 +412,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                                         handleRegisterClick
                                                     }
                                                     disabled={processing}
-                                                    className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg shadow-md shadow-red-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
+                                                    className="mt-4 sm:mt-6 sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg shadow-md shadow-red-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
                                                 >
                                                     {processing ? (
                                                         <>

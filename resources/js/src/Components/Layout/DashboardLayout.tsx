@@ -75,6 +75,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     { name: "Submissions", href: route("admin.hacksphere.submissions") },
                     { name: "Leaderboard", href: route("admin.hacksphere.leaderboard") },
                     { name: "Payments", href: route("admin.hacksphere.payments") },
+                    { name: "Countdown", href: route("admin.hacksphere.countdown") },
                 ],
             },
             {

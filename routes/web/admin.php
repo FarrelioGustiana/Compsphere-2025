@@ -54,6 +54,7 @@ Route::group([
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
             Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
             Route::get('/teams/{team_id}/members', [\App\Http\Controllers\Admin\HacksphereController::class, 'teamDetails'])->name('admin.hacksphere.team.details');
+            Route::get('/countdown', [\App\Http\Controllers\Admin\HacksphereCountdownController::class, 'index'])->name('admin.hacksphere.countdown');
 
             Route::post('/verify-payment/{user_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'verifyPayment'])->name('admin.hacksphere.verify-payment');
             Route::post('/reject-payment/{user_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'rejectPayment'])->name('admin.hacksphere.reject-payment');

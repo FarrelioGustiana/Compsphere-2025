@@ -15,11 +15,12 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'first_name' => 'Admin',
-            'last_name' => 'Super',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('IniSuperAdmin@123'),
+            'first_name' => env('SUPER_ADMIN_FIRST_NAME'),
+            'last_name' => env('SUPER_ADMIN_LAST_NAME'),
+            'email' => env('SUPER_ADMIN_EMAIL'),
+            'password' => Hash::make(env('SUPER_ADMIN_PASSWORD')),
             'role' => 'admin',
+            'email_verified' => true,
         ]);
 
         AdminProfile::create([
