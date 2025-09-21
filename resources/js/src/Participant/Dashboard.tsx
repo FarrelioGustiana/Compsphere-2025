@@ -299,25 +299,45 @@ export default function Dashboard({
                                                           )
                                                       } event and showcase your skills!`}
                                             </p>
-                                            <Link
-                                                href={`/events/${event.event_code}`}
-                                                className="inline-flex items-center px-5 py-2.5 border border-purple-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900"
-                                            >
-                                                {registeredEvents.some(
-                                                    (regEvent) =>
-                                                        regEvent.id === event.id
-                                                ) ? (
-                                                    <>
+                                            {/* Conditional rendering based on event registration status */}
+                                            {registeredEvents.some(
+                                                (regEvent) => regEvent.id === event.id
+                                            ) ? (
+                                                <div className="flex flex-wrap gap-3">
+                                                    {/* View Details button */}
+                                                    <Link
+                                                        href={`/events/${event.event_code}`}
+                                                        className="inline-flex items-center px-5 py-2.5 border border-purple-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900"
+                                                    >
                                                         <Users className="mr-2 h-4 w-4" />
                                                         View Details
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Zap className="mr-2 h-4 w-4" />
-                                                        Register Now
-                                                    </>
-                                                )}
-                                            </Link>
+                                                    </Link>
+                                                    
+                                                    {/* QR Code button for Talksphere and Festsphere only */}
+                                                    {(event.event_code === 'talksphere' || event.event_code === 'festsphere') && (
+                                                        <Link
+                                                            href={`/participant/event-registration/qr-code/${event.event_code}`}
+                                                            className="inline-flex items-center px-5 py-2.5 border border-green-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-green-900"
+                                                        >
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                <rect x="3" y="3" width="7" height="7"></rect>
+                                                                <rect x="14" y="3" width="7" height="7"></rect>
+                                                                <rect x="14" y="14" width="7" height="7"></rect>
+                                                                <rect x="3" y="14" width="7" height="7"></rect>
+                                                            </svg>
+                                                            View QR Code
+                                                        </Link>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <Link
+                                                    href={`/events/${event.event_code}`}
+                                                    className="inline-flex items-center px-5 py-2.5 border border-purple-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 focus:ring-offset-purple-900"
+                                                >
+                                                    <Zap className="mr-2 h-4 w-4" />
+                                                    Register Now
+                                                </Link>
+                                            )}
                                         </div>
                                         <div className="flex-shrink-0 bg-gradient-to-br from-purple-800/40 to-indigo-900/30 p-5 rounded-lg border border-purple-600/20 shadow-lg">
                                             <h4 className="text-purple-200 font-medium mb-3 flex items-center">
