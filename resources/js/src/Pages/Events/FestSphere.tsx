@@ -405,7 +405,7 @@ const Festsphere: React.FC<FestsphereProps> = ({
                                                         handleRegisterClick
                                                     }
                                                     disabled={processing}
-                                                    className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-green-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-md shadow-purple-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
+                                                    className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-green-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-md shadow-purple-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300"
                                                 >
                                                     {processing ? (
                                                         <>

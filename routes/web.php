@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +20,11 @@ require __DIR__ . '/web/participant.php';
 require __DIR__ . '/web/admin.php';
 require __DIR__ . '/web/judge.php';
 
+// Public countdown display for Hacksphere - accessible without authentication
+use App\Http\Controllers\Admin\HacksphereCountdownController;
+Route::get('/hacksphere/countdown', [HacksphereCountdownController::class, 'publicDisplay'])->name('hacksphere.countdown.public');
+
 // Fallback route for SPA navigation
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::fallback(function () {
