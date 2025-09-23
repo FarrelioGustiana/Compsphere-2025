@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             AdminSeeder::class,
             HacksphereActivitySeeder::class,
-            TalksphereSubEventSeeder::class,
         ]);
     }
 }
