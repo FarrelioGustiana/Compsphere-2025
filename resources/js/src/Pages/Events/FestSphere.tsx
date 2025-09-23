@@ -105,7 +105,7 @@ const Festsphere: React.FC<FestsphereProps> = ({
     };
 
     // Event date for countdown (November 15, 2025)
-    const eventDate = new Date(2025, 10, 15, 9, 0, 0);
+    const eventDate = new Date(2025, 9, 4, 9, 0, 0);
 
     const { post, processing } = useForm({});
 

@@ -105,7 +105,8 @@ const Talksphere: React.FC<TalksphereProps> = ({
     };
 
     // Event date for countdown (December 5, 2025)
-    const eventDate = new Date(2025, 11, 5, 9, 0, 0);
+    const eventDate = new Date(2025, 9, 1, 9, 0, 0);
+
 
     const { post, processing } = useForm({});
 
