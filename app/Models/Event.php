@@ -92,6 +92,14 @@ class Event extends Model
     }
     
     /**
+     * Get all sub-events for this event.
+     */
+    public function subEvents(): HasMany
+    {
+        return $this->hasMany(SubEvent::class);
+    }
+    
+    /**
      * Check if this event is Hacksphere.
      * 
      * @return bool
