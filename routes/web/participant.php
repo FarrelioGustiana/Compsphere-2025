@@ -4,6 +4,7 @@ use App\Http\Controllers\Participant\TeamQRCodeController;
 use App\Http\Controllers\Participant\TeamDashboardController;
 use App\Http\Controllers\Participant\ActivityQrController;
 use App\Http\Controllers\Participant\EventRegistrationQRController;
+use App\Http\Controllers\SubEventQRController;
 use App\Http\Controllers\Participant\PaymentStatusController;
 use App\Http\Controllers\Participant\ProjectSubmissionController;
 use App\Http\Controllers\ParticipantController;
@@ -35,6 +36,9 @@ Route::group([
         Route::post('/register-event/{eventId}', [ParticipantController::class, 'registerEvent'])
             ->name('participant.register-event');
             
+        Route::post('/register-sub-event/{subEventId}', [ParticipantController::class, 'registerSubEvent'])
+            ->name('participant.register-sub-event');
+            
         Route::post('/events/{eventId}/twibbon', [ParticipantController::class, 'updateTwibbonLink'])
             ->name('participant.update-twibbon');
         
@@ -65,22 +69,17 @@ Route::group([
             ->middleware(\App\Http\Middleware\VerifyHackspherePayment::class)
             ->name('participant.team.dashboard');
             
-        // Activity QR Code route (with payment verification middleware)
         Route::get('/activity-qr/{teamId}/{activityId}', [\App\Http\Controllers\Participant\ActivityQrController::class, 'show'])
             ->middleware(\App\Http\Middleware\VerifyHackspherePayment::class)
             ->name('participant.activity.qr');
             
-        // Event Registration QR Code routes for Talksphere and Festsphere
-        Route::prefix('event-registration')->group(function () {
-            Route::get('/qr-code/{eventCode}', [EventRegistrationQRController::class, 'showQRCode'])
-                ->name('participant.event-registration.qr-code');
-                
-            Route::post('/qr-code/regenerate', [EventRegistrationQRController::class, 'regenerateQRCode'])
-                ->name('participant.event-registration.qr-code.regenerate');
-                
-            Route::get('/qr-code/download/{eventCode}', [EventRegistrationQRController::class, 'downloadQRCode'])
-                ->name('participant.event-registration.qr-code.download');
-        });
+        // QR Code routes
+        Route::get('/activity-qr/{teamId}/{activityId}', [ActivityQrController::class, 'show'])->name('activity-qr');
+        Route::get('/event-registration/qr-code/{eventCode}', [EventRegistrationQRController::class, 'show'])->name('event-registration.qr-code');
+        
+        // Sub-event QR Code routes
+        Route::get('/sub-event/qr-code/{subEventId}', [SubEventQRController::class, 'show'])->name('sub-event.qr-code');
+        Route::post('/sub-event/qr-code/{subEventId}/regenerate', [SubEventQRController::class, 'regenerate'])->name('sub-event.qr-code.regenerate');
         
         // Hacksphere Registration Routes
         Route::post('/register-hacksphere', [\App\Http\Controllers\ParticipantController::class, 'registerHacksphere'])

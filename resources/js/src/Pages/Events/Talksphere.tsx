@@ -3,6 +3,7 @@ import {
     User,
     Participant,
     Event,
+    SubEvent,
     EventRegistration as EventRegistrationModel,
 } from "@/types/models";
 import { useForm } from "@inertiajs/react";
@@ -81,6 +82,8 @@ interface TalksphereProps {
     participantDetails?: Participant | null;
     isRegistered: boolean;
     eventRegistration?: EventRegistrationModel;
+    subEvents: SubEvent[];
+    userSubEventRegistrations: number[];
 }
 
 const Talksphere: React.FC<TalksphereProps> = ({
@@ -89,6 +92,8 @@ const Talksphere: React.FC<TalksphereProps> = ({
     participantDetails,
     isRegistered,
     eventRegistration,
+    subEvents,
+    userSubEventRegistrations,
 }) => {
     // Animation variants for sections
     const fadeInUpVariant = {
@@ -109,6 +114,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
 
 
     const { post, processing } = useForm({});
+    const { post: postSubEvent, processing: processingSubEvent } = useForm({});
 
     // Check if profile is complete
     const isProfileComplete =
@@ -132,6 +138,66 @@ const Talksphere: React.FC<TalksphereProps> = ({
         } else {
             // Handle incomplete profile
             alert("Please complete your profile before registering");
+        }
+    };
+
+    const handleSubEventRegister = (subEventId: number) => {
+        console.log('Attempting to register for sub-event:', subEventId);
+        
+        if (!user) {
+            console.log('User not logged in, redirecting to login');
+            window.location.href = route("login");
+            return;
+        }
+
+        if (!isProfileComplete) {
+            console.log('Profile incomplete, redirecting to profile');
+            window.location.href = route("participant.profile");
+            return;
+        }
+
+        console.log('Submitting registration request...');
+        postSubEvent(route("participant.register-sub-event", subEventId), {
+            method: 'post',
+            onStart: () => {
+                console.log('Request started');
+            },
+            onSuccess: (page) => {
+                console.log('Registration successful:', page);
+                // Redirect to the same page to refresh data
+                window.location.href = window.location.href;
+            },
+            onError: (errors) => {
+                console.error('Registration error:', errors);
+                alert('Registration failed: ' + JSON.stringify(errors));
+            },
+            onFinish: () => {
+                console.log('Request finished');
+            }
+        });
+    };
+
+    const formatDateTime = (dateTime: string) => {
+        return new Date(dateTime).toLocaleString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
+    const getSubEventIcon = (subEventName: string) => {
+        switch (subEventName.toLowerCase()) {
+            case 'seminar':
+                return '🎓';
+            case 'talkshow':
+                return '🎤';
+            case 'workshop':
+                return '🛠️';
+            default:
+                return '📅';
         }
     };
 
@@ -332,7 +398,93 @@ const Talksphere: React.FC<TalksphereProps> = ({
                             </div>
                         </section>
 
-                        {/* Registration Section */}
+                        {/* Sub-Events Section */}
+                        {subEvents && subEvents.length > 0 && (
+                            <section className="mb-16 sm:mb-20 lg:mb-24">
+                                <motion.div
+                                    className="text-center mb-8 sm:mb-10"
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    custom={0}
+                                    variants={fadeInUpVariant}
+                                >
+                                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-red-400 to-rose-500 text-transparent bg-clip-text">
+                                        Choose Your Experience
+                                    </h2>
+                                    <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-red-500 to-rose-600 mx-auto rounded-full"></div>
+                                </motion.div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                                    {subEvents.map((subEvent, index) => {
+                                        const isRegistered = userSubEventRegistrations.includes(subEvent.id);
+                                        
+                                        return (
+                                            <motion.div
+                                                key={subEvent.id}
+                                                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-red-800/30 shadow-lg p-6"
+                                                initial="hidden"
+                                                whileInView="visible"
+                                                viewport={{ once: true, margin: "-100px" }}
+                                                custom={index + 1}
+                                                variants={fadeInUpVariant}
+                                            >
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <span className="text-3xl">{getSubEventIcon(subEvent.sub_event_name)}</span>
+                                                    <h3 className="text-xl font-bold text-red-300">
+                                                        {subEvent.sub_event_name}
+                                                    </h3>
+                                                </div>
+                                                
+                                                <p className="text-gray-300 text-sm mb-4">
+                                                    {subEvent.description}
+                                                </p>
+
+                                                <div className="space-y-2 text-sm text-gray-300 mb-6">
+                                                    <div>📅 {formatDateTime(subEvent.start_time)}</div>
+                                                    <div>📍 {subEvent.location}</div>
+                                                    {subEvent.max_participants && (
+                                                        <div>👥 Max: {subEvent.max_participants} participants</div>
+                                                    )}
+                                                </div>
+
+                                                {user ? (
+                                                    isRegistered ? (
+                                                        <div className="bg-green-500/20 text-green-300 p-3 rounded-lg text-center">
+                                                            ✅ Registered
+                                                        </div>
+                                                    ) : isProfileComplete ? (
+                                                        <button
+                                                            onClick={() => handleSubEventRegister(subEvent.id)}
+                                                            disabled={processingSubEvent}
+                                                            className="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
+                                                        >
+                                                            {processingSubEvent ? 'Processing...' : 'Register Now'}
+                                                        </button>
+                                                    ) : (
+                                                        <a
+                                                            href={route("participant.profile")}
+                                                            className="block w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg text-center transition-all duration-300"
+                                                        >
+                                                            Complete Profile First
+                                                        </a>
+                                                    )
+                                                ) : (
+                                                    <a
+                                                        href={route("login")}
+                                                        className="block w-full px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-lg text-center transition-all duration-300"
+                                                    >
+                                                        Login to Register
+                                                    </a>
+                                                )}
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Info Section - No more general registration */}
                         <section className="mb-8 sm:mb-10 lg:mb-16">
                             <motion.div
                                 className="text-center mb-8 sm:mb-10"
@@ -343,7 +495,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                 variants={fadeInUpVariant}
                             >
                                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-red-400 to-rose-500 text-transparent bg-clip-text">
-                                    Register for Talksphere
+                                    How to Join Talksphere
                                 </h2>
                                 <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-red-500 to-rose-600 mx-auto rounded-full"></div>
                             </motion.div>
@@ -358,134 +510,19 @@ const Talksphere: React.FC<TalksphereProps> = ({
                             >
                                 <div className="text-center space-y-4 sm:space-y-6 w-full">
                                     <h3 className="text-xl sm:text-2xl font-semibold text-white">
-                                        {isRegistered
-                                            ? "You're Registered!"
-                                            : "Join Us at Talksphere"}
+                                        Choose Your Experience Above
                                     </h3>
                                     <p className="text-gray-300 text-sm sm:text-base">
-                                        {isRegistered
-                                            ? "Thank you for registering for Talksphere. We look forward to seeing you at the event!"
-                                            : "Join us for engaging discussions, insightful presentations, and networking opportunities with industry leaders. Talksphere brings together tech professionals and enthusiasts to explore the latest innovations and future trends in technology. Registration is quick and easy!"}
+                                        Talksphere offers three distinct experiences: <strong>Seminar</strong>, <strong>Talkshow</strong>, and <strong>Workshop</strong>. 
+                                        Each event has its own registration and QR code for verification. Simply scroll up to the "Choose Your Experience" section 
+                                        and register for the events that interest you most. You can register for multiple sub-events!
                                     </p>
 
-                                    {isRegistered ? (
-                                        <div className="mt-4 bg-red-500/20 text-red-300 p-4 rounded-lg border border-red-700/30">
-                                            <p className="font-medium">
-                                                You are successfully registered
-                                                for Talksphere!
-                                            </p>
-                                        </div>
-                                    ) : user ? (
-                                        <>
-                                            {!isProfileComplete ? (
-                                                <div className="mt-4 space-y-4">
-                                                    <div className="bg-yellow-500/20 text-yellow-300 p-4 rounded-lg border border-yellow-700/30 text-sm">
-                                                        <p>
-                                                            Please complete your
-                                                            profile before
-                                                            registering for
-                                                            Talksphere.
-                                                        </p>
-                                                    </div>
-                                                    <div className="">
-                                                        <a
-                                                            href={route(
-                                                                "participant.profile"
-                                                            )}
-                                                            className="px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="h-5 w-5"
-                                                                viewBox="0 0 20 20"
-                                                                fill="currentColor"
-                                                            >
-                                                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                                                            </svg>
-                                                            Complete Your
-                                                            Profile
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <button
-                                                    onClick={
-                                                        handleRegisterClick
-                                                    }
-                                                    disabled={processing}
-                                                    className="mt-4 sm:mt-6 sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg shadow-md shadow-red-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300 w-full"
-                                                >
-                                                    {processing ? (
-                                                        <>
-                                                            <span className="animate-pulse">
-                                                                Processing...
-                                                            </span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            Register Now
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="h-5 w-5"
-                                                                viewBox="0 0 20 20"
-                                                                fill="currentColor"
-                                                            >
-                                                                <path
-                                                                    fillRule="evenodd"
-                                                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                                                    clipRule="evenodd"
-                                                                />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </button>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <div className="mt-6 space-y-4 w-full">
-                                            <div className="bg-red-500/20 text-red-300 p-4 rounded-lg border border-red-700/30 text-sm">
-                                                <p>
-                                                    You need to log in or
-                                                    register before you can
-                                                    participate in Talksphere.
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-items-stretch w-full">
-                                                <a
-                                                    href={route("login")}
-                                                    className="sm:w-1/2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-5 w-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                    Login
-                                                </a>
-                                                <a
-                                                    href={route("register")}
-                                                    className="sm:w-1/2 px-6 py-3 bg-gradient-to-r from-rose-500 to-red-600 hover:from-rose-600 hover:to-red-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-5 w-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                                                    </svg>
-                                                    Register
-                                                </a>
-                                            </div>
-                                        </div>
-                                    )}
+                                    <div className="mt-6 bg-gradient-to-r from-red-500/20 to-rose-500/20 text-red-200 p-4 rounded-lg border border-red-700/30">
+                                        <p className="font-medium text-center">
+                                            🎯 Ready to join? Scroll up and choose your preferred sub-events!
+                                        </p>
+                                    </div>
                                 </div>
                             </motion.div>
                         </section>

@@ -92,6 +92,22 @@ class Event extends Model
     }
     
     /**
+     * Get all sub-events for this event.
+     */
+    public function subEvents(): HasMany
+    {
+        return $this->hasMany(SubEvent::class);
+    }
+    
+    /**
+     * Get active sub-events for this event.
+     */
+    public function activeSubEvents(): HasMany
+    {
+        return $this->hasMany(SubEvent::class)->where('is_active', true);
+    }
+    
+    /**
      * Check if this event is Hacksphere.
      * 
      * @return bool
@@ -99,5 +115,25 @@ class Event extends Model
     public function isHacksphere(): bool
     {
         return $this->event_code === 'hacksphere';
+    }
+    
+    /**
+     * Check if this event is Talksphere.
+     * 
+     * @return bool
+     */
+    public function isTalksphere(): bool
+    {
+        return $this->event_code === 'talksphere';
+    }
+    
+    /**
+     * Check if this event has sub-events.
+     * 
+     * @return bool
+     */
+    public function hasSubEvents(): bool
+    {
+        return $this->subEvents()->exists();
     }
 }

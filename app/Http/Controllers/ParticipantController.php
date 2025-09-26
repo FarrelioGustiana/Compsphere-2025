@@ -9,6 +9,7 @@ use App\Models\HacksphereRegistration;
 use App\Models\HacksphereTeam;
 use App\Models\HacksphereTeamMember;
 use App\Models\Participant;
+use App\Models\SubEvent;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
@@ -129,11 +130,18 @@ class ParticipantController extends Controller
             }
         }
 
+        // Get user's sub-event registrations
+        $userSubEventRegistrations = EventRegistration::where('user_id', $user->id)
+            ->whereNotNull('sub_event_id')
+            ->with(['subEvent', 'event'])
+            ->get();
+
         return Inertia::render('Participant/Dashboard', [
             'user' => $user,
             'participantDetails' => $participantDetails,
             'allEvents' => Event::all(),
             'registeredEvents' => $user->events,
+            'userSubEventRegistrations' => $userSubEventRegistrations,
             'hacksphereTeam' => $hacksphereTeam ? [
                 'id' => $hacksphereTeam->id,
                 'team_name' => $hacksphereTeam->team_name,
@@ -199,6 +207,11 @@ class ParticipantController extends Controller
 
         $event = Event::findOrFail($eventId);
 
+        // Block direct registration to Talksphere - users must register to sub-events
+        if ($event->event_code === 'talksphere') {
+            return back()->with('error', 'Please register for specific Talksphere sub-events (Seminar, Talkshow, or Workshop) instead of the general event.');
+        }
+
         try {
             DB::beginTransaction();
 
@@ -238,6 +251,135 @@ class ParticipantController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Event registration error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred during registration. Please try again.');
+        }
+    }
+
+    /**
+     * Register participant for a sub-event.
+     */
+    public function registerSubEvent(Request $request, $subEventId, QRCodeService $qrCodeService)
+    {
+        Log::info('Sub-event registration attempt', ['subEventId' => $subEventId, 'userId' => $request->user()->id]);
+        
+        $user = $request->user();
+        $participant = $user->participant;
+
+        // Check if participant profile is complete
+        if (
+            !$participant ||
+            !$participant->category ||
+            !$participant->phone_number ||
+            !$participant->date_of_birth
+        ) {
+            return redirect()->route('participant.profile')->with('error', 'Please complete your profile before registering.');
+        }
+
+        $subEvent = SubEvent::findOrFail($subEventId);
+        $event = $subEvent->event;
+
+        Log::info('Sub-event found', [
+            'subEvent' => $subEvent->sub_event_name,
+            'is_active' => $subEvent->is_active,
+            'start_time' => $subEvent->start_time,
+            'now' => now(),
+            'isRegistrationOpen' => $subEvent->isRegistrationOpen()
+        ]);
+
+        // Check if sub-event registration is still open
+        if (!$subEvent->isRegistrationOpen()) {
+            Log::warning('Registration closed for sub-event', ['subEventId' => $subEventId]);
+            return back()->with('error', 'Registration for this sub-event is no longer available.');
+        }
+
+        // Prevent duplicate registration for the same sub-event
+        $existingSubEventRegistration = EventRegistration::where('user_id', $participant->user_id)
+            ->where('event_id', $event->id)
+            ->where('sub_event_id', $subEvent->id)
+            ->first();
+
+        Log::info('Duplicate check result', [
+            'user_id' => $participant->user_id,
+            'event_id' => $event->id,
+            'sub_event_id' => $subEvent->id,
+            'existing_registration' => $existingSubEventRegistration ? $existingSubEventRegistration->id : null
+        ]);
+
+        if ($existingSubEventRegistration) {
+            Log::warning('Duplicate registration attempt blocked');
+            return back()->with('info', 'You are already registered for this sub-event.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Create EventRegistration record for sub-event
+            $eventRegistration = EventRegistration::create([
+                'user_id' => $participant->user_id,
+                'event_id' => $event->id,
+                'sub_event_id' => $subEvent->id,
+                'registration_date' => now(),
+                'registration_status' => 'registered', // Set to registered immediately for sub-events
+                'payment_status' => $event->is_paid_event ? 'pending' : null,
+                'payment_amount' => $event->is_paid_event ? 0 : null,
+            ]);
+
+            Log::info('EventRegistration created successfully', [
+                'registration_id' => $eventRegistration->id,
+                'user_id' => $participant->user_id,
+                'event_id' => $event->id,
+                'sub_event_id' => $subEvent->id
+            ]);
+
+            // Also register for main event if not already registered (without sub_event_id)
+            $mainEventRegistration = EventRegistration::where('user_id', $participant->user_id)
+                ->where('event_id', $event->id)
+                ->whereNull('sub_event_id')
+                ->first();
+                
+            if (!$mainEventRegistration) {
+                EventRegistration::create([
+                    'user_id' => $participant->user_id,
+                    'event_id' => $event->id,
+                    'sub_event_id' => null, // Main event registration
+                    'registration_date' => now(),
+                    'registration_status' => 'registered'
+                ]);
+                
+                Log::info('Main event registration created', [
+                    'user_id' => $participant->user_id,
+                    'event_id' => $event->id
+                ]);
+            }
+
+            // Generate QR code for sub-event
+            if (in_array($event->event_code, ['talksphere', 'festsphere'])) {
+                Log::info('Generating QR code for sub-event registration', [
+                    'user_id' => $participant->user_id,
+                    'event_id' => $event->id,
+                    'sub_event_id' => $subEvent->id,
+                    'event_code' => $event->event_code
+                ]);
+                
+                $qrCodeData = $qrCodeService->generateEventRegistrationQR($participant->user_id, $event->id, $subEvent->id);
+
+                if ($qrCodeData) {
+                    Log::info('QR code generated successfully', ['qr_data' => $qrCodeData]);
+                    DB::commit();
+                    return back()->with([
+                        'success' => "You have registered for {$subEvent->sub_event_name}! Your QR code has been generated.",
+                        'qr_code_data' => $qrCodeData
+                    ]);
+                } else {
+                    Log::error('Failed to generate QR code for sub-event registration');
+                }
+            }
+
+            DB::commit();
+            return back()->with('success', "You have successfully registered for {$subEvent->sub_event_name}!");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Sub-event registration error: ' . $e->getMessage());
             return back()->with('error', 'An error occurred during registration. Please try again.');
         }
     }

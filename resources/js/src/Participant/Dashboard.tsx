@@ -1,6 +1,6 @@
 import { Head } from "@inertiajs/react";
 import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
-import { Event, Participant, User } from "@/types/models";
+import { Event, Participant, User, EventRegistration } from "@/types/models";
 import EventCard from "@/src/Components/Home/EventCard";
 import { getColorAndIcon } from "@/src/Pages/Home";
 import { Link } from "@inertiajs/react";
@@ -20,6 +20,7 @@ interface ParticipantDashboardProps {
     participantDetails: any | Participant;
     allEvents: Event[];
     registeredEvents: Event[];
+    userSubEventRegistrations: EventRegistration[];
     hacksphereTeam: {
         id: number;
         team_name: string;
@@ -62,6 +63,7 @@ export default function Dashboard({
     participantDetails,
     allEvents,
     registeredEvents,
+    userSubEventRegistrations,
     hacksphereTeam,
     auth,
 }: ParticipantDashboardProps) {
@@ -337,6 +339,47 @@ export default function Dashboard({
                                                     <Zap className="mr-2 h-4 w-4" />
                                                     Register Now
                                                 </Link>
+                                            )}
+                                            
+                                            {/* Sub-events section */}
+                                            {registeredEvents.some((regEvent) => regEvent.id === event.id) && 
+                                             userSubEventRegistrations?.filter(reg => reg.event?.id === event.id).length > 0 && (
+                                                <div className="mt-4 pt-4 border-t border-purple-600/20">
+                                                    <h4 className="text-purple-200 font-medium mb-3">Your Sub-Events</h4>
+                                                    <div className="space-y-2">
+                                                        {userSubEventRegistrations
+                                                            .filter(reg => reg.event?.id === event.id)
+                                                            .map((registration, idx) => (
+                                                                <div key={idx} className="bg-purple-800/30 p-3 rounded-lg border border-purple-600/20">
+                                                                    <div className="flex items-center justify-between mb-2">
+                                                                        <span className="text-purple-200 font-medium text-sm">
+                                                                            {registration.sub_event?.sub_event_name}
+                                                                        </span>
+                                                                        <span className="px-2 py-1 bg-green-900/50 text-green-300 text-xs rounded-full border border-green-500/30">
+                                                                            Registered
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="flex items-center justify-between">
+                                                                        <div className="text-xs text-gray-300">
+                                                                            📅 {new Date(registration.sub_event?.start_time || '').toLocaleDateString('id-ID')}
+                                                                        </div>
+                                                                        <Link
+                                                                            href={`/participant/sub-event/qr-code/${registration.sub_event?.id}`}
+                                                                            className="inline-flex items-center px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors"
+                                                                        >
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" className="mr-1 h-3 w-3" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                                                <rect x="3" y="3" width="7" height="7"></rect>
+                                                                                <rect x="14" y="3" width="7" height="7"></rect>
+                                                                                <rect x="14" y="14" width="7" height="7"></rect>
+                                                                                <rect x="3" y="14" width="7" height="7"></rect>
+                                                                            </svg>
+                                                                            QR Code
+                                                                        </Link>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                    </div>
+                                                </div>
                                             )}
                                         </div>
                                         <div className="flex-shrink-0 bg-gradient-to-br from-purple-800/40 to-indigo-900/30 p-5 rounded-lg border border-purple-600/20 shadow-lg">

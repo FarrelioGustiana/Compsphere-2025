@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\SubEvent;
+use App\Models\EventRegistration;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -77,6 +79,21 @@ class EventController extends Controller
         if ($isRegistered) {
             $eventRegistration = $user->eventRegistrations()->where('event_id', $event->id)->first();
         }
+
+        // Get sub-events for this event (if any)
+        $subEvents = $event->activeSubEvents()->get();
+        
+        // Get user's sub-event registrations if logged in
+        $userSubEventRegistrations = [];
+        if ($user) {
+            $userSubEventRegistrations = EventRegistration::where('user_id', $user->id)
+                ->where('event_id', $event->id)
+                ->whereNotNull('sub_event_id')
+                ->with('subEvent')
+                ->get()
+                ->pluck('sub_event_id')
+                ->toArray();
+        }
         
         // Determine the component name based on the event code
         $componentName = 'Pages/Events/' . ucfirst($slug);
@@ -87,6 +104,8 @@ class EventController extends Controller
             'participantDetails' => $participantDetails,
             'isRegistered' => $isRegistered,
             'eventRegistration' => $eventRegistration,
+            'subEvents' => $subEvents,
+            'userSubEventRegistrations' => $userSubEventRegistrations,
         ]);
     }
 

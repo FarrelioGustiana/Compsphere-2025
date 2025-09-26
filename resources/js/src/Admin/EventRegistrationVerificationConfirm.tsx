@@ -5,6 +5,7 @@ import { CheckCircle, User, Calendar, Mail, Phone } from "lucide-react";
 
 interface Props {
   event: any;
+  subEvent?: any;
   eventRegistration: any;
   participant: any;
   user: any;
@@ -13,6 +14,7 @@ interface Props {
 
 export default function EventRegistrationVerificationConfirm({
   event,
+  subEvent,
   eventRegistration,
   participant,
   user,
@@ -58,6 +60,30 @@ export default function EventRegistrationVerificationConfirm({
               <span className="text-gray-400">Event Code:</span>
               <p className="font-medium uppercase">{event.event_code}</p>
             </div>
+            {subEvent && (
+              <>
+                <div>
+                  <span className="text-gray-400">Sub-Event:</span>
+                  <p className="font-medium text-yellow-400">{subEvent.sub_event_name}</p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Sub-Event Time:</span>
+                  <p className="font-medium">
+                    {new Date(subEvent.start_time).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-gray-400">Location:</span>
+                  <p className="font-medium">{subEvent.location}</p>
+                </div>
+              </>
+            )}
             <div>
               <span className="text-gray-400">Registration Date:</span>
               <p className="font-medium">

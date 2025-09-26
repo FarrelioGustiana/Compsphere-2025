@@ -49,6 +49,13 @@ class EventRegistrationVerification extends Model
         $user = $participant->user;
         
         // Format: /admin/verify-registration/{eventCode}/{userId}/{token}
-        return url("/admin/verify-registration/{$event->event_code}/{$user->id}/{$this->verification_token}");
+        $baseUrl = "/admin/verify-registration/{$event->event_code}/{$user->id}/{$this->verification_token}";
+        
+        // Add sub_event_id parameter if this is a sub-event registration
+        if ($eventRegistration->sub_event_id) {
+            $baseUrl .= "?sub_event_id={$eventRegistration->sub_event_id}";
+        }
+        
+        return url($baseUrl);
     }
 }

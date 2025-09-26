@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\QRVerificationController;
+use App\Http\Controllers\Admin\TalksphereController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,6 +71,9 @@ Route::group([
         });
 
         // Talksphere Admin Routes
+        Route::get('/talksphere', [TalksphereController::class, 'index'])->name('admin.talksphere.dashboard');
+        Route::get('/talksphere/sub-event/{subEventId}', [TalksphereController::class, 'showSubEvent'])->name('admin.talksphere.sub-event');
+        Route::get('/talksphere/sub-event/{subEventId}/export', [TalksphereController::class, 'exportSubEvent'])->name('admin.talksphere.sub-event.export');
         Route::get('/talksphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.talksphere.participants')->defaults('eventCode', 'talksphere');
 
         // Festsphere Admin Routes

@@ -262,18 +262,27 @@ class QRCodeService
      * 
      * @param int $userId
      * @param int $eventId
+     * @param int|null $subEventId
      * @return array|null QR code data or null if error
      */
-    public function generateEventRegistrationQR(int $userId, int $eventId): ?array
+    public function generateEventRegistrationQR(int $userId, int $eventId, ?int $subEventId = null): ?array
     {
         try {
             // Find the event registration
-            $eventRegistration = EventRegistration::where('user_id', $userId)
-                ->where('event_id', $eventId)
-                ->first();
+            $query = EventRegistration::where('user_id', $userId)
+                ->where('event_id', $eventId);
+            
+            if ($subEventId) {
+                $query->where('sub_event_id', $subEventId);
+            } else {
+                $query->whereNull('sub_event_id');
+            }
+            
+            $eventRegistration = $query->first();
 
             if (!$eventRegistration) {
-                Log::error('Event registration not found for user_id: ' . $userId . ', event_id: ' . $eventId);
+                $subEventText = $subEventId ? " and sub_event_id: $subEventId" : "";
+                Log::error('Event registration not found for user_id: ' . $userId . ', event_id: ' . $eventId . $subEventText);
                 return null;
             }
 
@@ -402,35 +411,22 @@ class QRCodeService
             $user = $participant ? $participant->user : null;
             $admin = User::find($adminId);
             
-            // Double check: prevent verification if user is already registered
-            if ($eventRegistration && $eventRegistration->registration_status === 'registered') {
-                return [
-                    'success' => false,
-                    'message' => 'This participant has already been verified and registered for the event.',
-                    'data' => [
-                        'event' => $event,
-                        'participant' => $participant,
-                        'user' => $user,
-                        'verification' => $verification
-                    ]
-                ];
-            }
+            // Note: We removed the double check for registration_status === 'registered' 
+            // because for sub-events, registration_status is set to 'registered' immediately upon registration
+            // The verification status is tracked by the verification record status (active/used/expired)
             
-            // Update EventRegistration status to 'registered' after successful verification
-            if ($eventRegistration) {
-                $eventRegistration->registration_status = 'registered';
-                $eventRegistration->save();
-                
-                // Also update pivot table for backward compatibility
-                if ($user) {
-                    $user->events()->updateExistingPivot($event->id, [
-                        'registration_status' => 'registered'
-                    ]);
-                }
-            }
+            // Log successful verification
+            Log::info('QR code verification successful', [
+                'token' => $token,
+                'admin_id' => $adminId,
+                'event_registration_id' => $verification->event_registration_id,
+                'event_id' => $eventRegistration->event_id,
+                'sub_event_id' => $eventRegistration->sub_event_id,
+                'user_id' => $eventRegistration->user_id
+            ]);
             
+            // Return success response
             DB::commit();
-            
             return [
                 'success' => true,
                 'message' => 'Event registration verification successful.',
@@ -460,15 +456,23 @@ class QRCodeService
      * 
      * @param int $userId
      * @param int $eventId
+     * @param int|null $subEventId
      * @return array|null
      */
-    public function regenerateEventRegistrationQR(int $userId, int $eventId): ?array
+    public function regenerateEventRegistrationQR(int $userId, int $eventId, ?int $subEventId = null): ?array
     {
         try {
             // Find the event registration
-            $eventRegistration = EventRegistration::where('user_id', $userId)
-                ->where('event_id', $eventId)
-                ->first();
+            $query = EventRegistration::where('user_id', $userId)
+                ->where('event_id', $eventId);
+            
+            if ($subEventId) {
+                $query->where('sub_event_id', $subEventId);
+            } else {
+                $query->whereNull('sub_event_id');
+            }
+            
+            $eventRegistration = $query->first();
 
             if (!$eventRegistration) {
                 return null;
@@ -480,7 +484,7 @@ class QRCodeService
                 ->update(['status' => 'expired']);
             
             // Generate a new QR code
-            return $this->generateEventRegistrationQR($userId, $eventId);
+            return $this->generateEventRegistrationQR($userId, $eventId, $subEventId);
         } catch (\Exception $e) {
             Log::error('Error regenerating event registration QR code: ' . $e->getMessage());
             return null;

@@ -239,7 +239,7 @@ class QRVerificationController extends Controller
     /**
      * Show the verification page for event registration QR code
      */
-    public function showEventRegistrationVerificationPage(string $eventCode, int $userId, string $token)
+    public function showEventRegistrationVerificationPage(Request $request, string $eventCode, int $userId, string $token)
     {
         // Get the event
         $event = Event::where('event_code', $eventCode)->firstOrFail();
@@ -255,6 +255,9 @@ class QRVerificationController extends Controller
             ]);
         }
         
+        // Get sub_event_id from query parameter if present
+        $subEventId = $request->query('sub_event_id');
+        
         // Get verification record to check if already used
         $verification = EventRegistrationVerification::where('verification_token', $token)->first();
         
@@ -266,10 +269,20 @@ class QRVerificationController extends Controller
             ]);
         }
         
+        // Check if QR code has already been used/verified
+        if ($verification->status === 'used') {
+            return Inertia::render('Admin/QRVerificationResult', [
+                'success' => false,
+                'message' => 'QR code has already been used for verification.',
+                'event' => $event,
+                'verification' => $verification
+            ]);
+        }
+        
         if ($verification->status !== 'active') {
             return Inertia::render('Admin/QRVerificationResult', [
                 'success' => false,
-                'message' => 'QR code has already been used or expired',
+                'message' => 'QR code has expired or is no longer valid.',
                 'event' => $event,
                 'verification' => $verification
             ]);
@@ -280,22 +293,25 @@ class QRVerificationController extends Controller
         $participant = $eventRegistration->user;
         $user = $participant->user;
         
-        // Check if user is already registered (verified)
-        if ($eventRegistration->registration_status === 'registered') {
+        // For sub-events, validate that the sub_event_id matches
+        if ($subEventId && $eventRegistration->sub_event_id != $subEventId) {
             return Inertia::render('Admin/QRVerificationResult', [
                 'success' => false,
-                'message' => 'This participant has already been verified and registered for the event.',
-                'event' => $event,
-                'eventRegistration' => $eventRegistration,
-                'participant' => $participant,
-                'user' => $user,
-                'type' => 'event_registration'
+                'message' => 'QR code is not valid for this sub-event.',
+                'event' => $event
             ]);
+        }
+        
+        // Get sub-event data if this is a sub-event registration
+        $subEvent = null;
+        if ($eventRegistration->sub_event_id) {
+            $subEvent = $eventRegistration->subEvent;
         }
         
         // Show verification confirmation page
         return Inertia::render('Admin/EventRegistrationVerificationConfirm', [
             'event' => $event,
+            'subEvent' => $subEvent,
             'eventRegistration' => $eventRegistration,
             'participant' => $participant,
             'user' => $user,

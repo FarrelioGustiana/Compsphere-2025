@@ -74,10 +74,31 @@ export interface Team {
     members?: User[];
 }
 
+export interface SubEvent {
+    id: number;
+    event_id: number;
+    sub_event_code: string;
+    sub_event_name: string;
+    description: string;
+    start_time: string;
+    end_time: string;
+    location: string;
+    max_participants: number | null;
+    is_active: boolean;
+    additional_info: any;
+    created_at: string;
+    updated_at: string;
+    event?: Event;
+    current_registration_count?: number;
+    available_slots?: number;
+    status: "upcoming" | "ongoing" | "completed" | "full" | "inactive";
+}
+
 export interface EventRegistration {
     id: number;
     user_id: number;
     event_id: number;
+    sub_event_id?: number | null;
     registration_date: string;
     registration_status: "pending" | "registered" | "cancelled";
     payment_status:
@@ -94,6 +115,7 @@ export interface EventRegistration {
     created_at: string;
     updated_at: string;
     event?: Event;
+    sub_event?: SubEvent;
     participant?: Participant;
 }
 

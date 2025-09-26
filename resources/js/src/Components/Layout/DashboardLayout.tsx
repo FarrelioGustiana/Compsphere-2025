@@ -80,7 +80,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             },
             {
                 name: "Talksphere",
-                href: route("admin.talksphere.participants"),
+                href: route("admin.talksphere.dashboard"),
                 icon: Users,
             },
             {

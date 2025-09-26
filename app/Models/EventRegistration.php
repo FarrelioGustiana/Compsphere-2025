@@ -16,6 +16,7 @@ class EventRegistration extends Model
     protected $fillable = [
         'user_id',
         'event_id',
+        'sub_event_id',
         'registration_date',
         'registration_status',
         'payment_status',
@@ -39,6 +40,14 @@ class EventRegistration extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Get the sub-event for this registration.
+     */
+    public function subEvent(): BelongsTo
+    {
+        return $this->belongsTo(SubEvent::class);
     }
 
     /**
