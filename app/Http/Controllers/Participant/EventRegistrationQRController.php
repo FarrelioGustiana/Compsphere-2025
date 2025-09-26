@@ -21,6 +21,17 @@ class EventRegistrationQRController extends Controller
     }
 
     /**
+     * Display QR code for event registration (alias for showQRCode)
+     *
+     * @param string $eventCode
+     * @return \Inertia\Response
+     */
+    public function show($eventCode)
+    {
+        return $this->showQRCode($eventCode);
+    }
+
+    /**
      * Display QR code for event registration
      *
      * @param string $eventCode
@@ -40,8 +51,8 @@ class EventRegistrationQRController extends Controller
             return redirect()->route('participant.dashboard')->with('error', 'You are not registered for this event.');
         }
 
-        // Only allow QR codes for Talksphere and Festsphere
-        if (!in_array($event->event_code, ['talksphere', 'festsphere'])) {
+        // Only allow QR codes for Festsphere and Exposphere (Talksphere uses sub-event QR codes)
+        if (!in_array($event->event_code, ['festsphere', 'exposphere'])) {
             return redirect()->route('participant.dashboard')->with('error', 'QR codes are not available for this event.');
         }
 

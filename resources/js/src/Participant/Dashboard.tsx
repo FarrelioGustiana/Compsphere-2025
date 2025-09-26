@@ -315,8 +315,8 @@ export default function Dashboard({
                                                         View Details
                                                     </Link>
                                                     
-                                                    {/* QR Code button for Talksphere and Festsphere only */}
-                                                    {(event.event_code === 'talksphere' || event.event_code === 'festsphere') && (
+                                                    {/* QR Code button for Festsphere and Exposphere only (Talksphere has individual sub-event QR codes) */}
+                                                    {(event.event_code === 'festsphere' || event.event_code === 'exposphere') && (
                                                         <Link
                                                             href={`/participant/event-registration/qr-code/${event.event_code}`}
                                                             className="inline-flex items-center px-5 py-2.5 border border-green-400/30 shadow-lg text-sm font-medium rounded-lg text-white bg-green-600 hover:bg-green-500 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-green-900"
