@@ -175,6 +175,7 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     "Apply the Twibbon to your photo using any photo editing app",
                                     "Post it on your social media with hashtag #Hacksphere2025",
                                     "Make sure your profile is public (at least until the event)",
+                                    "Use the caption template provided below",
                                     "Copy the post URL and paste it in the form below",
                                 ].map((instruction, index) => (
                                     <motion.li
@@ -190,6 +191,58 @@ const TwibbonStep: React.FC<TwibbonStepProps> = ({
                                     </motion.li>
                                 ))}
                             </ol>
+                        </motion.div>
+
+                        <motion.div className="mb-6" variants={itemVariants}>
+                            <h5 className="text-lg font-semibold text-blue-400 mb-3 flex items-center">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5 mr-2"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    />
+                                </svg>
+                                Caption Template
+                            </h5>
+                            <div className="bg-gray-800/80 p-4 rounded-lg border border-blue-500/20 mb-4">
+                                <p className="text-gray-300 mb-2 text-sm">Copy and paste this caption when posting your twibbon:</p>
+                                <div className="bg-gray-700/80 p-3 rounded-md border border-gray-600 text-gray-200 text-sm">
+                                    <p className="mb-2">Greetings, Innovators! 👋</p>
+                                    <p className="mb-2">Saya [tulis nama kamu di sini], siap berpartisipasi di Hacksphere 2025!</p>
+                                    <p className="mb-2">Hacksphere 2025 adalah bagian dari COMPSPHERE 2025, event tahunan terbesar dari Fakultas Ilmu Komputer President University.</p>
+                                    <p className="mb-2">Dengan tema "Accelerating Innovation Through Intelligent Technology", COMPSPHERE mengajak kamu untuk mengasah kreativitas, kemampuan problem-solving, dan inovasi teknologi terbaikmu!</p>
+                                    <p className="mb-2">Total hadiah hingga Rp20.000.000 menanti para pemenang!</p>
+                                    <p className="mb-2">📅 Registrasi: 14 – 25 September 2025</p>
+                                    <p className="mb-2">Jangan lewatkan kesempatan ini!</p>
+                                    <p className="mb-2">Daftarkan dirimu sekarang di:</p>
+                                    <p className="mb-2">👉 compsphere.id/events/hacksphere</p>
+                                    <p className="mb-2">Dan jangan lupa, tag 2 temanmu untuk ikut bareng!</p>
+                                    <p className="mb-1">@Compsphere</p>
+                                    <p className="mb-1">compsphere.id</p>
+                                    <p>#hacksphere2025</p>
+                                </div>
+                                <button 
+                                    className="mt-3 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded flex items-center transition-colors"
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(
+                                            "Greetings, Innovators! 👋\n\nSaya [tulis nama kamu di sini], siap berpartisipasi di Hacksphere 2025!\n\nHacksphere 2025 adalah bagian dari COMPSPHERE 2025, event tahunan terbesar dari Fakultas Ilmu Komputer President University.\n\nDengan tema \"Accelerating Innovation Through Intelligent Technology\", COMPSPHERE mengajak kamu untuk mengasah kreativitas, kemampuan problem-solving, dan inovasi teknologi terbaikmu!\n\nTotal hadiah hingga Rp20.000.000 menanti para pemenang!\n\n📅 Registrasi: 14 – 25 September 2025\n\nJangan lewatkan kesempatan ini!\nDaftarkan dirimu sekarang di:\n👉 compsphere.id/events/hacksphere\n\nDan jangan lupa, tag 2 temanmu untuk ikut bareng!\n\n@Compsphere\ncompsphere.id\n#hacksphere2025"
+                                        );
+                                        alert("Caption copied to clipboard!");
+                                    }}
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                    </svg>
+                                    Copy Caption
+                                </button>
+                            </div>
                         </motion.div>
 
                         <motion.div className="mb-6" variants={itemVariants}>
