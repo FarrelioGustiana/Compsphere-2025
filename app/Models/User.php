@@ -158,6 +158,26 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     
     /**
+     * Check if the user is a super admin.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'admin' && 
+               $this->adminProfile && 
+               $this->adminProfile->admin_level === 'super_admin';
+    }
+    
+    /**
+     * Check if the user is a moderator admin.
+     */
+    public function isModerator(): bool
+    {
+        return $this->role === 'admin' && 
+               $this->adminProfile && 
+               $this->adminProfile->admin_level === 'moderator';
+    }
+    
+    /**
      * Determine if the user has verified their email address.
      *
      * @return bool
