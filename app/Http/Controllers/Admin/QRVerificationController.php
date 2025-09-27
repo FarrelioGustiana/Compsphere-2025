@@ -288,10 +288,16 @@ class QRVerificationController extends Controller
             ]);
         }
         
-        // Get event registration and user data
-        $eventRegistration = $verification->eventRegistration;
-        $participant = $eventRegistration->user;
-        $user = $participant->user;
+        // Get event registration and user data with eager loading
+        $eventRegistration = $verification->eventRegistration()->with('user.user')->first();
+        $participant = $eventRegistration->user; // This is a Participant model
+        $user = $participant->user; // This is the actual User model
+        
+        // Debug logging
+        Log::info('Verification data debug', [
+            'participant' => $participant ? $participant->toArray() : null,
+            'user' => $user ? $user->toArray() : null,
+        ]);
         
         // For sub-events, validate that the sub_event_id matches
         if ($subEventId && $eventRegistration->sub_event_id != $subEventId) {

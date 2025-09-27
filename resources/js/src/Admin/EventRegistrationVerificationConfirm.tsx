@@ -20,6 +20,12 @@ export default function EventRegistrationVerificationConfirm({
   user,
   verificationToken,
 }: Props) {
+  // Debug logging
+  console.log('Verification Confirm Props:', {
+    participant,
+    user,
+    eventRegistration
+  });
   const { post, processing } = useForm({
     verification_token: verificationToken,
   });
@@ -110,7 +116,7 @@ export default function EventRegistrationVerificationConfirm({
               <User className="h-5 w-5 text-gray-400" />
               <div>
                 <span className="text-gray-400 text-sm">Full Name:</span>
-                <p className="font-medium">{user.full_name}</p>
+                <p className="font-medium">{user ? `${user.first_name} ${user.last_name}` : (participant.full_name || '')}</p>
               </div>
             </div>
             
@@ -118,7 +124,7 @@ export default function EventRegistrationVerificationConfirm({
               <Mail className="h-5 w-5 text-gray-400" />
               <div>
                 <span className="text-gray-400 text-sm">Email:</span>
-                <p className="font-medium">{user.email}</p>
+                <p className="font-medium">{user && user.email ? user.email : (participant && participant.email ? participant.email : '')}</p>
               </div>
             </div>
             
