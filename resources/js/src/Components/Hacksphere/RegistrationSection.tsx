@@ -501,8 +501,16 @@ function RegistrationSection({
                             and collaborate with fellow tech enthusiasts to
                             build innovative solutions!
                         </p>
-
-                        {user ? (
+                        
+                        {/* Check if registration is closed based on event status */}
+                        {event.event_code === 'hacksphere' || event.status === 'registration_closed' || event.status === 'ongoing' || event.status === 'completed' ? (
+                            <div className="bg-red-500/20 text-red-300 p-4 rounded-lg border border-red-700/30 text-sm mb-4">
+                                <p className="font-bold text-lg mb-2">Registration Closed</p>
+                                <p>
+                                    Hacksphere registration is now closed. Thank you for your interest.
+                                </p>
+                            </div>
+                        ) : user ? (
                             <div className="space-y-4 w-full">
                                 {isProfileComplete && (
                                     <button

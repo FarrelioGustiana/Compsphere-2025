@@ -136,4 +136,16 @@ class Event extends Model
     {
         return $this->subEvents()->exists();
     }
+    
+    /**
+     * Check if registration is still open for this event.
+     * 
+     * @return bool
+     */
+    public function isRegistrationOpen(): bool
+    {
+        return $this->is_active && 
+               now() >= $this->registration_open_date && 
+               now() <= $this->registration_close_date;
+    }
 }

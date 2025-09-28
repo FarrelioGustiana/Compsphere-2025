@@ -426,6 +426,18 @@ class ParticipantController extends Controller
     {
         $user = $request->user();
         $participant = $user->participant;
+        
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+        
+        // Force registration to be closed as of September 28, 2025
+        $closingDate = \Carbon\Carbon::create(2025, 9, 28, 23, 59, 59);
+        $now = now();
+        
+        // Check if current date is past the closing date or if registration is not open
+        if (!$hacksphereEvent || $now >= $closingDate || !$hacksphereEvent->isRegistrationOpen()) {
+            return back()->with('error', 'Hacksphere registration is now closed. Thank you for your interest.');
+        }
 
         // Check if participant profile is complete
         if (
@@ -618,6 +630,21 @@ class ParticipantController extends Controller
      */
     public function validateTeamMemberEmail(Request $request)
     {
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+        
+        // Force registration to be closed as of September 28, 2025
+        $closingDate = \Carbon\Carbon::create(2025, 9, 28, 23, 59, 59);
+        $now = now();
+        
+        // Check if current date is past the closing date or if registration is not open
+        if (!$hacksphereEvent || $now >= $closingDate || !$hacksphereEvent->isRegistrationOpen()) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Hacksphere registration is now closed. Thank you for your interest.'
+            ]);
+        }
+        
         $validated = $request->validate([
             'email' => 'required|email',
         ]);
@@ -666,6 +693,21 @@ class ParticipantController extends Controller
      */
     public function validateTeamMemberNik(Request $request)
     {
+        // Get Hacksphere event
+        $hacksphereEvent = Event::where('event_code', 'hacksphere')->first();
+        
+        // Force registration to be closed as of September 28, 2025
+        $closingDate = \Carbon\Carbon::create(2025, 9, 28, 23, 59, 59);
+        $now = now();
+        
+        // Check if current date is past the closing date or if registration is not open
+        if (!$hacksphereEvent || $now >= $closingDate || !$hacksphereEvent->isRegistrationOpen()) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'Hacksphere registration is now closed. Thank you for your interest.'
+            ]);
+        }
+        
         $validated = $request->validate([
             'nik' => ['required', new Nik],
             'current_member_email' => 'required|string|email',
