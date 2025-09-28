@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\QRVerificationController;
 use App\Http\Controllers\Admin\TalksphereController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\CheckAdminLevel;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,6 +32,13 @@ Route::group([
         Route::get('/users', function () {
             return app()->make(AdminController::class)->users(request());
         })->name('admin.users');
+
+        // Super Admin Only Routes
+        Route::middleware(CheckAdminLevel::class . ':super_admin')->group(function () {
+            Route::get('/user-management', [AdminController::class, 'userManagement'])->name('admin.user-management');
+            Route::post('/create-moderator', [AdminController::class, 'createModeratorAdmin'])->name('admin.create-moderator');
+            Route::post('/create-judge', [AdminController::class, 'createJudgeAccount'])->name('admin.create-judge');
+        });
 
         // QR Code Verification Routes
         Route::get('/qr-scanner', [QRVerificationController::class, 'showScanner'])->name('admin.qr.scanner');

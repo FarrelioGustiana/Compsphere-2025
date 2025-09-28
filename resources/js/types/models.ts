@@ -7,6 +7,9 @@ export interface User {
     profile_photo_url: string;
     full_name: string;
     email_verified: boolean;
+    created_at?: string;
+    adminProfile?: AdminProfile;
+    judgeProfile?: JudgeProfile;
 }
 
 export interface Participant {
@@ -47,18 +50,15 @@ export interface Event {
 }
 
 export interface JudgeProfile {
-    id: number;
     user_id: number;
-    institution: string;
-    expertise: string;
+    full_name: string;
     created_at: string;
     updated_at: string;
 }
 
 export interface AdminProfile {
-    id: number;
     user_id: number;
-    department: string;
+    admin_level: 'super_admin' | 'moderator';
     created_at: string;
     updated_at: string;
 }
@@ -164,4 +164,32 @@ export interface Sponsor {
     name? : string;
     logo? : string;
     url? : string;
+}
+
+export interface UserManagementStats {
+    total_admins: number;
+    super_admins: number;
+    moderators: number;
+    judges: number;
+}
+
+export interface CreateModeratorForm {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    send_credentials: boolean;
+    [key: string]: any;
+}
+
+export interface CreateJudgeForm {
+    first_name: string;
+    last_name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+    full_name: string;
+    send_credentials: boolean;
+    [key: string]: any;
 }
