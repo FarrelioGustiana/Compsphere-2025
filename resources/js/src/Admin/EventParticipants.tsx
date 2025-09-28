@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Head } from "@inertiajs/react";
 import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
 import { Event, EventRegistration } from "@/types/models";
-import { Download } from "lucide-react";
+import { Download, Users } from "lucide-react";
 import ParticipantTable from "@/src/Admin/Components/ParticipantTable";
 
 interface EventParticipantsProps {
@@ -71,59 +71,69 @@ export default function EventParticipants({
         <DashboardLayout>
             <Head title={`${event.event_name} Participants`} />
 
-            <div className="px-4 py-6">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
+            <div className="py-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 className="text-3xl font-bold text-white mb-8">
                         {event.event_name} Participants
                     </h1>
+                    
+                    {/* Statistics */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div className="bg-blue-600 rounded-xl p-6 text-white">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-blue-100 text-sm">Total Registrations</p>
+                                    <p className="text-3xl font-bold">{registrations.length}</p>
+                                </div>
+                                <Users className="h-12 w-12 text-blue-200" />
+                            </div>
+                        </div>
 
-                    <button
-                        onClick={handleExportCSV}
-                        className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                    >
-                        <Download className="w-4 h-4 mr-2" />
-                        Export CSV
-                    </button>
-                </div>
+                        {event.is_paid_event && (
+                            <div className="bg-green-600 rounded-xl p-6 text-white">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-green-100 text-sm">Paid Participants</p>
+                                        <p className="text-3xl font-bold">
+                                            {registrations.filter((reg) => reg.payment_status === "paid").length}
+                                        </p>
+                                    </div>
+                                    <Users className="h-12 w-12 text-green-200" />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Participants Table */}
+                    <div className="bg-gray-800 rounded-xl border border-gray-700 mb-6">
+                        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+                            <h2 className="text-xl font-semibold text-white">Participant List</h2>
+                            <button
+                                onClick={handleExportCSV}
+                                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                            >
+                                <Download className="w-4 h-4 mr-2" />
+                                Export CSV
+                            </button>
+                        </div>
 
-                <div className="bg-white rounded-lg shadow-sm">
-                    <div className="p-4">
-                        <div className="mb-4">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                Total: {registrations.length} participant
-                                {registrations.length !== 1 && "s"}
-                            </span>
-
+                        <div className="p-6">
                             {event.is_paid_event && (
-                                <div className="mt-2 flex space-x-2">
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Paid:{" "}
-                                        {
-                                            registrations.filter(
-                                                (reg) =>
-                                                    reg.payment_status ===
-                                                    "paid"
-                                            ).length
-                                        }
+                                <div className="mb-4 flex flex-wrap gap-2">
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-600 text-white">
+                                        Paid: {registrations.filter((reg) => reg.payment_status === "paid").length}
                                     </span>
-                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        Pending Payment:{" "}
-                                        {
-                                            registrations.filter(
-                                                (reg) =>
-                                                    reg.payment_status ===
-                                                    "pending"
-                                            ).length
-                                        }
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500 text-white">
+                                        Pending Payment: {registrations.filter((reg) => reg.payment_status === "pending").length}
                                     </span>
                                 </div>
                             )}
-                        </div>
 
-                        <ParticipantTable
-                            registrations={registrations}
-                            event={event}
-                        />
+                            <ParticipantTable
+                                registrations={registrations}
+                                event={event}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
