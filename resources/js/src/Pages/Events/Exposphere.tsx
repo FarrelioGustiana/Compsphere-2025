@@ -4,11 +4,12 @@ import {
     Participant,
     Event,
     EventRegistration as EventRegistrationModel,
+    SubEvent,
 } from "@/types/models";
 import { useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import { motion, AnimatePresence, easeOut } from "framer-motion";
-import { ArrowDownCircle } from "lucide-react";
+import { ArrowDownCircle, Calendar, MapPin, Users, Clock } from "lucide-react";
 import EventLayout from "@/src/Components/Layout/EventLayout";
 import StarGrid from "@/src/Components/StarGrid";
 
@@ -81,6 +82,8 @@ interface ExposphereProps {
     participantDetails?: Participant | null;
     isRegistered: boolean;
     eventRegistration?: EventRegistrationModel;
+    subEvents: SubEvent[];
+    userSubEventRegistrations: number[];
 }
 
 const Exposphere: React.FC<ExposphereProps> = ({
@@ -89,6 +92,8 @@ const Exposphere: React.FC<ExposphereProps> = ({
     participantDetails,
     isRegistered,
     eventRegistration,
+    subEvents,
+    userSubEventRegistrations,
 }) => {
     // Animation variants for sections
     const fadeInUpVariant = {
@@ -108,6 +113,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
     const eventDate = new Date(2025, 10, 15, 9, 0, 0);
 
     const { post, processing } = useForm({});
+    const { post: postSubEvent, processing: processingSubEvent } = useForm({});
 
     // Check if profile is complete
     const isProfileComplete =
@@ -115,6 +121,94 @@ const Exposphere: React.FC<ExposphereProps> = ({
         participantDetails.category &&
         participantDetails.phone_number &&
         participantDetails.date_of_birth;
+
+    const handleSubEventRegister = (subEventId: number) => {
+        if (!user) {
+            console.log('User not logged in, redirecting to login');
+            window.location.href = route("login");
+            return;
+        }
+
+        if (!isProfileComplete) {
+            console.log('Profile incomplete, redirecting to profile');
+            window.location.href = route("participant.profile");
+            return;
+        }
+
+        console.log('Submitting sub-event registration request...');
+        postSubEvent(route("participant.register-sub-event", subEventId), {
+            method: 'post',
+            onStart: () => {
+                console.log('Request started');
+            },
+            onSuccess: (page) => {
+                console.log('Registration successful:', page);
+                // Redirect to the same page to refresh data
+                window.location.href = window.location.href;
+            },
+            onError: (errors) => {
+                console.error('Registration error:', errors);
+                alert('Registration failed: ' + JSON.stringify(errors));
+            },
+            onFinish: () => {
+                console.log('Request finished');
+            }
+        });
+    };
+
+    const formatDateTime = (dateTime: string) => {
+        return new Date(dateTime).toLocaleString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    };
+
+    const getExposphereDayIcon = (dayName: string) => {
+        if (dayName.includes('Day 1')) return '🚀';
+        if (dayName.includes('Day 2')) return '💡';
+        if (dayName.includes('Day 3')) return '🌱';
+        return '🎯';
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'registration_open':
+                return 'bg-green-500/20 text-green-300 border-green-500/30';
+            case 'registration_not_open':
+                return 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30';
+            case 'registration_closed':
+                return 'bg-red-500/20 text-red-300 border-red-500/30';
+            case 'full':
+                return 'bg-red-500/20 text-red-300 border-red-500/30';
+            case 'ongoing':
+                return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
+            case 'completed':
+                return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+            default:
+                return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
+        }
+    };
+
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case 'registration_open':
+                return 'Registration Open';
+            case 'registration_not_open':
+                return 'Registration Not Open Yet';
+            case 'registration_closed':
+                return 'Registration Closed';
+            case 'ongoing':
+                return 'Event Ongoing';
+            case 'completed':
+                return 'Event Completed';
+            default:
+                return 'Unavailable';
+        }
+    };
 
     const handleRegisterClick = () => {
         // Check if user is logged in first
@@ -321,7 +415,123 @@ const Exposphere: React.FC<ExposphereProps> = ({
                             </div>
                         </section>
 
-                        {/* Registration Section */}
+                        {/* Sub-Events Section */}
+                        {subEvents && subEvents.length > 0 && (
+                            <section className="mb-16 sm:mb-20 lg:mb-24">
+                                <motion.div
+                                    className="text-center mb-8 sm:mb-10"
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    custom={0}
+                                    variants={fadeInUpVariant}
+                                >
+                                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-green-400 to-teal-400 text-transparent bg-clip-text">
+                                        Choose Your Day
+                                    </h2>
+                                    <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-green-500 to-teal-500 mx-auto rounded-full"></div>
+                                    <p className="text-gray-300 text-base sm:text-lg mt-4 max-w-3xl mx-auto">
+                                        Exposphere runs for 3 days with different themes each day. Register for the day(s) you want to attend. 
+                                        Registration opens one day before each event day.
+                                    </p>
+                                </motion.div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+                                    {subEvents.map((subEvent, index) => {
+                                        const isRegistered = userSubEventRegistrations.includes(subEvent.id);
+                                        const status = (subEvent as any).status || 'inactive';
+                                        
+                                        return (
+                                            <motion.div
+                                                key={subEvent.id}
+                                                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl border border-green-800/30 shadow-lg p-6"
+                                                initial="hidden"
+                                                whileInView="visible"
+                                                viewport={{ once: true, margin: "-100px" }}
+                                                custom={index + 1}
+                                                variants={fadeInUpVariant}
+                                            >
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <span className="text-3xl">{getExposphereDayIcon(subEvent.sub_event_name)}</span>
+                                                    <h3 className="text-xl font-bold text-green-300">
+                                                        {subEvent.sub_event_name}
+                                                    </h3>
+                                                </div>
+                                                
+                                                <p className="text-gray-300 text-sm mb-4">
+                                                    {subEvent.description}
+                                                </p>
+
+                                                <div className="space-y-2 text-sm text-gray-300 mb-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <Calendar className="h-4 w-4 text-green-400" />
+                                                        {formatDateTime(subEvent.start_time)}
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <MapPin className="h-4 w-4 text-green-400" />
+                                                        {subEvent.location}
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Users className="h-4 w-4 text-green-400" />
+                                                        Open for all participants
+                                                    </div>
+                                                </div>
+
+                                                {/* Status Badge */}
+                                                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border mb-4 ${getStatusColor(status)}`}>
+                                                    {getStatusText(status)}
+                                                </div>
+
+                                                {/* Action Buttons */}
+                                                {user ? (
+                                                    isRegistered ? (
+                                                        <div className="bg-green-500/20 text-green-300 p-3 rounded-lg text-center">
+                                                            ✅ Registered
+                                                        </div>
+                                                    ) : isProfileComplete ? (
+                                                        status === 'registration_open' ? (
+                                                            <button
+                                                                onClick={() => handleSubEventRegister(subEvent.id)}
+                                                                disabled={processingSubEvent}
+                                                                className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
+                                                            >
+                                                                {processingSubEvent ? 'Processing...' : 'Register Now'}
+                                                            </button>
+                                                        ) : (
+                                                            <button
+                                                                disabled
+                                                                className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
+                                                            >
+                                                                {status === 'registration_not_open' ? 'Registration Not Open Yet' :
+                                                                 status === 'ongoing' ? 'Event Ongoing' :
+                                                                 status === 'completed' ? 'Event Completed' :
+                                                                 'Unavailable'}
+                                                            </button>
+                                                        )
+                                                    ) : (
+                                                        <a
+                                                            href={route("participant.profile")}
+                                                            className="block w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg text-center transition-all duration-300"
+                                                        >
+                                                            Complete Profile First
+                                                        </a>
+                                                    )
+                                                ) : (
+                                                    <a
+                                                        href={route("login")}
+                                                        className="block w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-lg text-center transition-all duration-300"
+                                                    >
+                                                        Login to Register
+                                                    </a>
+                                                )}
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* Info Section */}
                         <section className="mb-8 sm:mb-10 lg:mb-16">
                             <motion.div
                                 className="text-center mb-8 sm:mb-10"
@@ -332,149 +542,66 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                 variants={fadeInUpVariant}
                             >
                                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-green-400 to-teal-400 text-transparent bg-clip-text">
-                                    Register for Exposphere
+                                    Important Information
                                 </h2>
                                 <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-green-500 to-teal-500 mx-auto rounded-full"></div>
                             </motion.div>
 
                             <motion.div
-                                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-green-900/20 border border-green-900/30 max-w-3xl mx-auto"
+                                className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-green-900/20 border border-green-900/30 max-w-4xl mx-auto"
                                 initial="hidden"
                                 whileInView="visible"
                                 viewport={{ once: true, margin: "-100px" }}
                                 custom={1}
                                 variants={fadeInUpVariant}
                             >
-                                <div className="text-center space-y-4 sm:space-y-6 w-full">
-                                    <h3 className="text-xl sm:text-2xl font-semibold text-white">
-                                        {isRegistered
-                                            ? "You're Registered!"
-                                            : "Join Us at Exposphere"}
-                                    </h3>
-                                    <p className="text-gray-300 text-sm sm:text-base">
-                                        {isRegistered
-                                            ? "Thank you for registering for Exposphere. We look forward to seeing you at the event!"
-                                            : "Exposphere offers a unique opportunity to explore the latest innovations and network with industry professionals. Registration is quick and easy!"}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <h3 className="text-lg font-semibold text-green-300 flex items-center gap-2">
+                                            <Clock className="h-5 w-5" />
+                                            Registration Schedule
+                                        </h3>
+                                        <div className="space-y-3 text-sm text-gray-300">
+                                            <div className="flex justify-between">
+                                                <span>Day 1 Registration:</span>
+                                                <span className="text-green-400">Sept 30 - Oct 1</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>Day 2 Registration:</span>
+                                                <span className="text-green-400">Oct 1 - Oct 2</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>Day 3 Registration:</span>
+                                                <span className="text-green-400">Oct 2 - Oct 3</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <h3 className="text-lg font-semibold text-green-300 flex items-center gap-2">
+                                            <Users className="h-5 w-5" />
+                                            Event Details
+                                        </h3>
+                                        <div className="space-y-3 text-sm text-gray-300">
+                                            <div className="flex justify-between">
+                                                <span>Duration:</span>
+                                                <span className="text-green-400">3 Days</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>Capacity per day:</span>
+                                                <span className="text-green-400">Unlimited</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span>Registration:</span>
+                                                <span className="text-green-400">Per day basis</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+                                    <p className="text-blue-300 text-sm">
+                                        <strong>Note:</strong> Each day has separate registration. You can register for multiple days, 
+                                        but registration for each day opens only one day before the event day.
                                     </p>
-
-                                    {isRegistered ? (
-                                        <div className="mt-4 bg-green-500/20 text-green-300 p-4 rounded-lg border border-green-700/30">
-                                            <p className="font-medium">
-                                                You are successfully registered
-                                                for Exposphere!
-                                            </p>
-                                        </div>
-                                    ) : user ? (
-                                        <>
-                                            {!isProfileComplete ? (
-                                                <div className="mt-4 space-y-4">
-                                                    <div className="bg-yellow-500/20 text-yellow-300 p-4 rounded-lg border border-yellow-700/30 text-sm">
-                                                        <p>
-                                                            Please complete your
-                                                            profile before
-                                                            registering for
-                                                            Exposphere.
-                                                        </p>
-                                                    </div>
-                                                    <div className="">
-                                                        <a
-                                                            href={route(
-                                                                "participant.profile"
-                                                            )}
-                                                            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="h-5 w-5"
-                                                                viewBox="0 0 20 20"
-                                                                fill="currentColor"
-                                                            >
-                                                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z" />
-                                                            </svg>
-                                                            Complete Your
-                                                            Profile
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <button
-                                                    onClick={
-                                                        handleRegisterClick
-                                                    }
-                                                    disabled={processing}
-                                                    className="mt-4 sm:mt-6 w-full sm:w-auto px-6 sm:px-8 py-3 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-medium rounded-lg shadow-md shadow-green-900/30 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300"
-                                                >
-                                                    {processing ? (
-                                                        <>
-                                                            <span className="animate-pulse">
-                                                                Processing...
-                                                            </span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            Register Now
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="h-5 w-5"
-                                                                viewBox="0 0 20 20"
-                                                                fill="currentColor"
-                                                            >
-                                                                <path
-                                                                    fillRule="evenodd"
-                                                                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                                                                    clipRule="evenodd"
-                                                                />
-                                                            </svg>
-                                                        </>
-                                                    )}
-                                                </button>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <div className="mt-6 space-y-4 w-full">
-                                            <div className="bg-blue-500/20 text-blue-300 p-4 rounded-lg border border-blue-700/30 text-sm">
-                                                <p>
-                                                    You need to log in or
-                                                    register before you can
-                                                    participate in Exposphere.
-                                                </p>
-                                            </div>
-                                            <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-items-stretch w-full">
-                                                <a
-                                                    href={route("login")}
-                                                    className="sm:w-1/2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-5 w-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                    Login
-                                                </a>
-                                                <a
-                                                    href={route("register")}
-                                                    className="sm:w-1/2 px-6 py-3 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-medium rounded-lg shadow-md flex items-center justify-center gap-2 transition-all duration-300"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-5 w-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                                                    </svg>
-                                                    Register
-                                                </a>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </motion.div>
                         </section>

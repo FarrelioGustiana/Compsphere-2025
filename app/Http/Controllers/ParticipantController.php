@@ -288,7 +288,31 @@ class ParticipantController extends Controller
 
         // Check if sub-event registration is still open
         if (!$subEvent->isRegistrationOpen()) {
-            Log::warning('Registration closed for sub-event', ['subEventId' => $subEventId]);
+            Log::warning('Registration closed for sub-event', [
+                'subEventId' => $subEventId,
+                'event_code' => $event->event_code,
+                'sub_event_status' => $subEvent->status
+            ]);
+            
+            // Provide more specific error messages for Exposphere
+            if ($event->event_code === 'exposphere') {
+                $status = $subEvent->status;
+                switch ($status) {
+                    case 'registration_not_open':
+                        return back()->with('error', 'Registration for this day has not opened yet. Please wait until the previous day ends.');
+                    case 'registration_closed':
+                        return back()->with('error', 'Registration for this day has closed.');
+                    case 'full':
+                        return back()->with('error', 'This day is not available for registration.');
+                    case 'ongoing':
+                        return back()->with('error', 'This event day is currently ongoing. Registration is closed.');
+                    case 'completed':
+                        return back()->with('error', 'This event day has already ended.');
+                    default:
+                        return back()->with('error', 'Registration for this day is not available.');
+                }
+            }
+            
             return back()->with('error', 'Registration for this sub-event is no longer available.');
         }
 
@@ -353,7 +377,7 @@ class ParticipantController extends Controller
             }
 
             // Generate QR code for sub-event
-            if (in_array($event->event_code, ['talksphere', 'festsphere'])) {
+            if (in_array($event->event_code, ['talksphere', 'festsphere', 'exposphere'])) {
                 Log::info('Generating QR code for sub-event registration', [
                     'user_id' => $participant->user_id,
                     'event_id' => $event->id,

@@ -10,6 +10,7 @@ interface Props {
   participant: any;
   user: any;
   verificationToken: string;
+  error?: string;
 }
 
 export default function EventRegistrationVerificationConfirm({
@@ -19,6 +20,7 @@ export default function EventRegistrationVerificationConfirm({
   participant,
   user,
   verificationToken,
+  error,
 }: Props) {
   // Debug logging
   console.log('Verification Confirm Props:', {
@@ -180,6 +182,15 @@ export default function EventRegistrationVerificationConfirm({
           </div>
         </div>
 
+        {error && (
+          <div className="bg-red-900/50 border border-red-700 p-4 rounded-lg mb-6">
+            <h3 className="font-semibold text-red-300 mb-2">❌ Verification Error</h3>
+            <p className="text-red-200 text-sm">
+              {error}
+            </p>
+          </div>
+        )}
+
         <div className="bg-yellow-900/50 border border-yellow-700 p-4 rounded-lg mb-6">
           <h3 className="font-semibold text-yellow-300 mb-2">⚠️ Important</h3>
           <p className="text-yellow-200 text-sm">
@@ -198,10 +209,10 @@ export default function EventRegistrationVerificationConfirm({
           
           <Button
             onClick={handleVerify}
-            disabled={processing}
+            disabled={processing || !!error}
             className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {processing ? "Verifying..." : "Verify Registration"}
+            {processing ? "Verifying..." : error ? "Cannot Verify" : "Verify Registration"}
           </Button>
         </div>
       </div>

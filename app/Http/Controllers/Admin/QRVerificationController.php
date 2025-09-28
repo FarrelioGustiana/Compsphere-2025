@@ -289,15 +289,32 @@ class QRVerificationController extends Controller
         }
         
         // Get event registration and user data with eager loading
-        $eventRegistration = $verification->eventRegistration()->with('user.user')->first();
-        $participant = $eventRegistration->user; // This is a Participant model
-        $user = $participant->user; // This is the actual User model
+        $eventRegistration = $verification->eventRegistration;
         
-        // Debug logging
-        Log::info('Verification data debug', [
-            'participant' => $participant ? $participant->toArray() : null,
-            'user' => $user ? $user->toArray() : null,
-        ]);
+        // Get event and sub-event information
+        $event = $verification->eventRegistration->event;
+        $subEvent = $verification->eventRegistration->subEvent;
+        $participant = $verification->eventRegistration->user;
+        $user = $participant ? $participant->user : null;
+
+        // For Exposphere events, validate that QR is being scanned on the correct day
+        if ($event->event_code === 'exposphere' && $subEvent) {
+            $now = now();
+            $eventDate = $subEvent->start_time->format('Y-m-d');
+            $currentDate = $now->format('Y-m-d');
+            
+            if ($eventDate !== $currentDate) {
+                return Inertia::render('Admin/EventRegistrationVerificationConfirm', [
+                    'event' => $event,
+                    'subEvent' => $subEvent,
+                    'eventRegistration' => $verification->eventRegistration,
+                    'participant' => $participant,
+                    'user' => $user,
+                    'verificationToken' => $token,
+                    'error' => "This QR code is for {$subEvent->sub_event_name} on " . $subEvent->start_time->format('M d, Y') . ". Today is " . $now->format('M d, Y') . ". Please use the correct QR code for today's event."
+                ]);
+            }
+        }
         
         // For sub-events, validate that the sub_event_id matches
         if ($subEventId && $eventRegistration->sub_event_id != $subEventId) {
@@ -306,12 +323,6 @@ class QRVerificationController extends Controller
                 'message' => 'QR code is not valid for this sub-event.',
                 'event' => $event
             ]);
-        }
-        
-        // Get sub-event data if this is a sub-event registration
-        $subEvent = null;
-        if ($eventRegistration->sub_event_id) {
-            $subEvent = $eventRegistration->subEvent;
         }
         
         // Show verification confirmation page
