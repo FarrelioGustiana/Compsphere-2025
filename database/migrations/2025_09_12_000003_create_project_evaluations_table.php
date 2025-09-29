@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('project_submission_id')->constrained('project_submissions')->onDelete('cascade');
             $table->foreignId('judge_id')->constrained('judges')->onDelete('cascade');
-            $table->decimal('whole_system_functionality_score', 5, 2)->nullable(); // TKT 6, 30%
-            $table->decimal('ui_ux_design_score', 5, 2)->nullable(); // TKT 5-6, 20%
-            $table->decimal('backend_logic_score', 5, 2)->nullable(); // TKT 6, 25%
-            $table->decimal('ai_model_performance_score', 5, 2)->nullable(); // TKT 5-6, 15%
-            $table->decimal('automation_integration_score', 5, 2)->nullable(); // TKT 6, 10%
+            $table->decimal('problem_solving_relevance_score', 5, 2)->nullable(); // 25%
+            $table->decimal('functional_mvp_prototype_score', 5, 2)->nullable(); // 25%
+            $table->decimal('technical_execution_score', 5, 2)->nullable(); // 20%
+            $table->decimal('creativity_innovation_score', 5, 2)->nullable(); // 10%
+            $table->decimal('impact_scalability_score', 5, 2)->nullable(); // 10%
+            $table->decimal('presentation_clarity_score', 5, 2)->nullable(); // 10%
             $table->decimal('final_score', 5, 2)->nullable(); // Calculated weighted score
             $table->text('comments')->nullable();
             $table->boolean('is_completed')->default(false);

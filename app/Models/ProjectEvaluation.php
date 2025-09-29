@@ -18,11 +18,12 @@ class ProjectEvaluation extends Model
     protected $fillable = [
         'project_submission_id',
         'judge_id',
-        'whole_system_functionality_score',
-        'ui_ux_design_score',
-        'backend_logic_score',
-        'ai_model_performance_score',
-        'automation_integration_score',
+        'problem_solving_relevance_score',
+        'functional_mvp_prototype_score',
+        'technical_execution_score',
+        'creativity_innovation_score',
+        'impact_scalability_score',
+        'presentation_clarity_score',
         'final_score',
         'comments',
         'is_completed',
@@ -34,11 +35,12 @@ class ProjectEvaluation extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'whole_system_functionality_score' => 'float',
-        'ui_ux_design_score' => 'float',
-        'backend_logic_score' => 'float',
-        'ai_model_performance_score' => 'float',
-        'automation_integration_score' => 'float',
+        'problem_solving_relevance_score' => 'float',
+        'functional_mvp_prototype_score' => 'float',
+        'technical_execution_score' => 'float',
+        'creativity_innovation_score' => 'float',
+        'impact_scalability_score' => 'float',
+        'presentation_clarity_score' => 'float',
         'final_score' => 'float',
         'is_completed' => 'boolean',
     ];
@@ -56,11 +58,12 @@ class ProjectEvaluation extends Model
      * The weight for each scoring criterion.
      */
     const WEIGHTS = [
-        'whole_system_functionality_score' => 0.30, // 30%
-        'ui_ux_design_score' => 0.20,               // 20%
-        'backend_logic_score' => 0.25,              // 25%
-        'ai_model_performance_score' => 0.15,       // 15%
-        'automation_integration_score' => 0.10,     // 10%
+        'problem_solving_relevance_score' => 0.25, // 25%
+        'functional_mvp_prototype_score' => 0.25,  // 25%
+        'technical_execution_score' => 0.20,       // 20%
+        'creativity_innovation_score' => 0.10,     // 10%
+        'impact_scalability_score' => 0.10,        // 10%
+        'presentation_clarity_score' => 0.10,      // 10%
     ];
 
     /**

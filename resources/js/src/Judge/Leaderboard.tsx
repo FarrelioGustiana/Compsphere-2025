@@ -13,11 +13,12 @@ interface RankedSubmission {
     evaluations_count: number;
     average_score: number;
     criteria_scores: {
-        whole_system_functionality_score: number;
-        ui_ux_design_score: number;
-        backend_logic_score: number;
-        ai_model_performance_score: number;
-        automation_integration_score: number;
+        problem_solving_relevance_score: number;
+        functional_mvp_prototype_score: number;
+        technical_execution_score: number;
+        creativity_innovation_score: number;
+        impact_scalability_score: number;
+        presentation_clarity_score: number;
     };
     rank: number;
 }

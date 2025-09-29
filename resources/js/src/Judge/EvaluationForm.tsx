@@ -8,7 +8,6 @@ interface Criterion {
     name: string;
     description: string;
     weight: number;
-    tkt_level: string;
 }
 
 interface Submission {
@@ -29,11 +28,12 @@ interface Submission {
 interface Evaluation {
     id?: number;
     project_submission_id: number;
-    whole_system_functionality_score?: number;
-    ui_ux_design_score?: number;
-    backend_logic_score?: number;
-    ai_model_performance_score?: number;
-    automation_integration_score?: number;
+    problem_solving_relevance_score?: number;
+    functional_mvp_prototype_score?: number;
+    technical_execution_score?: number;
+    creativity_innovation_score?: number;
+    impact_scalability_score?: number;
+    presentation_clarity_score?: number;
     comments?: string;
     is_completed?: boolean;
     created_at?: string;
@@ -48,11 +48,12 @@ interface EvaluationFormProps {
 
 export default function EvaluationForm({ submission, evaluation, scoringCriteria }: EvaluationFormProps) {
     const { data, setData, post, processing, errors } = useForm({
-        whole_system_functionality_score: evaluation?.whole_system_functionality_score || 0,
-        ui_ux_design_score: evaluation?.ui_ux_design_score || 0,
-        backend_logic_score: evaluation?.backend_logic_score || 0,
-        ai_model_performance_score: evaluation?.ai_model_performance_score || 0,
-        automation_integration_score: evaluation?.automation_integration_score || 0,
+        problem_solving_relevance_score: evaluation?.problem_solving_relevance_score || 0,
+        functional_mvp_prototype_score: evaluation?.functional_mvp_prototype_score || 0,
+        technical_execution_score: evaluation?.technical_execution_score || 0,
+        creativity_innovation_score: evaluation?.creativity_innovation_score || 0,
+        impact_scalability_score: evaluation?.impact_scalability_score || 0,
+        presentation_clarity_score: evaluation?.presentation_clarity_score || 0,
         comments: evaluation?.comments || '',
     });
 
@@ -61,11 +62,12 @@ export default function EvaluationForm({ submission, evaluation, scoringCriteria
     // Calculate weighted average score
     const calculateWeightedScore = () => {
         const weights = {
-            whole_system_functionality_score: 0.30,
-            ui_ux_design_score: 0.20,
-            backend_logic_score: 0.25,
-            ai_model_performance_score: 0.15,
-            automation_integration_score: 0.10,
+            problem_solving_relevance_score: 0.25,
+            functional_mvp_prototype_score: 0.25,
+            technical_execution_score: 0.20,
+            creativity_innovation_score: 0.10,
+            impact_scalability_score: 0.10,
+            presentation_clarity_score: 0.10,
         };
 
         let weightedSum = 0;
@@ -207,9 +209,6 @@ export default function EvaluationForm({ submission, evaluation, scoringCriteria
                                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
                                                                     Weight: {criterion.weight}%
                                                                 </span>
-                                                                <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-purple-100 text-purple-800">
-                                                                    {criterion.tkt_level}
-                                                                </span>
                                                             </div>
                                                         </div>
                                                         
@@ -220,15 +219,18 @@ export default function EvaluationForm({ submission, evaluation, scoringCriteria
                                                             <input
                                                                 type="number"
                                                                 id={criterion.id}
-                                                                min="0"
+                                                                min="1"
                                                                 max="10"
                                                                 step="0.5"
                                                                 className="bg-gray-700 border border-gray-600 text-white rounded-md block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                                                 value={data[criterion.id as keyof typeof data] as number}
-                                                                onChange={(e) => setData(criterion.id as keyof typeof data, parseFloat(e.target.value))}
+                                                                onChange={(e) => {
+                                                                    const id = criterion.id as keyof typeof data;
+                                                                    setData(id, parseFloat(e.target.value));
+                                                                }}
                                                             />
-                                                            {errors[criterion.id] && (
-                                                                <p className="text-red-500 text-xs mt-1">{errors[criterion.id]}</p>
+                                                            {criterion.id in errors && (
+                                                                <p className="text-red-500 text-xs mt-1">{String(errors[criterion.id as keyof typeof errors])}</p>
                                                             )}
                                                         </div>
                                                     </div>

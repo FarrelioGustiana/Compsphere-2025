@@ -126,39 +126,40 @@ class JudgeController extends Controller
             'evaluation' => $evaluation,
             'scoringCriteria' => [
                 [
-                    'id' => 'whole_system_functionality_score',
-                    'name' => 'Whole System Functionality',
-                    'description' => 'Apakah sistem menyatu dan dapat digunakan sesuai konteks kasus PT. Kereta Api Indonesia (KAI)?',
-                    'weight' => 30,
-                    'tkt_level' => 'TKT 6',
-                ],
-                [
-                    'id' => 'ui_ux_design_score',
-                    'name' => 'UI/UX Design',
-                    'description' => 'Apakah antar muka ramah pengguna, intuitif, dan profesional?',
-                    'weight' => 20,
-                    'tkt_level' => 'TKT 5-6',
-                ],
-                [
-                    'id' => 'backend_logic_score',
-                    'name' => 'Back-End & Logic',
-                    'description' => 'Apakah logika sistem berjalan stabil, efisien, dan fleksibel?',
+                    'id' => 'problem_solving_relevance_score',
+                    'name' => 'Problem-Solving & Relevance',
+                    'description' => 'Does the team identify a real PT. KAI problem (fraud, security, UX)? Is the solution well-targeted and supported by data/research?',
                     'weight' => 25,
-                    'tkt_level' => 'TKT 6',
                 ],
                 [
-                    'id' => 'ai_model_performance_score',
-                    'name' => 'AI Model Performance',
-                    'description' => 'Apakah AI/ML digunakan secara tepat dan menghasilkan output relevan?',
-                    'weight' => 15,
-                    'tkt_level' => 'TKT 5-6',
+                    'id' => 'functional_mvp_prototype_score',
+                    'name' => 'Functional MVP / Prototype',
+                    'description' => 'Does the solution work as promised? Is it stable, usable, and does it demonstrate core features?',
+                    'weight' => 25,
                 ],
                 [
-                    'id' => 'automation_integration_score',
-                    'name' => 'Automation & Integration',
-                    'description' => 'Apakah terdapat komponen otomasi atau chatbot yang real-time dan terhubung dengan sistem lain?',
+                    'id' => 'technical_execution_score',
+                    'name' => 'Technical Execution',
+                    'description' => 'Is the technical quality strong? Clear architecture, appropriate stack, handling of integration, security, scalability, and errors?',
+                    'weight' => 20,
+                ],
+                [
+                    'id' => 'creativity_innovation_score',
+                    'name' => 'Creativity & Innovation',
+                    'description' => 'Is there a unique or novel approach, feature, or technology that stands out from conventional solutions?',
                     'weight' => 10,
-                    'tkt_level' => 'TKT 6',
+                ],
+                [
+                    'id' => 'impact_scalability_score',
+                    'name' => 'Impact & Scalability',
+                    'description' => 'Can the solution scale across KAI\'s ecosystem? Is it sustainable with long-term development potential?',
+                    'weight' => 10,
+                ],
+                [
+                    'id' => 'presentation_clarity_score',
+                    'name' => 'Presentation Clarity',
+                    'description' => 'Are slides and video clear and complete? Did all members present well? Was the demo easy to follow?',
+                    'weight' => 10,
                 ],
             ],
         ]);
@@ -180,11 +181,12 @@ class JudgeController extends Controller
         
         // Validate evaluation data
         $validator = Validator::make($request->all(), [
-            'whole_system_functionality_score' => 'required|numeric|min:0|max:10',
-            'ui_ux_design_score' => 'required|numeric|min:0|max:10',
-            'backend_logic_score' => 'required|numeric|min:0|max:10',
-            'ai_model_performance_score' => 'required|numeric|min:0|max:10',
-            'automation_integration_score' => 'required|numeric|min:0|max:10',
+            'problem_solving_relevance_score' => 'required|numeric|min:1|max:10',
+            'functional_mvp_prototype_score' => 'required|numeric|min:1|max:10',
+            'technical_execution_score' => 'required|numeric|min:1|max:10',
+            'creativity_innovation_score' => 'required|numeric|min:1|max:10',
+            'impact_scalability_score' => 'required|numeric|min:1|max:10',
+            'presentation_clarity_score' => 'required|numeric|min:1|max:10',
             'comments' => 'nullable|string|max:2000',
         ]);
         
@@ -199,11 +201,12 @@ class JudgeController extends Controller
                 'judge_id' => $judge->id,
             ],
             [
-                'whole_system_functionality_score' => $request->whole_system_functionality_score,
-                'ui_ux_design_score' => $request->ui_ux_design_score,
-                'backend_logic_score' => $request->backend_logic_score,
-                'ai_model_performance_score' => $request->ai_model_performance_score,
-                'automation_integration_score' => $request->automation_integration_score,
+                'problem_solving_relevance_score' => $request->problem_solving_relevance_score,
+                'functional_mvp_prototype_score' => $request->functional_mvp_prototype_score,
+                'technical_execution_score' => $request->technical_execution_score,
+                'creativity_innovation_score' => $request->creativity_innovation_score,
+                'impact_scalability_score' => $request->impact_scalability_score,
+                'presentation_clarity_score' => $request->presentation_clarity_score,
                 'comments' => $request->comments,
                 'is_completed' => true,
             ]
@@ -232,11 +235,12 @@ class JudgeController extends Controller
         
         // Validate evaluation data (with less strict requirements for draft)
         $validator = Validator::make($request->all(), [
-            'whole_system_functionality_score' => 'nullable|numeric|min:0|max:10',
-            'ui_ux_design_score' => 'nullable|numeric|min:0|max:10',
-            'backend_logic_score' => 'nullable|numeric|min:0|max:10',
-            'ai_model_performance_score' => 'nullable|numeric|min:0|max:10',
-            'automation_integration_score' => 'nullable|numeric|min:0|max:10',
+            'problem_solving_relevance_score' => 'nullable|numeric|min:1|max:10',
+            'functional_mvp_prototype_score' => 'nullable|numeric|min:1|max:10',
+            'technical_execution_score' => 'nullable|numeric|min:1|max:10',
+            'creativity_innovation_score' => 'nullable|numeric|min:1|max:10',
+            'impact_scalability_score' => 'nullable|numeric|min:1|max:10',
+            'presentation_clarity_score' => 'nullable|numeric|min:1|max:10',
             'comments' => 'nullable|string|max:2000',
         ]);
         
@@ -251,11 +255,12 @@ class JudgeController extends Controller
                 'judge_id' => $judge->id,
             ],
             [
-                'whole_system_functionality_score' => $request->whole_system_functionality_score,
-                'ui_ux_design_score' => $request->ui_ux_design_score,
-                'backend_logic_score' => $request->backend_logic_score,
-                'ai_model_performance_score' => $request->ai_model_performance_score,
-                'automation_integration_score' => $request->automation_integration_score,
+                'problem_solving_relevance_score' => $request->problem_solving_relevance_score,
+                'functional_mvp_prototype_score' => $request->functional_mvp_prototype_score,
+                'technical_execution_score' => $request->technical_execution_score,
+                'creativity_innovation_score' => $request->creativity_innovation_score,
+                'impact_scalability_score' => $request->impact_scalability_score,
+                'presentation_clarity_score' => $request->presentation_clarity_score,
                 'comments' => $request->comments,
                 'is_completed' => false,
             ]
