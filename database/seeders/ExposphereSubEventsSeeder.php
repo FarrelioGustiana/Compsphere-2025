@@ -42,7 +42,7 @@ class ExposphereSubEventsSeeder extends Seeder
                 'sub_event_code' => 'exposphere_day2',
                 'sub_event_name' => 'Exposphere Day 2',
                 'description' => 'Last day of Exposphere',
-                'start_time' => '2025-10-02 08:00:00',
+                'start_time' => '2025-10-02 01:00:00',
                 'end_time' => '2025-10-02 17:00:00',
                 'location' => 'President University Convention Center',
                 'max_participants' => null,
