@@ -28,7 +28,7 @@ class TalksphereSubEventsSeeder extends Seeder
                 'sub_event_code' => 'talksphere_seminar',
                 'sub_event_name' => 'Seminar',
                 'description' => '',
-                'start_time' => '2025-10-01 13:30:00',
+                'start_time' => '2025-10-01 06:30:00',
                 'end_time' => '2025-10-01 15:00:00',
                 'location' => 'Fablab, President University',
                 'max_participants' => 150,
