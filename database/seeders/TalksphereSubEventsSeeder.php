@@ -46,7 +46,7 @@ class TalksphereSubEventsSeeder extends Seeder
                 'sub_event_code' => 'talksphere_workshop',
                 'sub_event_name' => 'Workshop',
                 'description' => '',
-                'start_time' => '2025-10-01 10:00:00',
+                'start_time' => '2025-10-01 02:15:00',
                 'end_time' => '2025-10-01 12:00:00',
                 'location' => 'Charles Hirmawan Auditorium, President University',
                 'max_participants' => 150,
