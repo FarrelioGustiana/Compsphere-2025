@@ -178,14 +178,33 @@ const Talksphere: React.FC<TalksphereProps> = ({
     };
 
     const formatDateTime = (dateTime: string) => {
-        return new Date(dateTime).toLocaleString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
+        if (!dateTime) {
+            return 'Invalid Date';
+        }
+        
+        try {
+            // Handle ISO 8601 format (2025-10-01T08:00:00.000000Z)
+            const date = new Date(dateTime);
+            
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+            
+            // For Indonesian timezone, treat the stored time as local time
+            // Since we're storing Indonesian local times directly in the database
+            return date.toLocaleString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Jakarta' // Explicitly use Indonesian timezone
+            });
+        } catch (error) {
+            console.error('Error formatting date:', dateTime, error);
+            return 'Invalid Date';
+        }
     };
 
     const getSubEventIcon = (subEventName: string) => {
