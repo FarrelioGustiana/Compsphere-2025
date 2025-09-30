@@ -83,6 +83,12 @@ class EventController extends Controller
         // Get sub-events for this event (if any)
         $subEvents = $event->activeSubEvents()->get();
         
+        // Add status to each sub-event
+        $subEvents = $subEvents->map(function ($subEvent) {
+            $subEvent->status = $subEvent->status; // This will trigger the getStatusAttribute
+            return $subEvent;
+        });
+        
         // Get user's sub-event registrations if logged in
         $userSubEventRegistrations = [];
         if ($user) {

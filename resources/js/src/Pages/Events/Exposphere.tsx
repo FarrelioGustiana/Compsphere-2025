@@ -109,8 +109,8 @@ const Exposphere: React.FC<ExposphereProps> = ({
         }),
     };
 
-    // Event date for countdown (November 15, 2025)
-    const eventDate = new Date(2025, 10, 15, 9, 0, 0);
+    // Event date for countdown (October 1, 2025 - Exposphere Day 1)
+    const eventDate = new Date(2025, 9, 1, 8, 0, 0); // Month 9 = October
 
     const { post, processing } = useForm({});
     const { post: postSubEvent, processing: processingSubEvent } = useForm({});
@@ -157,14 +157,34 @@ const Exposphere: React.FC<ExposphereProps> = ({
     };
 
     const formatDateTime = (dateTime: string) => {
-        return new Date(dateTime).toLocaleString('id-ID', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
+        if (!dateTime) {
+            return 'Invalid Date';
+        }
+        
+        try {
+            // Handle ISO 8601 format (2025-10-01T08:00:00.000000Z)
+            const date = new Date(dateTime);
+            
+            if (isNaN(date.getTime())) {
+                return 'Invalid Date';
+            }
+            
+            // Convert to WIB (UTC+7) manually to avoid browser timezone issues
+            const wibDate = new Date(date.getTime() + (7 * 60 * 60 * 1000));
+            
+            return wibDate.toLocaleString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'UTC' // Use UTC since we already converted to WIB
+            });
+        } catch (error) {
+            console.error('Error formatting date:', dateTime, error);
+            return 'Invalid Date';
+        }
     };
 
     const getExposphereDayIcon = (dayName: string) => {
