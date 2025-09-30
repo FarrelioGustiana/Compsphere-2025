@@ -190,16 +190,18 @@ const Talksphere: React.FC<TalksphereProps> = ({
                 return 'Invalid Date';
             }
             
-            // For Indonesian timezone, treat the stored time as local time
-            // Since we're storing Indonesian local times directly in the database
-            return date.toLocaleString('id-ID', {
+            // Treat the stored time as local Indonesian time without timezone conversion
+            // Parse the date string and create a new date object to avoid timezone issues
+            const dateStr = dateTime.replace('T', ' ').replace('Z', '');
+            const localDate = new Date(dateStr);
+            
+            return localDate.toLocaleString('id-ID', {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 hour: '2-digit',
-                minute: '2-digit',
-                timeZone: 'Asia/Jakarta' // Explicitly use Indonesian timezone
+                minute: '2-digit'
             });
         } catch (error) {
             console.error('Error formatting date:', dateTime, error);
