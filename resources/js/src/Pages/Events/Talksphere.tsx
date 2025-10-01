@@ -116,6 +116,23 @@ const Talksphere: React.FC<TalksphereProps> = ({
     const { post, processing } = useForm({});
     const { post: postSubEvent, processing: processingSubEvent } = useForm({});
 
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case 'registration_open':
+                return 'Registration Open';
+            case 'registration_not_open':
+                return 'Registration Not Open Yet';
+            case 'registration_closed':
+                return 'Registration Closed';
+            case 'ongoing':
+                return 'Event Ongoing';
+            case 'completed':
+                return 'Event Completed';
+            default:
+                return 'Unavailable';
+        }
+    };
+
     // Check if profile is complete
     const isProfileComplete =
         participantDetails &&
@@ -143,7 +160,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
 
     const handleSubEventRegister = (subEventId: number) => {
         console.log('Attempting to register for sub-event:', subEventId);
-        
+
         if (!user) {
             console.log('User not logged in, redirecting to login');
             window.location.href = route("login");
@@ -181,20 +198,20 @@ const Talksphere: React.FC<TalksphereProps> = ({
         if (!dateTime) {
             return 'Invalid Date';
         }
-        
+
         try {
             // Handle ISO 8601 format (2025-10-01T08:00:00.000000Z)
             const date = new Date(dateTime);
-            
+
             if (isNaN(date.getTime())) {
                 return 'Invalid Date';
             }
-            
+
             // Treat the stored time as local Indonesian time without timezone conversion
             // Parse the date string and create a new date object to avoid timezone issues
             const dateStr = dateTime.replace('T', ' ').replace('Z', '');
             const localDate = new Date(dateStr);
-            
+
             return localDate.toLocaleString('id-ID', {
                 weekday: 'long',
                 year: 'numeric',
@@ -439,7 +456,8 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                                     {subEvents.map((subEvent, index) => {
                                         const isRegistered = userSubEventRegistrations.includes(subEvent.id);
-                                        
+                                        const status = (subEvent as any).status || 'inactive';
+
                                         return (
                                             <motion.div
                                                 key={subEvent.id}
@@ -456,7 +474,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                                         {subEvent.sub_event_name}
                                                     </h3>
                                                 </div>
-                                                
+
                                                 <p className="text-gray-300 text-sm mb-4">
                                                     {subEvent.description}
                                                 </p>
@@ -469,20 +487,43 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                                     )}
                                                 </div>
 
+                                                {/* Action Buttons */}
                                                 {user ? (
                                                     isRegistered ? (
+                                                        // Case 1: Already Registered
                                                         <div className="bg-green-500/20 text-green-300 p-3 rounded-lg text-center">
                                                             ✅ Registered
                                                         </div>
                                                     ) : isProfileComplete ? (
-                                                        <button
-                                                            onClick={() => handleSubEventRegister(subEvent.id)}
-                                                            disabled={processingSubEvent}
-                                                            className="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
-                                                        >
-                                                            {processingSubEvent ? 'Processing...' : 'Register Now'}
-                                                        </button>
+                                                        // Case 2: Logged in and Profile is Complete
+                                                        // Get the specific status for this sub-event (must be passed from backend)
+                                                        // NOTE: The status must be accessible here, usually like (subEvent as any).status
+                                                        // Assuming status is defined in the map loop: const status = (subEvent as any).status || 'inactive';
+
+                                                        // CHECK 1: Is Registration Open OR Ongoing?
+                                                        (subEvent as any).status === 'registration_open' || (subEvent as any).status === 'ongoing' ? (
+                                                            // 2A: YES - Render Active Register Button (Registration is available)
+                                                            <button
+                                                                onClick={() => handleSubEventRegister(subEvent.id)}
+                                                                disabled={processingSubEvent}
+                                                                className="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
+                                                            >
+                                                                {processingSubEvent
+                                                                    ? 'Processing...'
+                                                                    : 'Register Now'}
+                                                            </button>
+                                                        ) : (
+                                                            // 2B: NO - Render Disabled/Informational Button
+                                                            <button
+                                                                disabled
+                                                                className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
+                                                            >
+                                                                {/* Display the correct status text using your helper function */}
+                                                                {getStatusText((subEvent as any).status)}
+                                                            </button>
+                                                        )
                                                     ) : (
+                                                        // Case 3: Logged in, but Profile is Incomplete
                                                         <a
                                                             href={route("participant.profile")}
                                                             className="block w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg text-center transition-all duration-300"
@@ -491,6 +532,7 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                                         </a>
                                                     )
                                                 ) : (
+                                                    // Case 4: Not Logged In
                                                     <a
                                                         href={route("login")}
                                                         className="block w-full px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-lg text-center transition-all duration-300"
@@ -534,8 +576,8 @@ const Talksphere: React.FC<TalksphereProps> = ({
                                         Choose Your Experience Above
                                     </h3>
                                     <p className="text-gray-300 text-sm sm:text-base">
-                                        Talksphere offers three distinct experiences: <strong>Seminar</strong>, <strong>Talkshow</strong>, and <strong>Workshop</strong>. 
-                                        Each event has its own registration and QR code for verification. Simply scroll up to the "Choose Your Experience" section 
+                                        Talksphere offers three distinct experiences: <strong>Seminar</strong>, <strong>Talkshow</strong>, and <strong>Workshop</strong>.
+                                        Each event has its own registration and QR code for verification. Simply scroll up to the "Choose Your Experience" section
                                         and register for the events that interest you most. You can register for multiple sub-events!
                                     </p>
 
