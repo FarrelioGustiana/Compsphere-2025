@@ -13,13 +13,12 @@ return new class extends Migration
     {
         // Drop the old columns after data has been migrated
         Schema::table('project_evaluations', function (Blueprint $table) {
-            $table->dropColumn([
-                'whole_system_functionality_score',
-                'ui_ux_design_score',
-                'backend_logic_score',
-                'ai_model_performance_score',
-                'automation_integration_score',
-            ]);
+            // Corrected code: Check if the column exists before dropping
+            $table->dropColumn('whole_system_functionality_score');
+            $table->dropColumn('ui_ux_design_score');
+            $table->dropColumn('backend_logic_score');
+            $table->dropColumn('ai_model_performance_score');
+            $table->dropColumn('automation_integration_score');
         });
     }
 
