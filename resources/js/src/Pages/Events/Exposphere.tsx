@@ -160,18 +160,18 @@ const Exposphere: React.FC<ExposphereProps> = ({
         if (!dateTime) {
             return 'Invalid Date';
         }
-        
+
         try {
             // Handle ISO 8601 format (2025-10-01T08:00:00.000000Z)
             const date = new Date(dateTime);
-            
+
             if (isNaN(date.getTime())) {
                 return 'Invalid Date';
             }
-            
+
             // Convert to WIB (UTC+7) manually to avoid browser timezone issues
             const wibDate = new Date(date.getTime() + (7 * 60 * 60 * 1000));
-            
+
             return wibDate.toLocaleString('id-ID', {
                 weekday: 'long',
                 year: 'numeric',
@@ -451,7 +451,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                     </h2>
                                     <div className="h-1 w-20 sm:w-24 bg-gradient-to-r from-green-500 to-teal-500 mx-auto rounded-full"></div>
                                     <p className="text-gray-300 text-base sm:text-lg mt-4 max-w-3xl mx-auto">
-                                        Exposphere runs for 3 days with different themes each day. Register for the day(s) you want to attend. 
+                                        Exposphere runs for 3 days with different themes each day. Register for the day(s) you want to attend.
                                         Registration opens one day before each event day.
                                     </p>
                                 </motion.div>
@@ -460,7 +460,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                     {subEvents.map((subEvent, index) => {
                                         const isRegistered = userSubEventRegistrations.includes(subEvent.id);
                                         const status = (subEvent as any).status || 'inactive';
-                                        
+
                                         return (
                                             <motion.div
                                                 key={subEvent.id}
@@ -477,7 +477,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                                         {subEvent.sub_event_name}
                                                     </h3>
                                                 </div>
-                                                
+
                                                 <p className="text-gray-300 text-sm mb-4">
                                                     {subEvent.description}
                                                 </p>
@@ -518,15 +518,19 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                                                 {processingSubEvent ? 'Processing...' : 'Register Now'}
                                                             </button>
                                                         ) : (
-                                                            <button
-                                                                disabled
+                                                            status === "ongoing" ? <button
                                                                 className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
                                                             >
-                                                                {status === 'registration_not_open' ? 'Registration Not Open Yet' :
-                                                                 status === 'ongoing' ? 'Event Ongoing' :
-                                                                 status === 'completed' ? 'Event Completed' :
-                                                                 'Unavailable'}
-                                                            </button>
+                                                                Event Ongoing<br />Grab Your Ticket Now
+                                                            </button> :
+                                                                <button
+                                                                    disabled
+                                                                    className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
+                                                                >
+                                                                    {status === 'registration_not_open' ? 'Registration Not Open Yet' :
+                                                                        status === 'completed' ? 'Event Completed' :
+                                                                            'Unavailable'}
+                                                                </button>
                                                         )
                                                     ) : (
                                                         <a
@@ -619,7 +623,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                 </div>
                                 <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
                                     <p className="text-blue-300 text-sm">
-                                        <strong>Note:</strong> Each day has separate registration. You can register for multiple days, 
+                                        <strong>Note:</strong> Each day has separate registration. You can register for multiple days,
                                         but registration for each day opens only one day before the event day.
                                     </p>
                                 </div>
