@@ -518,8 +518,9 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                                                 {processingSubEvent ? 'Processing...' : 'Register Now'}
                                                             </button>
                                                         ) : (
-                                                            status === "ongoing" ? <button
-                                                                className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
+                                                            status === "ongoing" ? <button onClick={() => handleSubEventRegister(subEvent.id)}
+                                                                disabled={processingSubEvent}
+                                                                className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
                                                             >
                                                                 Event Ongoing<br />Grab Your Ticket Now
                                                             </button> :
