@@ -91,7 +91,7 @@ class SubEvent extends Model
 
         // For other events (like Talksphere), use original logic
         return $this->is_active &&
-            $this->start_time < now() &&
+            $this->end_time < now() &&
             !$this->isAtCapacity();
     }
 
