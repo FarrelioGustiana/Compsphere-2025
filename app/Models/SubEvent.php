@@ -88,11 +88,11 @@ class SubEvent extends Model
         if ($this->event->event_code === 'exposphere') {
             return $this->isExposphereRegistrationOpen();
         }
-        
+
         // For other events (like Talksphere), use original logic
-        return $this->is_active && 
-               $this->start_time > now() && 
-               !$this->isAtCapacity();
+        return $this->is_active &&
+            $this->start_time < now() &&
+            !$this->isAtCapacity();
     }
 
     /**
@@ -103,12 +103,12 @@ class SubEvent extends Model
         if (!$this->is_active) {
             return false;
         }
-        
+
         // Exposphere has no capacity limit, so skip capacity check
 
         $now = now();
         $registrationInfo = $this->additional_info;
-        
+
         if (!$registrationInfo || !isset($registrationInfo['registration_opens']) || !isset($registrationInfo['registration_closes'])) {
             return false;
         }
@@ -126,11 +126,11 @@ class SubEvent extends Model
     public function getStatusAttribute(): string
     {
         $now = now();
-        
+
         if (!$this->is_active) {
             return 'inactive';
         }
-        
+
         if ($this->isAtCapacity()) {
             return 'full';
         }
@@ -139,7 +139,7 @@ class SubEvent extends Model
         if ($this->event->event_code === 'exposphere') {
             return $this->getExposphereStatus();
         }
-        
+
         if ($now < $this->start_time) {
             return 'upcoming';
         } elseif ($now >= $this->start_time && $now <= $this->end_time) {
@@ -156,7 +156,7 @@ class SubEvent extends Model
     {
         $now = now();
         $registrationInfo = $this->additional_info;
-        
+
         if (!$registrationInfo || !isset($registrationInfo['registration_opens']) || !isset($registrationInfo['registration_closes'])) {
             return 'inactive';
         }
