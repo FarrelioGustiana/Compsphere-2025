@@ -91,8 +91,10 @@ class SubEvent extends Model
 
         // For Talksphere events, allow registration until event ends
         if ($this->event->event_code === 'talksphere') {
+            // Consistent with getTalksphereStatus
+            $now = now();
             return $this->is_active &&
-                now() < $this->end_time &&
+                $now <= $this->end_time &&
                 !$this->isAtCapacity();
         }
 
@@ -146,6 +148,11 @@ class SubEvent extends Model
         if ($this->event->event_code === 'exposphere') {
             return $this->getExposphereStatus();
         }
+        
+        // For Talksphere events, allow registration until event ends
+        if ($this->event->event_code === 'talksphere') {
+            return $this->getTalksphereStatus();
+        }
 
         if ($now < $this->start_time) {
             return 'upcoming';
@@ -182,6 +189,24 @@ class SubEvent extends Model
             return 'completed';
         } else {
             return 'registration_closed';
+        }
+    }
+    
+    /**
+     * Get status for Talksphere sub-events.
+     * For Talksphere, we allow registration until the event ends.
+     */
+    public function getTalksphereStatus(): string
+    {
+        $now = now();
+        
+        if ($now < $this->start_time) {
+            return 'registration_open';
+        } elseif ($now >= $this->start_time && $now <= $this->end_time) {
+            // For Talksphere, we allow registration even during the event
+            return 'registration_open';
+        } else {
+            return 'completed';
         }
     }
 }
