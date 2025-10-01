@@ -218,47 +218,47 @@ const Home: React.FC = () => {
                                             President University, Cikarang
                                         </span>
                                     </div>
-                                    
+
                                     {/* Social Media Links */}
                                     <div className="mt-4">
                                         <p className="text-gray-400 mb-3">Follow us:</p>
                                         <div className="flex items-center justify-center md:justify-start space-x-4">
                                             {/* Instagram */}
-                                            <a 
-                                                href="https://www.instagram.com/compsphere/" 
-                                                target="_blank" 
+                                            <a
+                                                href="https://www.instagram.com/compsphere/"
+                                                target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="social-icon-link group"
                                                 aria-label="Instagram"
                                             >
-                                                    <Instagram className="w-5 h-5 text-white" />
+                                                <Instagram className="w-5 h-5 text-white" />
                                             </a>
-                                            
+
                                             {/* TikTok */}
-                                            <a 
-                                                href="https://www.tiktok.com/@compsphere" 
-                                                target="_blank" 
+                                            <a
+                                                href="https://www.tiktok.com/@compsphere"
+                                                target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="social-icon-link group"
                                                 aria-label="TikTok"
                                             >
-                                                    <FaTiktok className="w-5 h-5 text-white" />
+                                                <FaTiktok className="w-5 h-5 text-white" />
                                             </a>
-                                            
+
                                             {/* LinkedIn */}
-                                            <a 
-                                                href="https://www.linkedin.com/company/compsphere" 
-                                                target="_blank" 
+                                            <a
+                                                href="https://www.linkedin.com/company/compsphere"
+                                                target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="social-icon-link group"
                                                 aria-label="LinkedIn"
                                             >
                                                 <Linkedin className="w-5 h-5 text-white" />
                                             </a>
-                                            
+
                                             {/* Email */}
-                                            <a 
-                                                href="mailto:contact@compsphere.id" 
+                                            <a
+                                                href="mailto:contact@compsphere.id"
                                                 className="social-icon-link group"
                                                 aria-label="Email"
                                             >
@@ -273,6 +273,15 @@ const Home: React.FC = () => {
                         <div className="pt-4 sm:pt-8 border-t border-white/10 text-center flex flex-col md:flex-row items-center justify-center md:justify-between">
                             <p className="text-gray-500">
                                 © 2025 Compsphere. All rights reserved.
+                            </p>
+                        </div>
+
+                        {/* Error sorry message */}
+                        <div className="flex justify-center">
+                            <p className="text-xs md:text-sm lg:text-md text-center font-poppins text-white">
+                                Hi! We've noticed that there were some errors with the registration.<br />
+                                We at Jokey.it sincerely apologize for the inconvenience and have fixed the issues.<br />
+                                Happy Learning, Happy Competing, Happy Compsphere 2025!
                             </p>
                         </div>
                     </div>
