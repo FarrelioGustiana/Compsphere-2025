@@ -15,6 +15,7 @@ import { sponsors } from "../Constants/sponsor";
 import Sponsors from "../Components/Home/Sponsors";
 import SponsorSection from "../Components/Home/SponsorSection";
 import { FaTiktok } from "react-icons/fa";
+import OneTimeNotification from "@/src/Components/Home/OneTimeNotification";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -275,18 +276,17 @@ const Home: React.FC = () => {
                                 © 2025 Compsphere. All rights reserved.
                             </p>
                         </div>
-
-                        {/* Error sorry message */}
-                        <div className="flex justify-center">
-                            <p className="text-xs md:text-sm lg:text-md text-center font-poppins text-white">
-                                Hi! We've noticed that there were some errors with the registration.<br />
-                                We at Jokey.it sincerely apologize for the inconvenience and have fixed the issues.<br />
-                                Happy Learning, Happy Competing, Happy Compsphere 2025!
-                            </p>
-                        </div>
                     </div>
                 </footer>
             </div>
+
+            {/* One-time notification */}
+            <OneTimeNotification
+                storageKey="compsphere_registration_error_apology"
+                title="Registration Update"
+                message="Hi! We've noticed that there were some errors with the registration.<br />We at Jokey.it sincerely apologize for the inconvenience and have fixed the issues.<br />Happy Learning, Happy Competing, Happy Compsphere 2025!"
+                duration={3000}
+            />
         </div>
     );
 };
