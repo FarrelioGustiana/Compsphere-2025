@@ -89,9 +89,16 @@ class SubEvent extends Model
             return $this->isExposphereRegistrationOpen();
         }
 
-        // For other events (like Talksphere), use original logic
+        // For Talksphere events, allow registration until event ends
+        if ($this->event->event_code === 'talksphere') {
+            return $this->is_active &&
+                now() < $this->end_time &&
+                !$this->isAtCapacity();
+        }
+
+        // For other events, use original logic (registration before event starts)
         return $this->is_active &&
-            $this->end_time < now() &&
+            $this->start_time > now() &&
             !$this->isAtCapacity();
     }
 
