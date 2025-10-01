@@ -505,35 +505,34 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                                 {/* Action Buttons */}
                                                 {user ? (
                                                     isRegistered ? (
+                                                        // Case 1: Already Registered
                                                         <div className="bg-green-500/20 text-green-300 p-3 rounded-lg text-center">
                                                             ✅ Registered
                                                         </div>
                                                     ) : isProfileComplete ? (
-                                                        status === 'registration_open' ? (
+                                                        // Case 2: User is logged in AND profile is complete
+                                                        status === 'registration_open' || status === 'ongoing' ? (
+                                                            // A: Registration is OPEN or ONGOING -> Show Active Register Button
                                                             <button
                                                                 onClick={() => handleSubEventRegister(subEvent.id)}
                                                                 disabled={processingSubEvent}
                                                                 className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
                                                             >
-                                                                {processingSubEvent ? 'Processing...' : 'Register Now'}
+                                                                {processingSubEvent
+                                                                    ? 'Processing...'
+                                                                    : status === 'ongoing' ? 'Grab Your Ticket Now' : 'Register Now'}
                                                             </button>
                                                         ) : (
-                                                            status === "ongoing" ? <button onClick={() => handleSubEventRegister(subEvent.id)}
-                                                                disabled={processingSubEvent}
-                                                                className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-70"
+                                                            // B: Registration is CLOSED, NOT OPEN YET, or COMPLETED -> Show Disabled Button
+                                                            <button
+                                                                disabled
+                                                                className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
                                                             >
-                                                                Event Ongoing<br />Grab Your Ticket Now
-                                                            </button> :
-                                                                <button
-                                                                    disabled
-                                                                    className="w-full px-4 py-3 bg-gray-600 text-gray-400 font-medium rounded-lg cursor-not-allowed"
-                                                                >
-                                                                    {status === 'registration_not_open' ? 'Registration Not Open Yet' :
-                                                                        status === 'completed' ? 'Event Completed' :
-                                                                            'Unavailable'}
-                                                                </button>
+                                                                {getStatusText(status)}
+                                                            </button>
                                                         )
                                                     ) : (
+                                                        // Case 3: Logged in, but Profile is Incomplete
                                                         <a
                                                             href={route("participant.profile")}
                                                             className="block w-full px-4 py-3 bg-yellow-600 hover:bg-yellow-700 text-white font-medium rounded-lg text-center transition-all duration-300"
@@ -542,6 +541,7 @@ const Exposphere: React.FC<ExposphereProps> = ({
                                                         </a>
                                                     )
                                                 ) : (
+                                                    // Case 4: Not Logged In
                                                     <a
                                                         href={route("login")}
                                                         className="block w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-lg text-center transition-all duration-300"
