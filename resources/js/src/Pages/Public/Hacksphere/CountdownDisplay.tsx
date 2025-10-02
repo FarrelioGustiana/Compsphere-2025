@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { Clock, Calendar, AlertCircle, Timer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '@/src/Components/UI/Logo';
 
 interface CountdownDisplayProps {
   startDate: string;
@@ -162,18 +163,19 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 to-purple-900 p-4 shadow-lg">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="max-w-7xl mx-auto flex justify-center items-center">
             <div className="flex items-center space-x-3">
-              <div className="bg-blue-800 rounded-full p-2">
-                <Timer className="h-6 w-6 text-blue-200" />
-              </div>
+              <Logo
+                  size="md"
+                  className="justify-center relative z-10"
+              />
               <div>
                 <h1 className="text-2xl font-bold text-white">Hacksphere 2025</h1>
-                <p className="text-blue-200 text-sm">48-Hour Hackathon Challenge</p>
+                <p className="text-blue-200 text-sm">48-Hour Hackathon</p>
               </div>
             </div>
             
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
               <button
                 onClick={toggleClock}
                 className="px-3 py-1 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition text-sm"
@@ -186,7 +188,7 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
               >
                 {fullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
         
