@@ -22,32 +22,66 @@ class HacksphereActivitySeeder extends Seeder
             return;
         }
         
-        // New activity data
+        // Clear existing Hacksphere activities to avoid duplicates
+        Activity::where('event_id', $hacksphereEvent->id)->delete();
+        $this->command->info('Cleared existing Hacksphere activities.');
+        
+        // Hacksphere activities based on the new schedule
         $activities = [
+            // Thursday, October 2, 2025
             [
-                'name' => 'Re-registration',
-                'description' => 'Participant re-registration at the event venue',
-                'activity_code' => 're-registration',
+                'name' => 'Re-registration + Snack',
+                'description' => 'Re-registration and welcome snack - Thursday, October 2, 2025',
+                'activity_code' => 'day1-registration-snack',
             ],
             [
-                'name' => 'Check Point 1',
-                'description' => 'First stage progress check',
-                'activity_code' => 'checkpoint-1',
+                'name' => 'Checkpoint - 19:00',
+                'description' => 'Evening checkpoint - Thursday, October 2, 2025 at 7 PM',
+                'activity_code' => 'day1-checkpoint-1900',
             ],
             [
-                'name' => 'Check Point 2',
-                'description' => 'Second stage progress check',
-                'activity_code' => 'checkpoint-2',
+                'name' => 'Snack - 16:00',
+                'description' => 'Afternoon snack - Thursday, October 2, 2025 at 4 PM',
+                'activity_code' => 'day1-snack-1600',
             ],
             [
-                'name' => 'Check Point 3',
-                'description' => 'Third stage progress check',
-                'activity_code' => 'checkpoint-3',
+                'name' => 'Snack - 22:00',
+                'description' => 'Late night snack - Thursday, October 2, 2025 at 10 PM',
+                'activity_code' => 'day1-snack-2200',
+            ],
+            
+            // Friday, October 3, 2025
+            [
+                'name' => 'Light Snack - 19:00',
+                'description' => 'Light snack - Friday, October 3, 2025 at 7 PM',
+                'activity_code' => 'day2-light-snack-1900',
             ],
             [
-                'name' => 'Check Point 4',
-                'description' => 'Final stage progress check',
-                'activity_code' => 'checkpoint-4',
+                'name' => 'Checkpoint - 19:00',
+                'description' => 'Evening checkpoint - Friday, October 3, 2025 at 7 PM',
+                'activity_code' => 'day2-checkpoint-1900',
+            ],
+            [
+                'name' => 'Dinner - 22:00',
+                'description' => 'Dinner - Friday, October 3, 2025 at 10 PM',
+                'activity_code' => 'day2-heavy-meal-2200',
+            ],
+            [
+                'name' => 'Dinner + Checkpoint + Relocation - 17:00',
+                'description' => 'Dinner with checkpoint and relocation - Friday, October 3, 2025 at 5 PM',
+                'activity_code' => 'day2-meal-checkpoint-move-1700',
+            ],
+            
+            // Saturday, October 4, 2025
+            [
+                'name' => 'Snack - 07:00',
+                'description' => 'Morning snack - Saturday, October 4, 2025 at 7 AM',
+                'activity_code' => 'day3-snack-0700',
+            ],
+            [
+                'name' => 'Lunch - 12:00',
+                'description' => 'Lunch - Saturday, October 4, 2025 at 12 PM',
+                'activity_code' => 'day3-lunch-1200',
             ],
         ];
 
@@ -61,5 +95,7 @@ class HacksphereActivitySeeder extends Seeder
                 'is_active' => true,
             ]);
         }
+        
+        $this->command->info('Successfully created ' . count($activities) . ' Hacksphere activities.');
     }
 }

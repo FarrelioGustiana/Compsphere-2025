@@ -48,7 +48,7 @@ class ExposphereSubEventsSeeder extends Seeder
                 'max_participants' => null,
                 'is_active' => true,
                 'additional_info' => [
-                    'registration_opens' => '2025-10-01 23:59:59', // After Day 1 ends
+                    'registration_opens' => '2025-10-01 18:00:00', // Open at 6 PM on Day 1
                     'registration_closes' => '2025-10-02 23:59:59', // End of event day
                 ]
             ],
