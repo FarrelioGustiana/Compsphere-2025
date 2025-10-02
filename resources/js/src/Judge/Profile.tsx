@@ -57,19 +57,6 @@ export default function Profile({ user, judgeProfile }: JudgeProfileProps) {
                                         {user.role}
                                     </dd>
                                 </div>
-                                <div className="bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                                    <dt className="text-sm font-medium text-gray-400">
-                                        Expertise
-                                    </dt>
-                                    <dd className="mt-1 text-sm text-gray-200 sm:mt-0 sm:col-span-2">
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 mr-2">
-                                            Web Development
-                                        </span>
-                                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                                            Mobile Development
-                                        </span>
-                                    </dd>
-                                </div>
                                 <div className="bg-gray-850 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-400">
                                         Status
@@ -80,7 +67,7 @@ export default function Profile({ user, judgeProfile }: JudgeProfileProps) {
                                         </span>
                                     </dd>
                                 </div>
-                                <div className="bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                                {/* <div className="bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                     <dt className="text-sm font-medium text-gray-400">
                                         Assigned Events
                                     </dt>
@@ -112,7 +99,7 @@ export default function Profile({ user, judgeProfile }: JudgeProfileProps) {
                                             </li>
                                         </ul>
                                     </dd>
-                                </div>
+                                </div> */}
                             </dl>
                         </div>
                     </div>

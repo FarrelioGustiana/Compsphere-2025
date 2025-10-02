@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\QRVerificationController;
 use App\Http\Controllers\Admin\TalksphereController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VotingController;
 use App\Http\Middleware\CheckAdminLevel;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,11 @@ Route::group([
 
         // Hacksphere Admin Routes
         Route::prefix('hacksphere')->group(function () {
+            // Default route - redirect to dashboard
+            Route::get('/', function () {
+                return redirect()->route('admin.hacksphere.dashboard');
+            });
+            
             Route::get('/dashboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'dashboard'])->name('admin.hacksphere.dashboard');
             Route::get('/activities', [\App\Http\Controllers\Admin\HacksphereController::class, 'activities'])->name('admin.hacksphere.activities');
             Route::get('/teams', [\App\Http\Controllers\Admin\HacksphereController::class, 'teams'])->name('admin.hacksphere.teams');
@@ -76,6 +82,12 @@ Route::group([
             Route::get('/submissions/{submission_id}', [\App\Http\Controllers\Admin\HacksphereController::class, 'submissionDetails'])->name('admin.hacksphere.submissions.show');
             Route::get('/leaderboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'leaderboard'])->name('admin.hacksphere.leaderboard');
             Route::get('/payments', [\App\Http\Controllers\Admin\HacksphereController::class, 'payments'])->name('admin.hacksphere.payments');
+            
+            // Voting Statistics Routes
+            Route::get('/voting-stats', [VotingController::class, 'getVotingStats'])->name('admin.hacksphere.voting-stats');
+            Route::get('/voting-results', function () {
+                return \Inertia\Inertia::render('Admin/HacksphereVotingResults');
+            })->name('admin.hacksphere.voting-results');
         });
 
         // Talksphere Admin Routes

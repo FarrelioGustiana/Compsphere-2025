@@ -68,7 +68,7 @@ export default function Dashboard({ user, judgeProfile, assignments, stats }: Ju
                         </div>
                     )}
                     
-                    <div className="bg-gray-800 shadow overflow-hidden sm:rounded-md">
+                    {/* <div className="bg-gray-800 shadow overflow-hidden sm:rounded-md">
                         <ul className="divide-y divide-gray-700">
                             {assignments.map((assignment, index) => (
                                 <li key={index}>
@@ -105,7 +105,7 @@ export default function Dashboard({ user, judgeProfile, assignments, stats }: Ju
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
                 </div>
                 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">

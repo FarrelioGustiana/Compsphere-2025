@@ -2,7 +2,7 @@ import React from "react";
 import { Head } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
 import DashboardLayout from "@/src/Components/Layout/DashboardLayout";
-import { Users, ChevronRight, PieChart, BarChart3, Activity } from "lucide-react";
+import { Users, ChevronRight, PieChart, BarChart3, Activity, Heart } from "lucide-react";
 import { route } from "ziggy-js";
 
 interface CategoryStats {
@@ -119,7 +119,7 @@ export default function Dashboard({
                 
                 {/* Main Stats */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                         {/* Total Teams Card */}
                         <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
                             <div className="p-5">
@@ -184,6 +184,40 @@ export default function Dashboard({
                                         View payments
                                         <ChevronRight size={16} className="ml-1" />
                                     </Link>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Voting Results Card */}
+                        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
+                            <div className="p-5">
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0 rounded-md p-3 bg-purple-500">
+                                        <Heart className="h-6 w-6 text-white" aria-hidden="true" />
+                                    </div>
+                                    <div className="ml-5 w-0 flex-1">
+                                        <dl>
+                                            <dt className="text-sm font-medium text-gray-400 truncate">
+                                                Public Voting
+                                            </dt>
+                                            <dd>
+                                                <div className="text-lg font-medium text-gray-200">
+                                                    View Results
+                                                </div>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-700 px-5 py-3">
+                                <div className="text-sm">
+                                    <a
+                                        href="/admin/hacksphere/voting-results"
+                                        className="font-medium text-blue-400 hover:text-blue-300 flex items-center"
+                                    >
+                                        View voting results
+                                        <ChevronRight size={16} className="ml-1" />
+                                    </a>
                                 </div>
                             </div>
                         </div>

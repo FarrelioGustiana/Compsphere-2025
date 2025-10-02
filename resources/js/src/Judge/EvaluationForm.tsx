@@ -214,14 +214,14 @@ export default function EvaluationForm({ submission, evaluation, scoringCriteria
                                                         
                                                         <div className="w-32">
                                                             <label htmlFor={criterion.id} className="block text-sm font-medium text-gray-300 mb-1">
-                                                                Score (0-10)
+                                                                Score (1-100)
                                                             </label>
                                                             <input
                                                                 type="number"
                                                                 id={criterion.id}
                                                                 min="1"
-                                                                max="10"
-                                                                step="0.5"
+                                                                max="100"
+                                                                step="1"
                                                                 className="bg-gray-700 border border-gray-600 text-white rounded-md block w-full p-2.5 focus:ring-blue-500 focus:border-blue-500"
                                                                 value={data[criterion.id as keyof typeof data] as number}
                                                                 onChange={(e) => {
@@ -252,7 +252,7 @@ export default function EvaluationForm({ submission, evaluation, scoringCriteria
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <h3 className="text-lg font-medium text-white">Final Score</h3>
-                                            <p className="text-2xl font-bold text-blue-400">{calculateWeightedScore()}/10</p>
+                                            <p className="text-2xl font-bold text-blue-400">{calculateWeightedScore()}/100</p>
                                         </div>
                                         
                                         <div className="flex space-x-4">

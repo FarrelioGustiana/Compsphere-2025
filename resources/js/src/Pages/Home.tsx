@@ -93,15 +93,26 @@ const Home: React.FC = () => {
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center opacity-0 animate-fadeIn animation-delay-500">
                             {isLoggedIn ? (
-                                <button
-                                    onClick={() => {
-                                        window.location.href = `/${auth?.user?.role}/dashboard`;
-                                    }}
-                                    className="cursor-pointer bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
-                                >
-                                    <span>Dashboard</span>
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => {
+                                            window.location.href = `/${auth?.user?.role}/dashboard`;
+                                        }}
+                                        className="cursor-pointer bg-gradient-to-r from-blue-500 to-red-500 hover:from-blue-600 hover:to-red-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                    >
+                                        <span>Dashboard</span>
+                                        <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.location.href = "/voting/hacksphere";
+                                        }}
+                                        className="cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105"
+                                    >
+                                        <span>Vote Hacksphere</span>
+                                        <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                </>
                             ) : (
                                 <>
                                     <button
@@ -120,6 +131,15 @@ const Home: React.FC = () => {
                                         className="cursor-pointer bg-transparent border border-blue-400/20 hover:border-blue-400/40 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 whitespace-nowrap mx-3 sm:mx-0"
                                     >
                                         Login
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            window.location.href = "/voting/hacksphere";
+                                        }}
+                                        className="cursor-pointer bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium text-sm sm:text-base py-2.5 sm:py-3 px-6 sm:px-8 rounded-lg transition-all duration-300 inline-flex items-center gap-2 hover:scale-105 whitespace-nowrap mx-3 sm:mx-0"
+                                    >
+                                        <span>Vote Hacksphere</span>
+                                        <ArrowRight className="w-4 h-4" />
                                     </button>
                                 </>
                             )}

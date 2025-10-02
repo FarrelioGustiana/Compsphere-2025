@@ -181,12 +181,12 @@ class JudgeController extends Controller
         
         // Validate evaluation data
         $validator = Validator::make($request->all(), [
-            'problem_solving_relevance_score' => 'required|numeric|min:1|max:10',
-            'functional_mvp_prototype_score' => 'required|numeric|min:1|max:10',
-            'technical_execution_score' => 'required|numeric|min:1|max:10',
-            'creativity_innovation_score' => 'required|numeric|min:1|max:10',
-            'impact_scalability_score' => 'required|numeric|min:1|max:10',
-            'presentation_clarity_score' => 'required|numeric|min:1|max:10',
+            'problem_solving_relevance_score' => 'required|numeric|min:1|max:100',
+            'functional_mvp_prototype_score' => 'required|numeric|min:1|max:100',
+            'technical_execution_score' => 'required|numeric|min:1|max:100',
+            'creativity_innovation_score' => 'required|numeric|min:1|max:100',
+            'impact_scalability_score' => 'required|numeric|min:1|max:100',
+            'presentation_clarity_score' => 'required|numeric|min:1|max:100',
             'comments' => 'nullable|string|max:2000',
         ]);
         
@@ -235,12 +235,12 @@ class JudgeController extends Controller
         
         // Validate evaluation data (with less strict requirements for draft)
         $validator = Validator::make($request->all(), [
-            'problem_solving_relevance_score' => 'nullable|numeric|min:1|max:10',
-            'functional_mvp_prototype_score' => 'nullable|numeric|min:1|max:10',
-            'technical_execution_score' => 'nullable|numeric|min:1|max:10',
-            'creativity_innovation_score' => 'nullable|numeric|min:1|max:10',
-            'impact_scalability_score' => 'nullable|numeric|min:1|max:10',
-            'presentation_clarity_score' => 'nullable|numeric|min:1|max:10',
+            'problem_solving_relevance_score' => 'nullable|numeric|min:1|max:100',
+            'functional_mvp_prototype_score' => 'nullable|numeric|min:1|max:100',
+            'technical_execution_score' => 'nullable|numeric|min:1|max:100',
+            'creativity_innovation_score' => 'nullable|numeric|min:1|max:100',
+            'impact_scalability_score' => 'nullable|numeric|min:1|max:100',
+            'presentation_clarity_score' => 'nullable|numeric|min:1|max:100',
             'comments' => 'nullable|string|max:2000',
         ]);
         

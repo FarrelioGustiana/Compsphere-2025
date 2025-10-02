@@ -52,6 +52,14 @@ class ProjectSubmission extends Model
     }
 
     /**
+     * Get all votes for this submission.
+     */
+    public function votes(): HasMany
+    {
+        return $this->hasMany(ProjectSubmissionVote::class);
+    }
+
+    /**
      * Get the submission status.
      *
      * @return string
@@ -85,5 +93,26 @@ class ProjectSubmission extends Model
         }
         
         return $completedEvaluations->avg('final_score');
+    }
+
+    /**
+     * Get the total vote count for this submission.
+     *
+     * @return int
+     */
+    public function getVoteCountAttribute(): int
+    {
+        return $this->votes()->count();
+    }
+
+    /**
+     * Check if a specific user has voted for this submission.
+     *
+     * @param int $userId
+     * @return bool
+     */
+    public function hasUserVoted(int $userId): bool
+    {
+        return $this->votes()->where('user_id', $userId)->exists();
     }
 }

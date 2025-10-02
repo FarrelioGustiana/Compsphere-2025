@@ -132,6 +132,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(TeamActivityVerification::class, 'verified_by');
     }
+
+    /**
+     * Get all project submission votes by this user.
+     */
+    public function projectSubmissionVotes(): HasMany
+    {
+        return $this->hasMany(ProjectSubmissionVote::class);
+    }
     
     /**
      * Check if the user is a participant.
