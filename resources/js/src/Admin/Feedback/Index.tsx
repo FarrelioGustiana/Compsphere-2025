@@ -389,9 +389,6 @@ export default function Index({ feedback, stats, filters }: FeedbackIndexProps) 
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                             Date
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                            Actions
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody className="bg-gray-800 divide-y divide-gray-700">
@@ -452,17 +449,6 @@ export default function Index({ feedback, stats, filters }: FeedbackIndexProps) 
                                                 <div className="flex items-center">
                                                     <Calendar className="w-4 h-4 mr-1" />
                                                     {new Date(item.created_at).toLocaleDateString()}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center justify-end space-x-2">
-                                                    <Link
-                                                        href={route('admin.feedback.show', item.id)}
-                                                        className="inline-flex items-center px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-sm font-medium rounded-lg transition-colors"
-                                                    >
-                                                        <Eye className="w-4 h-4 mr-1" />
-                                                        View
-                                                    </Link>
                                                 </div>
                                             </td>
                                         </tr>
