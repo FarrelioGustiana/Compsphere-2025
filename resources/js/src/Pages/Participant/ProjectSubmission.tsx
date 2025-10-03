@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link, router, useForm } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 import DashboardLayout from '@/src/Components/Layout/DashboardLayout';
 import Button from '@/src/Components/UI/Button';
 import { CalendarClock, Save, Send, AlertCircle, ExternalLink, CheckCircle } from 'lucide-react';
@@ -30,6 +31,7 @@ interface ProjectSubmissionProps {
   };
   success?: string;
   error?: string;
+  format_reminders?: string[];
 }
 
 export default function ProjectSubmission({
@@ -41,6 +43,7 @@ export default function ProjectSubmission({
   errors,
   success,
   error,
+  format_reminders,
 }: ProjectSubmissionProps) {
   const [autoSaveMessage, setAutoSaveMessage] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState<string>('');
@@ -178,6 +181,27 @@ export default function ProjectSubmission({
                 <li>YouTube video presentation (max 5 minutes)</li>
                 <li>GitHub repository link</li>
               </ol>
+              
+              <div className="mt-6 p-4 bg-yellow-900/30 border border-yellow-700 rounded-lg">
+                <h3 className="text-yellow-300 font-semibold mb-2">📋 Required Naming Formats:</h3>
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="text-yellow-300 font-medium">YouTube Video Title:</span>
+                    <br />
+                    <span className="text-gray-300 font-mono bg-gray-700 px-2 py-1 rounded">Nama Tim - Judul Project - Hacksphere 2025</span>
+                  </div>
+                  <div>
+                    <span className="text-yellow-300 font-medium">Presentation File Name:</span>
+                    <br />
+                    <span className="text-gray-300 font-mono bg-gray-700 px-2 py-1 rounded">Nama Tim_Judul Project_Hacksphere 2025</span>
+                  </div>
+                  <div>
+                    <span className="text-yellow-300 font-medium">GitHub Repository:</span>
+                    <br />
+                    <span className="text-gray-300">Bebas (Free format)</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -202,6 +226,21 @@ export default function ProjectSubmission({
             <div className="bg-blue-900 text-white px-4 py-3 rounded mb-6 flex items-center">
               <Save className="h-5 w-5 mr-2" />
               <span>{autoSaveMessage}</span>
+            </div>
+          )}
+          
+          {/* Format Reminder Messages */}
+          {format_reminders && format_reminders.length > 0 && (
+            <div className="bg-yellow-900/20 border border-yellow-700 text-yellow-300 px-4 py-3 rounded mb-6">
+              <div className="flex items-center font-medium mb-2">
+                <AlertCircle className="h-5 w-5 mr-2" />
+                <span>Format Reminder</span>
+              </div>
+              <ul className="space-y-1 text-sm">
+                {format_reminders.map((reminder, index) => (
+                  <li key={index}>• {reminder}</li>
+                ))}
+              </ul>
             </div>
           )}
           
@@ -307,9 +346,14 @@ export default function ProjectSubmission({
                   {errors?.presentation_url && (
                     <p className="mt-1 text-sm text-red-400">{errors.presentation_url}</p>
                   )}
-                  <p className="mt-1 text-xs text-gray-400">
-                    Must be a Google Drive link with public access
-                  </p>
+                  <div className="mt-1 space-y-1">
+                    <p className="text-xs text-gray-400">
+                      Must be a Google Drive link with public access
+                    </p>
+                    <p className="text-xs text-yellow-400">
+                      📋 File name must follow format: <span className="font-mono bg-gray-700 px-1 rounded">{team.team_name}_[Judul Project]_Hacksphere 2025</span>
+                    </p>
+                  </div>
                 </div>
                 
                 {/* YouTube URL */}
@@ -340,9 +384,14 @@ export default function ProjectSubmission({
                   {errors?.youtube_url && (
                     <p className="mt-1 text-sm text-red-400">{errors.youtube_url}</p>
                   )}
-                  <p className="mt-1 text-xs text-gray-400">
-                    Video should be a maximum of 5 minutes long
-                  </p>
+                  <div className="mt-1 space-y-1">
+                    <p className="text-xs text-gray-400">
+                      Video should be a maximum of 5 minutes long
+                    </p>
+                    <p className="text-xs text-yellow-400">
+                      📋 Video title must follow format: <span className="font-mono bg-gray-700 px-1 rounded">{team.team_name} - [Judul Project] - Hacksphere 2025</span>
+                    </p>
+                  </div>
                 </div>
                 
                 {/* GitHub URL */}
@@ -373,6 +422,9 @@ export default function ProjectSubmission({
                   {errors?.github_url && (
                     <p className="mt-1 text-sm text-red-400">{errors.github_url}</p>
                   )}
+                  <p className="mt-1 text-xs text-green-400">
+                    📋 Repository name: Bebas (Free format)
+                  </p>
                 </div>
                 
                 {/* Form Buttons */}
