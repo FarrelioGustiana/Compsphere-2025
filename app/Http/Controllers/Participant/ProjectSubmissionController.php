@@ -99,6 +99,25 @@ class ProjectSubmissionController extends Controller
             }],
         ]);
         
+        // Add format reminder messages
+        $validator->after(function ($validator) use ($team, $request) {
+            $messages = [];
+            
+            if ($request->youtube_url && $request->project_title) {
+                $expectedYouTubeTitle = $team->team_name . ' - ' . $request->project_title . ' - Hacksphere 2025';
+                $messages[] = "Pastikan judul video YouTube mengikuti format: {$expectedYouTubeTitle}";
+            }
+            
+            if ($request->presentation_url && $request->project_title) {
+                $expectedPPTName = str_replace(' ', '_', $team->team_name) . '_' . str_replace(' ', '_', $request->project_title) . '_Hacksphere_2025';
+                $messages[] = "Pastikan nama file presentasi mengikuti format: {$expectedPPTName}";
+            }
+            
+            if (!empty($messages)) {
+                session()->flash('format_reminders', $messages);
+            }
+        });
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -175,6 +194,25 @@ class ProjectSubmissionController extends Controller
                 }
             }],
         ]);
+        
+        // Add format reminder messages
+        $validator->after(function ($validator) use ($team, $request) {
+            $messages = [];
+            
+            if ($request->youtube_url && $request->project_title) {
+                $expectedYouTubeTitle = $team->team_name . ' - ' . $request->project_title . ' - Hacksphere 2025';
+                $messages[] = "Pastikan judul video YouTube mengikuti format: {$expectedYouTubeTitle}";
+            }
+            
+            if ($request->presentation_url && $request->project_title) {
+                $expectedPPTName = str_replace(' ', '_', $team->team_name) . '_' . str_replace(' ', '_', $request->project_title) . '_Hacksphere_2025';
+                $messages[] = "Pastikan nama file presentasi mengikuti format: {$expectedPPTName}";
+            }
+            
+            if (!empty($messages)) {
+                session()->flash('format_reminders', $messages);
+            }
+        });
         
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
