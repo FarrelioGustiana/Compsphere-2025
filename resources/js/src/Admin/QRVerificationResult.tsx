@@ -15,13 +15,13 @@ interface VerificationData {
   };
   team?: {
     id: number;
-    name: string;
-    code: string;
+    team_name: string;
+    team_code: string;
   };
   activity?: {
     id: number;
     name: string;
-    code: string;
+    activity_code: string;
   };
   event?: {
     id: number;
@@ -215,14 +215,14 @@ export default function QRVerificationResult({ success, message, data, event, ac
           {data?.team && (
             <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 mb-4">
               <h3 className="font-semibold text-gray-300 mb-2">Team</h3>
-              <p className="text-white font-medium">{data.team.name} ({data.team.code})</p>
+              <p className="text-white font-medium">{data.team.team_name} ({data.team.team_code})</p>
             </div>
           )}
 
           {data?.activity && (
             <div className="bg-gray-800 rounded-lg border border-gray-700 p-4 mb-4">
               <h3 className="font-semibold text-gray-300 mb-2">Activity</h3>
-              <p className="text-white font-medium">{data.activity.name} ({data.activity.code})</p>
+              <p className="text-white font-medium">{data.activity.name} ({data.activity.activity_code})</p>
             </div>
           )}
         </div>

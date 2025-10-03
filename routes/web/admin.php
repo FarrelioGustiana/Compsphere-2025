@@ -101,6 +101,15 @@ Route::group([
 
         // Exposphere Admin Routes
         Route::get('/exposphere/participants', [\App\Http\Controllers\Admin\EventParticipantsController::class, 'participants'])->name('admin.exposphere.participants')->defaults('eventCode', 'exposphere');
+
+        // Feedback Management Routes
+        Route::prefix('feedback')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('admin.feedback.index');
+            Route::get('/{feedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'show'])->name('admin.feedback.show');
+            Route::put('/{feedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'update'])->name('admin.feedback.update');
+            Route::delete('/{feedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'destroy'])->name('admin.feedback.destroy');
+            Route::post('/bulk-update', [\App\Http\Controllers\Admin\FeedbackController::class, 'bulkUpdate'])->name('admin.feedback.bulk-update');
+        });
         
         // New descriptive URL format for QR Code scanning - must be LAST because it's a catch-all
         Route::get('/{eventCode}/{activityCode}/{teamCode}', [QRVerificationController::class, 'verifyByTeamCode'])

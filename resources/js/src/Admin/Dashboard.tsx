@@ -127,6 +127,35 @@ export default function Dashboard({
                         ))}
                     </div>
 
+                    {/* Feedback Management */}
+                    <div className="mt-6">
+                        <div className="bg-gray-800 overflow-hidden shadow rounded-lg">
+                            <div className="p-6">
+                                <div className="flex items-center">
+                                    <div className="flex-shrink-0">
+                                        <Settings className="h-8 w-8 text-green-400" />
+                                    </div>
+                                    <div className="ml-4 flex-1">
+                                        <h3 className="text-lg font-medium text-gray-200">
+                                            Feedback Management
+                                        </h3>
+                                        <p className="text-sm text-gray-400 mt-1">
+                                            View and manage user feedback, bug reports, and feature requests.
+                                        </p>
+                                    </div>
+                                    <div className="ml-4">
+                                        <Link
+                                            href={route('admin.feedback.index')}
+                                            className="inline-flex items-center px-3 py-2 border border-gray-600 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                        >
+                                            View Feedback
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     {isSuperAdmin && (
                         <div className="mt-6">
                             <div className="bg-gray-800 overflow-hidden shadow rounded-lg">

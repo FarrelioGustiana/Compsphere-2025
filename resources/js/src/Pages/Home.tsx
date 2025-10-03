@@ -226,6 +226,29 @@ const Home: React.FC = () => {
                             </div>
 
                             <div className="text-center md:text-left">
+                                <h3 className="text-lg font-bold mb-4 text-white">
+                                    Quick Links
+                                </h3>
+                                <div className="space-y-2">
+                                    <div>
+                                        <a
+                                            href="/feedback"
+                                            className="text-gray-400 hover:text-white transition-colors duration-200"
+                                        >
+                                            Share Feedback
+                                        </a>
+                                    </div>
+                                    {isLoggedIn && (
+                                        <div>
+                                            <a
+                                                href="/feedback/my-feedback"
+                                                className="text-gray-400 hover:text-white transition-colors duration-200"
+                                            >
+                                                My Feedback
+                                            </a>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             <div className="text-center md:text-left">

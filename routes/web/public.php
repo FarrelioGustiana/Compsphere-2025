@@ -43,3 +43,15 @@ Route::prefix('voting')->group(function () {
         Route::delete('/hacksphere/{submission}/unvote', [VotingController::class, 'unvote'])->name('voting.unvote');
     });
 });
+
+// Feedback routes
+Route::prefix('feedback')->group(function () {
+    Route::get('/', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/', [\App\Http\Controllers\FeedbackController::class, 'store'])->name('feedback.store');
+    
+    // Protected feedback routes (require authentication)
+    Route::middleware(['auth', 'verified'])->group(function () {
+        Route::get('/my-feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+        Route::get('/my-feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
+    });
+});
