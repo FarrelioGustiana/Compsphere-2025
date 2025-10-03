@@ -15,17 +15,21 @@ class Feedback extends Model
         'email',
         'subject',
         'message',
-        'feedback_type',
-        'event_code',
-        'rating',
+        'category',
+        'priority',
         'status',
-        'admin_response',
-        'responded_by',
-        'responded_at',
+        'admin_notes',
+        'resolved_at',
+        'resolved_by',
     ];
 
     protected $casts = [
         'resolved_at' => 'datetime',
+    ];
+    
+    protected $attributes = [
+        'priority' => 'medium',
+        'status' => 'new',
     ];
 
     /**
@@ -37,11 +41,11 @@ class Feedback extends Model
     }
 
     /**
-     * Get the admin who responded to the feedback.
+     * Get the admin who resolved the feedback.
      */
-    public function respondedBy(): BelongsTo
+    public function resolvedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'responded_by');
+        return $this->belongsTo(User::class, 'resolved_by');
     }
 
     /**
@@ -77,18 +81,11 @@ class Feedback extends Model
     }
 
     /**
-     * Scope for filtering by feedback type.
+     * Scope for filtering by category.
      */
     public function scopeByCategory($query, $category)
     {
-        return $query->where('feedback_type', $category);
+        return $query->where('category', $category);
     }
 
-    /**
-     * Scope for filtering by event code.
-     */
-    public function scopeByEventCode($query, $eventCode)
-    {
-        return $query->where('event_code', $eventCode);
-    }
 }

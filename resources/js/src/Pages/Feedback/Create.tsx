@@ -39,16 +39,37 @@ export default function Create({ user }: FeedbackCreateProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Log the data being submitted
+        console.log('Form data being submitted:', {
+            subject: data.subject,
+            message: data.message,
+            category: data.category,
+            name: data.name,
+            email: data.email
+        });
+        
         post(route("feedback.store"), {
             onSuccess: () => {
+                console.log('Feedback submission successful');
                 setShowSuccess(true);
                 reset();
                 setTimeout(() => setShowSuccess(false), 5000);
             },
             onError: (errors) => {
                 console.error('Feedback submission failed:', errors);
-                // Show error message to user
-                alert('Failed to submit feedback. Please try again or contact support.');
+                
+                // Log all form data and errors for debugging
+                console.log('Form data at time of error:', data);
+                console.log('Error details:', errors);
+                
+                // Show detailed error message
+                if (errors.error) {
+                    alert(`Error: ${errors.error}`);
+                } else {
+                    const errorMessages = Object.values(errors).join('\n');
+                    alert(`Failed to submit feedback: \n${errorMessages}`);
+                }
             },
         });
     };

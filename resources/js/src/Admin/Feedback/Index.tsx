@@ -89,6 +89,23 @@ export default function Index({ feedback, stats, filters }: FeedbackIndexProps) 
     const [selectedFeedback, setSelectedFeedback] = useState<number[]>([]);
     const [showFilters, setShowFilters] = useState(false);
     const [searchQuery, setSearchQuery] = useState(filters.search || "");
+    
+    // State for full message modal
+    const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+    const [currentMessage, setCurrentMessage] = useState("");
+    const [currentSubject, setCurrentSubject] = useState("");
+    
+    // Function to open the full message modal
+    const openMessageModal = (message: string, subject: string) => {
+        setCurrentMessage(message);
+        setCurrentSubject(subject);
+        setIsMessageModalOpen(true);
+    };
+    
+    // Function to close the full message modal
+    const closeMessageModal = () => {
+        setIsMessageModalOpen(false);
+    };
 
     const categories = [
         { value: "", label: "All Categories" },
@@ -411,9 +428,23 @@ export default function Index({ feedback, stats, filters }: FeedbackIndexProps) 
                                                         <p className="text-sm font-medium text-white truncate">
                                                             {item.subject || 'No Subject'}
                                                         </p>
-                                                        <p className="text-sm text-gray-400 truncate">
-                                                            {item.message ? item.message.substring(0, 100) + '...' : 'No message'}
-                                                        </p>
+                                                        <div className="flex items-center justify-between">
+                                                            <p className="text-sm text-gray-400 truncate">
+                                                                {item.message ? item.message.substring(0, 80) + '...' : 'No message'}
+                                                            </p>
+                                                            {item.message && (
+                                                                <button 
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        openMessageModal(item.message, item.subject || 'No Subject');
+                                                                    }}
+                                                                    className="ml-2 text-xs text-blue-400 hover:text-blue-300 flex items-center"
+                                                                >
+                                                                    <Eye className="w-3 h-3 mr-1" />
+                                                                    Lihat
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                         <div className="flex items-center mt-1 space-x-2">
                                                             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-700 text-gray-300">
                                                                 <Tag className="w-3 h-3 mr-1" />
@@ -483,6 +514,41 @@ export default function Index({ feedback, stats, filters }: FeedbackIndexProps) 
                                 </div>
                             </div>
                         )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Full Message Modal */}
+            <div className="fixed inset-0 overflow-y-auto z-50" style={{ display: isMessageModalOpen ? 'block' : 'none' }}>
+                <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center">
+                    {/* Background overlay */}
+                    <div className="fixed inset-0 bg-black opacity-75 transition-opacity" onClick={closeMessageModal}></div>
+
+                    {/* Modal content */}
+                    <div className="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                        <div className="bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div className="sm:flex sm:items-start">
+                                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                    <h3 className="text-lg leading-6 font-medium text-white mb-2">
+                                        {currentSubject}
+                                    </h3>
+                                    <div className="mt-4 bg-gray-700 p-4 rounded-md max-h-80 overflow-y-auto">
+                                        <p className="text-sm text-gray-300 whitespace-pre-wrap">
+                                            {currentMessage}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button
+                                type="button"
+                                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                onClick={closeMessageModal}
+                            >
+                                Tutup
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -22,7 +22,7 @@ class FeedbackController extends Controller
         $priority = $request->input('priority');
 
         $feedback = Feedback::query()
-            ->with(['user', 'respondedBy'])
+            ->with(['user', 'resolvedBy'])
             ->when($search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('subject', 'like', "%{$search}%")
@@ -49,7 +49,7 @@ class FeedbackController extends Controller
         // Get statistics for dashboard
         $stats = [
             'total' => Feedback::count(),
-            'new' => Feedback::byStatus('pending')->count(),
+            'new' => Feedback::byStatus('new')->count(),
             'in_progress' => Feedback::byStatus('in_progress')->count(),
             'resolved' => Feedback::byStatus('resolved')->count(),
             'closed' => Feedback::byStatus('closed')->count(),
