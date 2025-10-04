@@ -7,10 +7,11 @@ import Logo from '@/src/Components/UI/Logo';
 interface CountdownDisplayProps {
   startDate: string;
   endDate: string;
+  extendedTimeMinutes: number;
   announcements: Record<number, string>;
 }
 
-export default function CountdownDisplay({ startDate, endDate, announcements }: CountdownDisplayProps) {
+export default function CountdownDisplay({ startDate, endDate, extendedTimeMinutes, announcements }: CountdownDisplayProps) {
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -20,6 +21,7 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
     isRunning: false,
     isComplete: false,
     hasStarted: false,
+    isExtendedTime: false,
   });
   
   const [currentAnnouncement, setCurrentAnnouncement] = useState<string | null>(null);
@@ -32,17 +34,33 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
       const now = new Date();
       const startTime = new Date(startDate);
       const endTime = new Date(endDate);
+      const extendedEndTime = new Date(endTime.getTime() + extendedTimeMinutes * 60 * 1000);
       
       // Check if hackathon has started
       const hasStarted = now >= startTime;
       
-      // Check if hackathon is complete
-      const isComplete = now >= endTime;
+      // Check if main time is complete (48 hours)
+      const isMainTimeComplete = now >= endTime;
       
-      // Calculate time remaining until end if started
+      // Check if extended time is complete
+      const isExtendedTimeComplete = now >= extendedEndTime;
+      
+      // Determine if we're in extended time period
+      const isExtendedTime = isMainTimeComplete && !isExtendedTimeComplete;
+      
+      // Check if everything is complete
+      const isComplete = isExtendedTimeComplete;
+      
+      // Calculate time remaining
       let timeLeft = 0;
       if (hasStarted && !isComplete) {
-        timeLeft = endTime.getTime() - now.getTime();
+        if (isExtendedTime) {
+          // Show extended time countdown
+          timeLeft = extendedEndTime.getTime() - now.getTime();
+        } else {
+          // Show main countdown
+          timeLeft = endTime.getTime() - now.getTime();
+        }
       } else if (!hasStarted) {
         // If not started yet, show time until start
         timeLeft = startTime.getTime() - now.getTime();
@@ -57,11 +75,16 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
       // Calculate total hours for hackathon progress
       let totalHours = 0;
       if (hasStarted && !isComplete) {
-        const elapsedTime = now.getTime() - startTime.getTime();
-        const totalTime = endTime.getTime() - startTime.getTime();
-        const hoursElapsed = elapsedTime / (1000 * 60 * 60);
-        const totalHackathonHours = totalTime / (1000 * 60 * 60);
-        totalHours = Math.floor(totalHackathonHours - hoursElapsed);
+        if (isExtendedTime) {
+          // During extended time, show minutes remaining
+          totalHours = 0;
+        } else {
+          const elapsedTime = now.getTime() - startTime.getTime();
+          const totalTime = endTime.getTime() - startTime.getTime();
+          const hoursElapsed = elapsedTime / (1000 * 60 * 60);
+          const totalHackathonHours = totalTime / (1000 * 60 * 60);
+          totalHours = Math.floor(totalHackathonHours - hoursElapsed);
+        }
       }
       
       // Check for announcements based on hours remaining
@@ -84,6 +107,7 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
         isRunning: hasStarted && !isComplete,
         isComplete,
         hasStarted,
+        isExtendedTime,
       };
     };
     
@@ -116,7 +140,16 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
     
     const start = new Date(startDate).getTime();
     const end = new Date(endDate).getTime();
+    const extendedEnd = new Date(end + extendedTimeMinutes * 60 * 1000).getTime();
     const now = new Date().getTime();
+    
+    if (timeRemaining.isExtendedTime) {
+      // During extended time, show progress from 100% to completion
+      const extendedDuration = extendedEnd - end;
+      const extendedElapsed = now - end;
+      const extendedProgress = (extendedElapsed / extendedDuration) * 100;
+      return Math.min(Math.floor(100 + extendedProgress), 200);
+    }
     
     const totalDuration = end - start;
     const elapsed = now - start;
@@ -216,6 +249,11 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
                 <span className="mr-2">●</span>
                 Hackathon Complete
               </div>
+            ) : timeRemaining.isExtendedTime ? (
+              <div className="inline-flex items-center px-6 py-3 rounded-full text-lg font-medium bg-orange-900/30 text-orange-400 animate-pulse">
+                <span className="mr-2">●</span>
+                Extended Time - Final Submission Period
+              </div>
             ) : timeRemaining.isRunning ? (
               <div className="inline-flex items-center px-6 py-3 rounded-full text-lg font-medium bg-blue-900/30 text-blue-400 animate-pulse">
                 <span className="mr-2">●</span>
@@ -241,26 +279,50 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
           
           {/* Big Countdown Timer */}
           <div className="grid grid-cols-4 gap-4 md:gap-8 max-w-4xl w-full mx-auto mb-12">
-            <div className="bg-gray-900/60 p-4 md:p-8 rounded-lg shadow-lg text-center">
-              <div className="text-5xl md:text-8xl font-bold text-white mb-2">
+            <div className={`p-4 md:p-8 rounded-lg shadow-lg text-center transition-all duration-1000 ${
+              timeRemaining.isExtendedTime 
+                ? 'bg-gradient-to-br from-orange-900/60 to-red-900/60 ring-2 ring-orange-500/50' 
+                : 'bg-gray-900/60'
+            }`}>
+              <div className={`text-5xl md:text-8xl font-bold mb-2 ${
+                timeRemaining.isExtendedTime ? 'text-orange-400' : 'text-white'
+              }`}>
                 {String(timeRemaining.days).padStart(2, '0')}
               </div>
               <div className="text-gray-400 text-lg md:text-xl">Days</div>
             </div>
-            <div className="bg-gray-900/60 p-4 md:p-8 rounded-lg shadow-lg text-center">
-              <div className="text-5xl md:text-8xl font-bold text-white mb-2">
+            <div className={`p-4 md:p-8 rounded-lg shadow-lg text-center transition-all duration-1000 ${
+              timeRemaining.isExtendedTime 
+                ? 'bg-gradient-to-br from-orange-900/60 to-red-900/60 ring-2 ring-orange-500/50' 
+                : 'bg-gray-900/60'
+            }`}>
+              <div className={`text-5xl md:text-8xl font-bold mb-2 ${
+                timeRemaining.isExtendedTime ? 'text-orange-400' : 'text-white'
+              }`}>
                 {String(timeRemaining.hours).padStart(2, '0')}
               </div>
               <div className="text-gray-400 text-lg md:text-xl">Hours</div>
             </div>
-            <div className="bg-gray-900/60 p-4 md:p-8 rounded-lg shadow-lg text-center">
-              <div className="text-5xl md:text-8xl font-bold text-white mb-2">
+            <div className={`p-4 md:p-8 rounded-lg shadow-lg text-center transition-all duration-1000 ${
+              timeRemaining.isExtendedTime 
+                ? 'bg-gradient-to-br from-orange-900/60 to-red-900/60 ring-2 ring-orange-500/50' 
+                : 'bg-gray-900/60'
+            }`}>
+              <div className={`text-5xl md:text-8xl font-bold mb-2 ${
+                timeRemaining.isExtendedTime ? 'text-orange-400' : 'text-white'
+              }`}>
                 {String(timeRemaining.minutes).padStart(2, '0')}
               </div>
               <div className="text-gray-400 text-lg md:text-xl">Minutes</div>
             </div>
-            <div className="bg-gray-900/60 p-4 md:p-8 rounded-lg shadow-lg text-center">
-              <div className="text-5xl md:text-8xl font-bold text-white mb-2">
+            <div className={`p-4 md:p-8 rounded-lg shadow-lg text-center transition-all duration-1000 ${
+              timeRemaining.isExtendedTime 
+                ? 'bg-gradient-to-br from-orange-900/60 to-red-900/60 ring-2 ring-orange-500/50' 
+                : 'bg-gray-900/60'
+            }`}>
+              <div className={`text-5xl md:text-8xl font-bold mb-2 ${
+                timeRemaining.isExtendedTime ? 'text-orange-400' : 'text-white'
+              }`}>
                 {String(timeRemaining.seconds).padStart(2, '0')}
               </div>
               <div className="text-gray-400 text-lg md:text-xl">Seconds</div>
@@ -272,13 +334,17 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
             <div className="mb-8 max-w-4xl w-full mx-auto px-4">
               <div className="flex justify-between text-sm text-gray-400 mb-2">
                 <span>Progress</span>
-                <span>{progress}%</span>
+                <span>{timeRemaining.isExtendedTime ? 'Extended Time' : `${Math.min(progress, 100)}%`}</span>
               </div>
               <div className="h-6 bg-gray-800 rounded-full overflow-hidden shadow-inner">
                 <motion.div 
-                  className="h-full bg-gradient-to-r from-blue-600 to-purple-600"
+                  className={`h-full ${
+                    timeRemaining.isExtendedTime 
+                      ? 'bg-gradient-to-r from-orange-600 to-red-600' 
+                      : 'bg-gradient-to-r from-blue-600 to-purple-600'
+                  }`}
                   initial={{ width: '0%' }}
-                  animate={{ width: `${progress}%` }}
+                  animate={{ width: `${Math.min(progress, 100)}%` }}
                   transition={{ duration: 1 }}
                 />
               </div>
@@ -287,9 +353,11 @@ export default function CountdownDisplay({ startDate, endDate, announcements }: 
                 <span>
                   {timeRemaining.isComplete 
                     ? "Completed!" 
-                    : timeRemaining.isRunning 
-                      ? `${timeRemaining.totalHours} hours remaining` 
-                      : formatDate(endDate)}
+                    : timeRemaining.isExtendedTime
+                      ? `Extended Time: ${timeRemaining.minutes}m ${timeRemaining.seconds}s remaining`
+                      : timeRemaining.isRunning 
+                        ? `${timeRemaining.totalHours} hours remaining` 
+                        : formatDate(endDate)}
                 </span>
               </div>
             </div>

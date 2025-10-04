@@ -19,6 +19,9 @@ class HacksphereCountdownController extends Controller
         // Define the start and end dates for the hackathon
         $startDate = '2025-10-02 12:00:00'; // October 2, 2025, 12:00 PM
         $endDate = '2025-10-04 12:00:00';   // October 4, 2025, 12:00 PM
+        
+        // Extended time: 30 minutes after the main countdown ends
+        $extendedTimeMinutes = 30;
 
         // Define announcement milestones (hours remaining)
         $announcements = [
@@ -35,6 +38,7 @@ class HacksphereCountdownController extends Controller
         return [
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'extendedTimeMinutes' => $extendedTimeMinutes,
             'announcements' => $announcements,
         ];
     }
