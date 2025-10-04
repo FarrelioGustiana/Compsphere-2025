@@ -103,7 +103,7 @@ const Home: React.FC = () => {
                                         <span>Dashboard</span>
                                         <ArrowRight className="w-4 h-4" />
                                     </button>
-                                    <button
+                                    {/* <button
                                         onClick={() => {
                                             window.location.href = "/voting/hacksphere";
                                         }}
@@ -111,7 +111,7 @@ const Home: React.FC = () => {
                                     >
                                         <span>Vote Hacksphere</span>
                                         <ArrowRight className="w-4 h-4" />
-                                    </button>
+                                    </button> */}
                                 </>
                             ) : (
                                 <>
