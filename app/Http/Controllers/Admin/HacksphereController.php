@@ -17,6 +17,103 @@ use Inertia\Inertia;
 class HacksphereController extends Controller
 {
     /**
+     * Helper function to calculate scores with backward compatibility
+     * 
+     * @param \Illuminate\Support\Collection $evaluations
+     * @return array ['average_score' => float, 'criteria_scores' => array]
+     */
+    private function calculateScores($evaluations)
+    {
+        $evaluationsCount = $evaluations->count();
+        $averageScore = 0;
+        
+        if ($evaluationsCount === 0) {
+            return [
+                'average_score' => 0,
+                'criteria_scores' => [
+                    'problem_solving_relevance_score' => 0,
+                    'functional_mvp_prototype_score' => 0,
+                    'technical_execution_score' => 0,
+                    'creativity_innovation_score' => 0,
+                    'impact_scalability_score' => 0,
+                    'presentation_clarity_score' => 0,
+                ],
+            ];
+        }
+        
+        // Check if using new or old criteria format
+        $firstEvaluation = $evaluations->first();
+        $useNewFormat = $firstEvaluation && isset($firstEvaluation->problem_solving_relevance_score);
+        
+        if ($useNewFormat) {
+            // New format
+            $criteriaScores = [
+                'problem_solving_relevance_score' => $evaluations->avg('problem_solving_relevance_score'),
+                'functional_mvp_prototype_score' => $evaluations->avg('functional_mvp_prototype_score'),
+                'technical_execution_score' => $evaluations->avg('technical_execution_score'),
+                'creativity_innovation_score' => $evaluations->avg('creativity_innovation_score'),
+                'impact_scalability_score' => $evaluations->avg('impact_scalability_score'),
+                'presentation_clarity_score' => $evaluations->avg('presentation_clarity_score'),
+            ];
+            
+            $weights = [
+                'problem_solving_relevance_score' => 0.25,
+                'functional_mvp_prototype_score' => 0.25,
+                'technical_execution_score' => 0.20,
+                'creativity_innovation_score' => 0.10,
+                'impact_scalability_score' => 0.10,
+                'presentation_clarity_score' => 0.10,
+            ];
+            
+            $weightedTotal = 0;
+            foreach ($criteriaScores as $criterion => $score) {
+                $weightedTotal += ($score ?? 0) * $weights[$criterion];
+            }
+            
+            $averageScore = $weightedTotal;
+        } else {
+            // Old format - convert to new format for display
+            $oldCriteriaScores = [
+                'whole_system_functionality_score' => $evaluations->avg('whole_system_functionality_score'),
+                'ui_ux_design_score' => $evaluations->avg('ui_ux_design_score'),
+                'backend_logic_score' => $evaluations->avg('backend_logic_score'),
+                'ai_model_performance_score' => $evaluations->avg('ai_model_performance_score'),
+                'automation_integration_score' => $evaluations->avg('automation_integration_score'),
+            ];
+            
+            $oldWeights = [
+                'whole_system_functionality_score' => 0.30,
+                'ui_ux_design_score' => 0.20,
+                'backend_logic_score' => 0.25,
+                'ai_model_performance_score' => 0.15,
+                'automation_integration_score' => 0.10,
+            ];
+            
+            $weightedTotal = 0;
+            foreach ($oldCriteriaScores as $criterion => $score) {
+                $weightedTotal += ($score ?? 0) * $oldWeights[$criterion];
+            }
+            
+            $averageScore = $weightedTotal;
+            
+            // Map old criteria to new format for frontend
+            $criteriaScores = [
+                'problem_solving_relevance_score' => $oldCriteriaScores['whole_system_functionality_score'] ?? 0,
+                'functional_mvp_prototype_score' => $oldCriteriaScores['backend_logic_score'] ?? 0,
+                'technical_execution_score' => $oldCriteriaScores['ui_ux_design_score'] ?? 0,
+                'creativity_innovation_score' => $oldCriteriaScores['ai_model_performance_score'] ?? 0,
+                'impact_scalability_score' => $oldCriteriaScores['ai_model_performance_score'] ?? 0,
+                'presentation_clarity_score' => $oldCriteriaScores['automation_integration_score'] ?? 0,
+            ];
+        }
+        
+        return [
+            'average_score' => $averageScore,
+            'criteria_scores' => $criteriaScores,
+        ];
+    }
+    
+    /**
      * Display the dashboard with team statistics by category
      *
      * @return \Inertia\Response
@@ -782,41 +879,16 @@ class HacksphereController extends Controller
         $evaluatedCount = 0;
         
         $formattedSubmissions = $submissions->map(function($submission) use (&$evaluatedSubmissions, &$pendingEvaluations, &$totalScore, &$evaluatedCount) {
-            // Calculate average scores
+            // Calculate average scores using helper function
             $evaluations = $submission->evaluations;
             $evaluationsCount = $evaluations->count();
             
-            $averageScore = 0;
-            $criteriaScores = [
-                'whole_system_functionality_score' => 0,
-                'ui_ux_design_score' => 0,
-                'backend_logic_score' => 0,
-                'ai_model_performance_score' => 0,
-                'automation_integration_score' => 0,
-            ];
+            $scores = $this->calculateScores($evaluations);
+            $averageScore = $scores['average_score'];
+            $criteriaScores = $scores['criteria_scores'];
             
             if ($evaluationsCount > 0) {
                 $evaluatedSubmissions++;
-                
-                foreach ($criteriaScores as $criterion => $score) {
-                    $criteriaScores[$criterion] = $evaluations->avg($criterion);
-                }
-                
-                // Apply weights from config
-                $weights = config('hacksphere.evaluation_weights', [
-                    'whole_system_functionality_score' => 0.30,
-                    'ui_ux_design_score' => 0.20,
-                    'backend_logic_score' => 0.25,
-                    'ai_model_performance_score' => 0.15,
-                    'automation_integration_score' => 0.10,
-                ]);
-                
-                $weightedTotal = 0;
-                foreach ($criteriaScores as $criterion => $score) {
-                    $weightedTotal += $score * $weights[$criterion];
-                }
-                
-                $averageScore = $weightedTotal;
                 $totalScore += $averageScore;
                 $evaluatedCount++;
             } else {
@@ -891,54 +963,54 @@ class HacksphereController extends Controller
             ];
         }
         
+        // Check format from first evaluation
+        $firstEval = $submission->evaluations->first();
+        $useNewFormat = $firstEval && isset($firstEval->problem_solving_relevance_score);
+        
         // Format evaluations
-        $evaluations = $submission->evaluations->map(function($evaluation) {
-            return [
+        $evaluations = $submission->evaluations->map(function($evaluation) use ($useNewFormat) {
+            $evalData = [
                 'id' => $evaluation->id,
                 'judge_name' => $evaluation->judge->user->full_name,
-                'whole_system_functionality_score' => $evaluation->whole_system_functionality_score,
-                'ui_ux_design_score' => $evaluation->ui_ux_design_score,
-                'backend_logic_score' => $evaluation->backend_logic_score,
-                'ai_model_performance_score' => $evaluation->ai_model_performance_score,
-                'automation_integration_score' => $evaluation->automation_integration_score,
                 'comments' => $evaluation->comments,
                 'created_at' => $evaluation->created_at,
             ];
+            
+            if ($useNewFormat) {
+                $evalData['problem_solving_relevance_score'] = $evaluation->problem_solving_relevance_score;
+                $evalData['functional_mvp_prototype_score'] = $evaluation->functional_mvp_prototype_score;
+                $evalData['technical_execution_score'] = $evaluation->technical_execution_score;
+                $evalData['creativity_innovation_score'] = $evaluation->creativity_innovation_score;
+                $evalData['impact_scalability_score'] = $evaluation->impact_scalability_score;
+                $evalData['presentation_clarity_score'] = $evaluation->presentation_clarity_score;
+            } else {
+                // Map old format to new format for display
+                $evalData['problem_solving_relevance_score'] = $evaluation->whole_system_functionality_score;
+                $evalData['functional_mvp_prototype_score'] = $evaluation->backend_logic_score;
+                $evalData['technical_execution_score'] = $evaluation->ui_ux_design_score;
+                $evalData['creativity_innovation_score'] = $evaluation->ai_model_performance_score;
+                $evalData['impact_scalability_score'] = $evaluation->ai_model_performance_score;
+                $evalData['presentation_clarity_score'] = $evaluation->automation_integration_score;
+            }
+            
+            return $evalData;
         });
         
-        // Calculate average scores
-        $evaluationsCount = $evaluations->count();
-        $criteriaScores = [
-            'problem_solving_relevance_score' => 0,
-            'functional_mvp_prototype_score' => 0,
-            'technical_execution_score' => 0,
-            'creativity_innovation_score' => 0,
-            'impact_scalability_score' => 0,
-            'presentation_clarity_score' => 0,
-            'automation_integration_score' => 0,
+        // Calculate average scores using helper function
+        $evaluationsCount = $submission->evaluations->count();
+        $scores = $this->calculateScores($submission->evaluations);
+        $averageScore = $scores['average_score'];
+        $criteriaScores = $scores['criteria_scores'];
+        
+        // Weights for display
+        $weights = [
+            'problem_solving_relevance_score' => 0.25,
+            'functional_mvp_prototype_score' => 0.25,
+            'technical_execution_score' => 0.20,
+            'creativity_innovation_score' => 0.10,
+            'impact_scalability_score' => 0.10,
+            'presentation_clarity_score' => 0.10,
         ];
-        
-        if ($evaluationsCount > 0) {
-            foreach ($criteriaScores as $criterion => $score) {
-                $criteriaScores[$criterion] = $submission->evaluations->avg($criterion);
-            }
-        }
-        
-        // Apply weights from config
-        $weights = config('hacksphere.evaluation_weights', [
-            'whole_system_functionality_score' => 0.30,
-            'ui_ux_design_score' => 0.20,
-            'backend_logic_score' => 0.25,
-            'ai_model_performance_score' => 0.15,
-            'automation_integration_score' => 0.10,
-        ]);
-        
-        $weightedTotal = 0;
-        foreach ($criteriaScores as $criterion => $score) {
-            $weightedTotal += $score * $weights[$criterion];
-        }
-        
-        $averageScore = $evaluationsCount > 0 ? $weightedTotal : 0;
         
         $formattedSubmission = [
             'id' => $submission->id,
@@ -979,42 +1051,13 @@ class HacksphereController extends Controller
         ])->get();
         
         $rankedSubmissions = $submissions->map(function($submission) {
-            // Calculate average scores
+            // Calculate average scores using helper function
             $evaluations = $submission->evaluations;
             $evaluationsCount = $evaluations->count();
             
-            $averageScore = 0;
-            $criteriaScores = [
-                'problem_solving_relevance_score' => 0,
-                'functional_mvp_prototype_score' => 0,
-                'technical_execution_score' => 0,
-                'creativity_innovation_score' => 0,
-                'impact_scalability_score' => 0,
-                'presentation_clarity_score' => 0,
-            ];
-            
-            if ($evaluationsCount > 0) {
-                foreach ($criteriaScores as $criterion => $score) {
-                    $criteriaScores[$criterion] = $evaluations->avg($criterion);
-                }
-                
-                // Apply weights from config
-                $weights = config('hacksphere.evaluation_weights', [
-                    'problem_solving_relevance_score' => 0.25,
-                    'functional_mvp_prototype_score' => 0.25,
-                    'technical_execution_score' => 0.20,
-                    'creativity_innovation_score' => 0.10,
-                    'impact_scalability_score' => 0.10,
-                    'presentation_clarity_score' => 0.10,
-                ]);
-                
-                $weightedTotal = 0;
-                foreach ($criteriaScores as $criterion => $score) {
-                    $weightedTotal += $score * $weights[$criterion];
-                }
-                
-                $averageScore = $weightedTotal;
-            }
+            $scores = $this->calculateScores($evaluations);
+            $averageScore = $scores['average_score'];
+            $criteriaScores = $scores['criteria_scores'];
             
             // Get team members
             $members = $submission->team->members->map(function($member) {
