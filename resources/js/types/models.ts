@@ -47,6 +47,7 @@ export interface Event {
         | "registration_closed"
         | "ongoing"
         | "completed";
+    is_registration_open?: boolean;
 }
 
 export interface JudgeProfile {

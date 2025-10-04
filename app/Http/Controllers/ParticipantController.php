@@ -212,6 +212,11 @@ class ParticipantController extends Controller
             return back()->with('error', 'Please register for specific Talksphere sub-events (Seminar, Talkshow, or Workshop) instead of the general event.');
         }
 
+        // Check if registration is still open
+        if (!$event->isRegistrationOpen()) {
+            return back()->with('error', 'Registration for this event is now closed. Thank you for your interest.');
+        }
+
         try {
             DB::beginTransaction();
 

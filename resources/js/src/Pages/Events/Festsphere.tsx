@@ -366,6 +366,15 @@ const Festsphere: React.FC<FestsphereProps> = ({
                                                 for Festsphere!
                                             </p>
                                         </div>
+                                    ) : !event.is_registration_open ? (
+                                        <div className="mt-4 bg-red-500/20 text-red-300 p-4 rounded-lg border border-red-700/30">
+                                            <p className="font-medium">
+                                                Registration for Festsphere is now closed.
+                                            </p>
+                                            <p className="text-sm mt-2">
+                                                Thank you for your interest. Please check back for future events.
+                                            </p>
+                                        </div>
                                     ) : user ? (
                                         <>
                                             {!isProfileComplete &&

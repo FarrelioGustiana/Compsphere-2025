@@ -101,6 +101,10 @@ class EventController extends Controller
                 ->toArray();
         }
         
+        // Add status and registration open check to event
+        $event->status = $event->status;
+        $event->is_registration_open = $event->isRegistrationOpen();
+        
         // Determine the component name based on the event code
         $componentName = 'Pages/Events/' . ucfirst($slug);
         
