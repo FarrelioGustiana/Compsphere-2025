@@ -909,10 +909,12 @@ class HacksphereController extends Controller
         // Calculate average scores
         $evaluationsCount = $evaluations->count();
         $criteriaScores = [
-            'whole_system_functionality_score' => 0,
-            'ui_ux_design_score' => 0,
-            'backend_logic_score' => 0,
-            'ai_model_performance_score' => 0,
+            'problem_solving_relevance_score' => 0,
+            'functional_mvp_prototype_score' => 0,
+            'technical_execution_score' => 0,
+            'creativity_innovation_score' => 0,
+            'impact_scalability_score' => 0,
+            'presentation_clarity_score' => 0,
             'automation_integration_score' => 0,
         ];
         
@@ -983,11 +985,12 @@ class HacksphereController extends Controller
             
             $averageScore = 0;
             $criteriaScores = [
-                'whole_system_functionality_score' => 0,
-                'ui_ux_design_score' => 0,
-                'backend_logic_score' => 0,
-                'ai_model_performance_score' => 0,
-                'automation_integration_score' => 0,
+                'problem_solving_relevance_score' => 0,
+                'functional_mvp_prototype_score' => 0,
+                'technical_execution_score' => 0,
+                'creativity_innovation_score' => 0,
+                'impact_scalability_score' => 0,
+                'presentation_clarity_score' => 0,
             ];
             
             if ($evaluationsCount > 0) {
@@ -997,11 +1000,12 @@ class HacksphereController extends Controller
                 
                 // Apply weights from config
                 $weights = config('hacksphere.evaluation_weights', [
-                    'whole_system_functionality_score' => 0.30,
-                    'ui_ux_design_score' => 0.20,
-                    'backend_logic_score' => 0.25,
-                    'ai_model_performance_score' => 0.15,
-                    'automation_integration_score' => 0.10,
+                    'problem_solving_relevance_score' => 0.25,
+                    'functional_mvp_prototype_score' => 0.25,
+                    'technical_execution_score' => 0.20,
+                    'creativity_innovation_score' => 0.10,
+                    'impact_scalability_score' => 0.10,
+                    'presentation_clarity_score' => 0.10,
                 ]);
                 
                 $weightedTotal = 0;

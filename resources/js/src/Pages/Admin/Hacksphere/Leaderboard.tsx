@@ -19,11 +19,12 @@ interface RankedSubmission {
   average_score: number;
   evaluations_count: number;
   criteria_scores: {
-    whole_system_functionality_score: number;
-    ui_ux_design_score: number;
-    backend_logic_score: number;
-    ai_model_performance_score: number;
-    automation_integration_score: number;
+    problem_solving_relevance_score: number;
+    functional_mvp_prototype_score: number;
+    technical_execution_score: number;
+    creativity_innovation_score: number;
+    impact_scalability_score: number;
+    presentation_clarity_score: number;
   };
   team_leader: string;
   members: string[];
@@ -58,9 +59,9 @@ export default function Leaderboard({ rankedSubmissions }: LeaderboardProps) {
   };
   
   const getScoreClass = (score: number) => {
-    if (score >= 8) return 'text-green-400';
-    if (score >= 6) return 'text-blue-400';
-    if (score >= 4) return 'text-yellow-400';
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-blue-400';
+    if (score >= 40) return 'text-yellow-400';
     return 'text-red-400';
   };
   
@@ -228,11 +229,12 @@ export default function Leaderboard({ rankedSubmissions }: LeaderboardProps) {
                     <th scope="col" className="px-6 py-3">Team</th>
                     <th scope="col" className="px-6 py-3">Project</th>
                     <th scope="col" className="px-6 py-3">Team Leader</th>
-                    <th scope="col" className="px-6 py-3 text-right">System</th>
-                    <th scope="col" className="px-6 py-3 text-right">UI/UX</th>
-                    <th scope="col" className="px-6 py-3 text-right">Logic</th>
-                    <th scope="col" className="px-6 py-3 text-right">AI</th>
-                    <th scope="col" className="px-6 py-3 text-right">Auto</th>
+                    <th scope="col" className="px-6 py-3 text-right">Problem</th>
+                    <th scope="col" className="px-6 py-3 text-right">MVP</th>
+                    <th scope="col" className="px-6 py-3 text-right">Tech</th>
+                    <th scope="col" className="px-6 py-3 text-right">Creative</th>
+                    <th scope="col" className="px-6 py-3 text-right">Impact</th>
+                    <th scope="col" className="px-6 py-3 text-right">Present</th>
                     <th scope="col" className="px-6 py-3 w-24 text-right">Final Score</th>
                     <th scope="col" className="px-6 py-3 w-24 text-center">Action</th>
                   </tr>
@@ -240,7 +242,7 @@ export default function Leaderboard({ rankedSubmissions }: LeaderboardProps) {
                 <tbody>
                   {filteredSubmissions.length === 0 ? (
                     <tr>
-                      <td colSpan={11} className="px-6 py-8 text-center text-gray-400">
+                      <td colSpan={12} className="px-6 py-8 text-center text-gray-400">
                         {searchQuery ? 'No matching submissions found' : 'No evaluated submissions available yet'}
                       </td>
                     </tr>
@@ -274,33 +276,38 @@ export default function Leaderboard({ rankedSubmissions }: LeaderboardProps) {
                           {submission.team_leader}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={getScoreClass(submission.criteria_scores.whole_system_functionality_score)}>
-                            {submission.criteria_scores.whole_system_functionality_score.toFixed(1)}
+                          <span className={getScoreClass(submission.criteria_scores.problem_solving_relevance_score || 0)}>
+                            {submission.criteria_scores.problem_solving_relevance_score?.toFixed(1) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={getScoreClass(submission.criteria_scores.ui_ux_design_score)}>
-                            {submission.criteria_scores.ui_ux_design_score.toFixed(1)}
+                          <span className={getScoreClass(submission.criteria_scores.functional_mvp_prototype_score || 0)}>
+                            {submission.criteria_scores.functional_mvp_prototype_score?.toFixed(1) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={getScoreClass(submission.criteria_scores.backend_logic_score)}>
-                            {submission.criteria_scores.backend_logic_score.toFixed(1)}
+                          <span className={getScoreClass(submission.criteria_scores.technical_execution_score || 0)}>
+                            {submission.criteria_scores.technical_execution_score?.toFixed(1) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={getScoreClass(submission.criteria_scores.ai_model_performance_score)}>
-                            {submission.criteria_scores.ai_model_performance_score.toFixed(1)}
+                          <span className={getScoreClass(submission.criteria_scores.creativity_innovation_score || 0)}>
+                            {submission.criteria_scores.creativity_innovation_score?.toFixed(1) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <span className={getScoreClass(submission.criteria_scores.automation_integration_score)}>
-                            {submission.criteria_scores.automation_integration_score.toFixed(1)}
+                          <span className={getScoreClass(submission.criteria_scores.impact_scalability_score || 0)}>
+                            {submission.criteria_scores.impact_scalability_score?.toFixed(1) || '-'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className={getScoreClass(submission.criteria_scores.presentation_clarity_score || 0)}>
+                            {submission.criteria_scores.presentation_clarity_score?.toFixed(1) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-right font-bold">
-                          <span className={getScoreClass(submission.average_score)}>
-                            {submission.average_score.toFixed(2)}
+                          <span className={getScoreClass(submission.average_score || 0)}>
+                            {submission.average_score?.toFixed(2) || '-'}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-center">
