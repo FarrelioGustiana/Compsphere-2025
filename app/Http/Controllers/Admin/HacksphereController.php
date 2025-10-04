@@ -909,6 +909,11 @@ class HacksphereController extends Controller
                 'evaluations_count' => $evaluationsCount,
                 'average_score' => $averageScore,
                 'criteria_scores' => $criteriaScores,
+                'is_winner_problem_solving' => $submission->is_winner_problem_solving,
+                'is_winner_technical_execution' => $submission->is_winner_technical_execution,
+                'is_winner_presentation' => $submission->is_winner_presentation,
+                'is_overall_winner' => $submission->is_overall_winner,
+                'winner_categories' => $submission->getWinnerCategories(),
             ];
         });
         
@@ -1096,5 +1101,110 @@ class HacksphereController extends Controller
         return Inertia::render('Admin/Hacksphere/Leaderboard', [
             'rankedSubmissions' => $rankedSubmissions,
         ]);
+    }
+
+    /**
+     * Display the winners management page
+     * 
+     * @return \Inertia\Response
+     */
+    public function winners()
+    {
+        // Get all project submissions with evaluations and winner status
+        $submissions = \App\Models\ProjectSubmission::with([
+            'team.leader.user', 
+            'evaluations',
+            'assignedBy'
+        ])->get();
+        
+        $formattedSubmissions = $submissions->map(function($submission) {
+            // Calculate average scores using helper function
+            $evaluations = $submission->evaluations;
+            $evaluationsCount = $evaluations->count();
+            
+            $scores = $this->calculateScores($evaluations);
+            $averageScore = $scores['average_score'];
+            $criteriaScores = $scores['criteria_scores'];
+            
+            return [
+                'id' => $submission->id,
+                'project_title' => $submission->project_title,
+                'team_id' => $submission->team->id,
+                'team_name' => $submission->team->team_name,
+                'team_leader' => $submission->team->leader ? $submission->team->leader->user->full_name : 'No leader',
+                'evaluations_count' => $evaluationsCount,
+                'average_score' => $averageScore,
+                'criteria_scores' => $criteriaScores,
+                'is_winner_problem_solving' => $submission->is_winner_problem_solving,
+                'is_winner_technical_execution' => $submission->is_winner_technical_execution,
+                'is_winner_presentation' => $submission->is_winner_presentation,
+                'is_overall_winner' => $submission->is_overall_winner,
+                'winner_categories' => $submission->getWinnerCategories(),
+                'winner_assigned_by' => $submission->assignedBy ? $submission->assignedBy->full_name : null,
+                'winner_assigned_at' => $submission->winner_assigned_at,
+            ];
+        })->filter(function($submission) {
+            // Only include submissions with at least one evaluation
+            return $submission['evaluations_count'] > 0;
+        })->sortByDesc('average_score')->values();
+        
+        return Inertia::render('Admin/Hacksphere/Winners', [
+            'submissions' => $formattedSubmissions,
+        ]);
+    }
+
+    /**
+     * Set winner category for a submission
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @param int $submission_id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function setWinner(Request $request, $submission_id)
+    {
+        $request->validate([
+            'category' => 'required|in:problem_solving,technical_execution,presentation,overall',
+            'value' => 'required|boolean',
+        ]);
+
+        $submission = \App\Models\ProjectSubmission::findOrFail($submission_id);
+        
+        $categoryField = 'is_winner_' . $request->category;
+        $categoryName = $this->getWinnerCategoryName($request->category);
+        
+        // If setting to true, remove winner status from other submissions in this category
+        if ($request->value) {
+            \App\Models\ProjectSubmission::where('id', '!=', $submission_id)
+                ->update([
+                    $categoryField => false
+                ]);
+        }
+        
+        $submission->$categoryField = $request->value;
+        $submission->winner_assigned_by = Auth::id();
+        $submission->winner_assigned_at = now();
+        $submission->save();
+        
+        $action = $request->value ? 'set as' : 'removed from';
+        
+        return back()->with('success', "Team '{$submission->team->team_name}' has been {$action} winner for {$categoryName}.");
+    }
+
+    /**
+     * Get winner category display name
+     * 
+     * @param string $category
+     * @return string
+     */
+    private function getWinnerCategoryName($category)
+    {
+        $names = [
+            'problem_solving' => 'Problem-Solving & Creativity',
+            'technical_execution' => 'Technical Execution',
+            'presentation' => 'Presentation & Clarity',
+            'overall' => 'Overall Winner',
+        ];
+        
+        return $names[$category] ?? $category;
     }
 }

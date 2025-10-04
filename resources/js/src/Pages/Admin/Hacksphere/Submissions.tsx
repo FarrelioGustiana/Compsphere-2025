@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import DashboardLayout from '@/src/Components/Layout/DashboardLayout';
 import { route } from 'ziggy-js';
-import { Search, Filter, Download, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Search, Filter, Download, CheckCircle, Clock, AlertTriangle, Trophy, Crown, Award, Star } from 'lucide-react';
 import Button from '@/src/Components/UI/Button';
 
 interface Submission {
@@ -18,6 +18,11 @@ interface Submission {
   submitted_at: string;
   evaluations_count: number;
   average_score: number | null;
+  is_winner_problem_solving?: boolean;
+  is_winner_technical_execution?: boolean;
+  is_winner_presentation?: boolean;
+  is_overall_winner?: boolean;
+  winner_categories?: string[];
 }
 
 interface SubmissionsProps {
@@ -33,6 +38,19 @@ interface SubmissionsProps {
 export default function Submissions({ submissions, stats }: SubmissionsProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  const getWinnerIcon = (submission: Submission) => {
+    if (submission.is_overall_winner) return <Crown className="h-4 w-4 text-yellow-400" />;
+    if (submission.is_winner_problem_solving) return <Star className="h-4 w-4 text-yellow-400" />;
+    if (submission.is_winner_technical_execution) return <Award className="h-4 w-4 text-blue-400" />;
+    if (submission.is_winner_presentation) return <Trophy className="h-4 w-4 text-purple-400" />;
+    return null;
+  };
+
+  const isWinner = (submission: Submission) => {
+    return submission.is_overall_winner || submission.is_winner_problem_solving || 
+           submission.is_winner_technical_execution || submission.is_winner_presentation;
+  };
   
   // Filter submissions based on search query and status
   const filteredSubmissions = submissions.filter(submission => {
@@ -203,13 +221,14 @@ export default function Submissions({ submissions, stats }: SubmissionsProps) {
                     <th scope="col" className="px-6 py-3">Submitted At</th>
                     <th scope="col" className="px-6 py-3">Evaluations</th>
                     <th scope="col" className="px-6 py-3">Score</th>
+                    <th scope="col" className="px-6 py-3">Winner</th>
                     <th scope="col" className="px-6 py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredSubmissions.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-6 py-8 text-center text-gray-400">
+                      <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
                         {searchQuery || statusFilter !== 'all' ? 
                           'No matching submissions found' : 
                           'No submissions available yet'}
@@ -262,6 +281,22 @@ export default function Submissions({ submissions, stats }: SubmissionsProps) {
                           )}
                         </td>
                         <td className="px-6 py-4">
+                          {isWinner(submission) ? (
+                            <div className="flex items-center gap-2">
+                              {getWinnerIcon(submission)}
+                              <div className="flex flex-col">
+                                {submission.winner_categories?.map((cat, idx) => (
+                                  <span key={idx} className="text-xs text-yellow-400">
+                                    {cat}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500">-</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4">
                           <Link href={route('admin.hacksphere.submissions.show', submission.id)}>
                             <Button size="sm">View</Button>
                           </Link>
@@ -274,11 +309,17 @@ export default function Submissions({ submissions, stats }: SubmissionsProps) {
             </div>
           </div>
           
-          {/* View Leaderboard Link */}
-          <div className="mt-8 text-center">
+          {/* Action Links */}
+          <div className="mt-8 flex justify-center gap-4">
             <Link href={route('admin.hacksphere.leaderboard')}>
               <Button className="text-white">
                 View Leaderboard
+              </Button>
+            </Link>
+            <Link href={route('admin.hacksphere.winners')}>
+              <Button className="text-white flex items-center gap-2">
+                <Trophy className="h-4 w-4" />
+                Manage Winners
               </Button>
             </Link>
           </div>

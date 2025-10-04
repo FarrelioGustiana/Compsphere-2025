@@ -24,6 +24,12 @@ class ProjectSubmission extends Model
         'youtube_url',
         'github_url',
         'submitted_at',
+        'is_winner_problem_solving',
+        'is_winner_technical_execution',
+        'is_winner_presentation',
+        'is_overall_winner',
+        'winner_assigned_by',
+        'winner_assigned_at',
     ];
 
     /**
@@ -33,6 +39,11 @@ class ProjectSubmission extends Model
      */
     protected $casts = [
         'submitted_at' => 'datetime',
+        'is_winner_problem_solving' => 'boolean',
+        'is_winner_technical_execution' => 'boolean',
+        'is_winner_presentation' => 'boolean',
+        'is_overall_winner' => 'boolean',
+        'winner_assigned_at' => 'datetime',
     ];
 
     /**
@@ -114,5 +125,51 @@ class ProjectSubmission extends Model
     public function hasUserVoted(int $userId): bool
     {
         return $this->votes()->where('user_id', $userId)->exists();
+    }
+
+    /**
+     * Get the admin who assigned winner status.
+     */
+    public function assignedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'winner_assigned_by');
+    }
+
+    /**
+     * Check if this submission has any winner status.
+     *
+     * @return bool
+     */
+    public function isWinner(): bool
+    {
+        return $this->is_winner_problem_solving 
+            || $this->is_winner_technical_execution 
+            || $this->is_winner_presentation 
+            || $this->is_overall_winner;
+    }
+
+    /**
+     * Get all winner categories for this submission.
+     *
+     * @return array
+     */
+    public function getWinnerCategories(): array
+    {
+        $categories = [];
+        
+        if ($this->is_winner_problem_solving) {
+            $categories[] = 'Problem-Solving & Creativity';
+        }
+        if ($this->is_winner_technical_execution) {
+            $categories[] = 'Technical Execution';
+        }
+        if ($this->is_winner_presentation) {
+            $categories[] = 'Presentation & Clarity';
+        }
+        if ($this->is_overall_winner) {
+            $categories[] = 'Overall Winner';
+        }
+        
+        return $categories;
     }
 }

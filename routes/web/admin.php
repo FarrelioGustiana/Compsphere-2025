@@ -83,6 +83,10 @@ Route::group([
             Route::get('/leaderboard', [\App\Http\Controllers\Admin\HacksphereController::class, 'leaderboard'])->name('admin.hacksphere.leaderboard');
             Route::get('/payments', [\App\Http\Controllers\Admin\HacksphereController::class, 'payments'])->name('admin.hacksphere.payments');
             
+            // Winner Management Routes
+            Route::get('/winners', [\App\Http\Controllers\Admin\HacksphereController::class, 'winners'])->name('admin.hacksphere.winners');
+            Route::post('/winners/{submission_id}/set', [\App\Http\Controllers\Admin\HacksphereController::class, 'setWinner'])->name('admin.hacksphere.winners.set');
+            
             // Voting Statistics Routes
             Route::get('/voting-stats', [VotingController::class, 'getVotingStats'])->name('admin.hacksphere.voting-stats');
             Route::get('/voting-results', function () {
