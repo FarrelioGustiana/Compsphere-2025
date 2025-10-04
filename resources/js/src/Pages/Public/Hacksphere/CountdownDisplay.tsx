@@ -120,7 +120,7 @@ export default function CountdownDisplay({ startDate, endDate, extendedTimeMinut
     }, 1000);
     
     return () => clearInterval(timer);
-  }, [startDate, endDate, announcements, currentAnnouncement]);
+  }, [startDate, endDate, extendedTimeMinutes, announcements, currentAnnouncement]);
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
