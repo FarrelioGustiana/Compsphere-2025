@@ -258,7 +258,7 @@ export default function HacksphereVoting({ submissions: initialSubmissions, user
                                                     <Heart className="h-6 w-6" />
                                                 )}
                                             </button>
-                                            <span className="text-sm font-semibold mt-2">{submission.vote_count}</span>
+                                            {/* <span className="text-sm font-semibold mt-2">{submission.vote_count}</span> */}
                                         </div>
                                     </div>
 
