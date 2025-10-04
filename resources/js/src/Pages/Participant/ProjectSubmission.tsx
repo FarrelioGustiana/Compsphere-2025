@@ -178,7 +178,7 @@ export default function ProjectSubmission({
                     <li>Slide 6: Impact and future development</li>
                   </ul>
                 </li>
-                <li>YouTube video presentation (max 5 minutes)</li>
+                <li>YouTube video presentation (max 10 minutes)</li>
                 <li>GitHub repository link</li>
               </ol>
               
@@ -386,7 +386,7 @@ export default function ProjectSubmission({
                   )}
                   <div className="mt-1 space-y-1">
                     <p className="text-xs text-gray-400">
-                      Video should be a maximum of 5 minutes long
+                      Video should be a maximum of 10 minutes long
                     </p>
                     <p className="text-xs text-yellow-400">
                       📋 Video title must follow format: <span className="font-mono bg-gray-700 px-1 rounded">{team.team_name} - [Judul Project] - Hacksphere 2025</span>
