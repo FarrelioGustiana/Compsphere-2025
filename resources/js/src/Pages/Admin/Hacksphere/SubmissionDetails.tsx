@@ -13,17 +13,13 @@ interface TeamMember {
 
 interface Evaluation {
   id: number;
-  judge: {
-    id: number;
-    name: string;
-    specialization: string;
-  };
-  whole_system_functionality_score: number;
-  ui_ux_design_score: number;
-  backend_logic_score: number;
-  ai_model_performance_score: number;
-  automation_integration_score: number;
-  final_score: number;
+  judge_name: string;
+  problem_solving_relevance_score: number;
+  functional_mvp_prototype_score: number;
+  technical_execution_score: number;
+  creativity_innovation_score: number;
+  impact_scalability_score: number;
+  presentation_clarity_score: number;
   comments: string;
   created_at: string;
 }
@@ -48,18 +44,20 @@ interface SubmissionDetailsProps {
     evaluations: Evaluation[];
     evaluations_count: number;
     criteria_scores: {
-      whole_system_functionality_score: number;
-      ui_ux_design_score: number;
-      backend_logic_score: number;
-      ai_model_performance_score: number;
-      automation_integration_score: number;
+      problem_solving_relevance_score: number;
+      functional_mvp_prototype_score: number;
+      technical_execution_score: number;
+      creativity_innovation_score: number;
+      impact_scalability_score: number;
+      presentation_clarity_score: number;
     };
     criteria_weights?: {
-      whole_system_functionality_score: number;
-      ui_ux_design_score: number;
-      backend_logic_score: number;
-      ai_model_performance_score: number;
-      automation_integration_score: number;
+      problem_solving_relevance_score: number;
+      functional_mvp_prototype_score: number;
+      technical_execution_score: number;
+      creativity_innovation_score: number;
+      impact_scalability_score: number;
+      presentation_clarity_score: number;
     };
   };
 }
@@ -70,18 +68,14 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
   // Get evaluations from submission object
   const evaluations = submission.evaluations || [];
   
-  // Calculate average scores by criterion
-  const criterionAverages = {
-    whole_system_functionality_score: evaluations.length > 0 ? 
-      evaluations.reduce((sum, eval_) => sum + eval_.whole_system_functionality_score, 0) / evaluations.length : null,
-    ui_ux_design_score: evaluations.length > 0 ? 
-      evaluations.reduce((sum, eval_) => sum + eval_.ui_ux_design_score, 0) / evaluations.length : null,
-    backend_logic_score: evaluations.length > 0 ? 
-      evaluations.reduce((sum, eval_) => sum + eval_.backend_logic_score, 0) / evaluations.length : null,
-    ai_model_performance_score: evaluations.length > 0 ? 
-      evaluations.reduce((sum, eval_) => sum + eval_.ai_model_performance_score, 0) / evaluations.length : null,
-    automation_integration_score: evaluations.length > 0 ? 
-      evaluations.reduce((sum, eval_) => sum + eval_.automation_integration_score, 0) / evaluations.length : null,
+  // Use criteria scores from backend
+  const criterionAverages = submission.criteria_scores || {
+    problem_solving_relevance_score: 0,
+    functional_mvp_prototype_score: 0,
+    technical_execution_score: 0,
+    creativity_innovation_score: 0,
+    impact_scalability_score: 0,
+    presentation_clarity_score: 0,
   };
   
   const formatDate = (dateString: string) => {
@@ -89,9 +83,9 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
   };
   
   const getScoreClass = (score: number) => {
-    if (score >= 8) return 'text-green-400';
-    if (score >= 6) return 'text-blue-400';
-    if (score >= 4) return 'text-yellow-400';
+    if (score >= 80) return 'text-green-400';
+    if (score >= 60) return 'text-blue-400';
+    if (score >= 40) return 'text-yellow-400';
     return 'text-red-400';
   };
   
@@ -170,61 +164,73 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
                     <div className="space-y-4">
                       <div>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-300">Whole System Functionality (30%)</span>
-                          <span className={getScoreClass(criterionAverages.whole_system_functionality_score!)}>
-                            {criterionAverages.whole_system_functionality_score?.toFixed(2)}
+                          <span className="text-gray-300">Problem-Solving & Relevance (25%)</span>
+                          <span className={getScoreClass(criterionAverages.problem_solving_relevance_score)}>
+                            {criterionAverages.problem_solving_relevance_score?.toFixed(2) || '-'}
                           </span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(criterionAverages.whole_system_functionality_score! / 10) * 100}%` }}></div>
+                          <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(criterionAverages.problem_solving_relevance_score / 100) * 100}%` }}></div>
                         </div>
                       </div>
                       
                       <div>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-300">UI/UX Design (20%)</span>
-                          <span className={getScoreClass(criterionAverages.ui_ux_design_score!)}>
-                            {criterionAverages.ui_ux_design_score?.toFixed(2)}
+                          <span className="text-gray-300">Functional MVP / Prototype (25%)</span>
+                          <span className={getScoreClass(criterionAverages.functional_mvp_prototype_score)}>
+                            {criterionAverages.functional_mvp_prototype_score?.toFixed(2) || '-'}
                           </span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div className="bg-purple-500 h-2 rounded-full" style={{ width: `${(criterionAverages.ui_ux_design_score! / 10) * 100}%` }}></div>
+                          <div className="bg-purple-500 h-2 rounded-full" style={{ width: `${(criterionAverages.functional_mvp_prototype_score / 100) * 100}%` }}></div>
                         </div>
                       </div>
                       
                       <div>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-300">Back-End & Logic (25%)</span>
-                          <span className={getScoreClass(criterionAverages.backend_logic_score!)}>
-                            {criterionAverages.backend_logic_score?.toFixed(2)}
+                          <span className="text-gray-300">Technical Execution (20%)</span>
+                          <span className={getScoreClass(criterionAverages.technical_execution_score)}>
+                            {criterionAverages.technical_execution_score?.toFixed(2) || '-'}
                           </span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div className="bg-green-500 h-2 rounded-full" style={{ width: `${(criterionAverages.backend_logic_score! / 10) * 100}%` }}></div>
+                          <div className="bg-green-500 h-2 rounded-full" style={{ width: `${(criterionAverages.technical_execution_score / 100) * 100}%` }}></div>
                         </div>
                       </div>
                       
                       <div>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-300">AI Model Performance (15%)</span>
-                          <span className={getScoreClass(criterionAverages.ai_model_performance_score!)}>
-                            {criterionAverages.ai_model_performance_score?.toFixed(2)}
+                          <span className="text-gray-300">Creativity & Innovation (10%)</span>
+                          <span className={getScoreClass(criterionAverages.creativity_innovation_score)}>
+                            {criterionAverages.creativity_innovation_score?.toFixed(2) || '-'}
                           </span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${(criterionAverages.ai_model_performance_score! / 10) * 100}%` }}></div>
+                          <div className="bg-yellow-500 h-2 rounded-full" style={{ width: `${(criterionAverages.creativity_innovation_score / 100) * 100}%` }}></div>
                         </div>
                       </div>
                       
                       <div>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-gray-300">Automation & Integration (10%)</span>
-                          <span className={getScoreClass(criterionAverages.automation_integration_score!)}>
-                            {criterionAverages.automation_integration_score?.toFixed(2)}
+                          <span className="text-gray-300">Impact & Scalability (10%)</span>
+                          <span className={getScoreClass(criterionAverages.impact_scalability_score)}>
+                            {criterionAverages.impact_scalability_score?.toFixed(2) || '-'}
                           </span>
                         </div>
                         <div className="w-full bg-gray-700 rounded-full h-2">
-                          <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${(criterionAverages.automation_integration_score! / 10) * 100}%` }}></div>
+                          <div className="bg-orange-500 h-2 rounded-full" style={{ width: `${(criterionAverages.impact_scalability_score / 100) * 100}%` }}></div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-gray-300">Presentation Clarity (10%)</span>
+                          <span className={getScoreClass(criterionAverages.presentation_clarity_score)}>
+                            {criterionAverages.presentation_clarity_score?.toFixed(2) || '-'}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-700 rounded-full h-2">
+                          <div className="bg-pink-500 h-2 rounded-full" style={{ width: `${(criterionAverages.presentation_clarity_score / 100) * 100}%` }}></div>
                         </div>
                       </div>
                     </div>
@@ -307,12 +313,12 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
                       <thead className="text-xs uppercase bg-gray-700 text-gray-400">
                         <tr>
                           <th scope="col" className="px-6 py-3">Judge</th>
-                          <th scope="col" className="px-6 py-3 text-center">System<br/>(30%)</th>
-                          <th scope="col" className="px-6 py-3 text-center">UI/UX<br/>(20%)</th>
-                          <th scope="col" className="px-6 py-3 text-center">Logic<br/>(25%)</th>
-                          <th scope="col" className="px-6 py-3 text-center">AI<br/>(15%)</th>
-                          <th scope="col" className="px-6 py-3 text-center">Auto<br/>(10%)</th>
-                          <th scope="col" className="px-6 py-3 text-center">Final Score</th>
+                          <th scope="col" className="px-6 py-3 text-center">Problem<br/>(25%)</th>
+                          <th scope="col" className="px-6 py-3 text-center">MVP<br/>(25%)</th>
+                          <th scope="col" className="px-6 py-3 text-center">Tech<br/>(20%)</th>
+                          <th scope="col" className="px-6 py-3 text-center">Creative<br/>(10%)</th>
+                          <th scope="col" className="px-6 py-3 text-center">Impact<br/>(10%)</th>
+                          <th scope="col" className="px-6 py-3 text-center">Present<br/>(10%)</th>
                           <th scope="col" className="px-6 py-3">Date</th>
                         </tr>
                       </thead>
@@ -320,66 +326,37 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
                         {evaluations.map((evaluation) => (
                           <tr key={evaluation.id} className="border-b border-gray-700">
                             <td className="px-6 py-4 font-medium text-white">
-                              {evaluation.judge?.name || 'Unknown Judge'}
-                              {evaluation.judge?.specialization && (
-                                <div className="text-xs text-gray-400">
-                                  {evaluation.judge.specialization}
-                                </div>
-                              )}
+                              {evaluation.judge_name || 'Unknown Judge'}
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {evaluation.whole_system_functionality_score !== undefined && evaluation.whole_system_functionality_score !== null ? (
-                                <span className={getScoreClass(evaluation.whole_system_functionality_score)}>
-                                  {evaluation.whole_system_functionality_score.toFixed(1)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <span className={getScoreClass(evaluation.problem_solving_relevance_score || 0)}>
+                                {evaluation.problem_solving_relevance_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {evaluation.ui_ux_design_score !== undefined && evaluation.ui_ux_design_score !== null ? (
-                                <span className={getScoreClass(evaluation.ui_ux_design_score)}>
-                                  {evaluation.ui_ux_design_score.toFixed(1)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <span className={getScoreClass(evaluation.functional_mvp_prototype_score || 0)}>
+                                {evaluation.functional_mvp_prototype_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {evaluation.backend_logic_score !== undefined && evaluation.backend_logic_score !== null ? (
-                                <span className={getScoreClass(evaluation.backend_logic_score)}>
-                                  {evaluation.backend_logic_score.toFixed(1)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <span className={getScoreClass(evaluation.technical_execution_score || 0)}>
+                                {evaluation.technical_execution_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {evaluation.ai_model_performance_score !== undefined && evaluation.ai_model_performance_score !== null ? (
-                                <span className={getScoreClass(evaluation.ai_model_performance_score)}>
-                                  {evaluation.ai_model_performance_score.toFixed(1)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <span className={getScoreClass(evaluation.creativity_innovation_score || 0)}>
+                                {evaluation.creativity_innovation_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {evaluation.automation_integration_score !== undefined && evaluation.automation_integration_score !== null ? (
-                                <span className={getScoreClass(evaluation.automation_integration_score)}>
-                                  {evaluation.automation_integration_score.toFixed(1)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                              <span className={getScoreClass(evaluation.impact_scalability_score || 0)}>
+                                {evaluation.impact_scalability_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
-                            <td className="px-6 py-4 text-center font-bold">
-                              {evaluation.final_score !== undefined && evaluation.final_score !== null ? (
-                                <span className={getScoreClass(evaluation.final_score)}>
-                                  {evaluation.final_score.toFixed(2)}
-                                </span>
-                              ) : (
-                                <span className="text-gray-500">-</span>
-                              )}
+                            <td className="px-6 py-4 text-center">
+                              <span className={getScoreClass(evaluation.presentation_clarity_score || 0)}>
+                                {evaluation.presentation_clarity_score?.toFixed(1) || '-'}
+                              </span>
                             </td>
                             <td className="px-6 py-4 text-xs">
                               {evaluation.created_at ? formatDate(evaluation.created_at) : '-'}
@@ -401,7 +378,7 @@ export default function SubmissionDetails({ submission }: { submission: Submissi
                           <div key={`comment-${evaluation.id}`} className="bg-gray-700 rounded-md p-4">
                             <div className="flex items-center mb-2">
                               <Star className="h-4 w-4 text-yellow-400 mr-2" />
-                              <span className="font-medium text-white">{evaluation.judge?.name || 'Unknown Judge'}</span>
+                              <span className="font-medium text-white">{evaluation.judge_name || 'Unknown Judge'}</span>
                               <span className="text-xs text-gray-400 ml-auto">
                                 {evaluation.created_at ? formatDate(evaluation.created_at) : '-'}
                               </span>
