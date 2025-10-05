@@ -3,7 +3,21 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import DashboardLayout from '@/src/Components/Layout/DashboardLayout';
 import Button from '@/src/Components/UI/Button';
-import { CalendarClock, Save, Send, AlertCircle, ExternalLink, CheckCircle } from 'lucide-react';
+import { CalendarClock, Save, Send, AlertCircle, ExternalLink, CheckCircle, Star, MessageSquare } from 'lucide-react';
+
+interface Evaluation {
+  id: number;
+  judge_name: string;
+  problem_solving_relevance_score: number;
+  functional_mvp_prototype_score: number;
+  technical_execution_score: number;
+  creativity_innovation_score: number;
+  impact_scalability_score: number;
+  presentation_clarity_score: number;
+  final_score: number;
+  comments: string | null;
+  created_at: string;
+}
 
 interface ProjectSubmissionProps {
   team: {
@@ -19,6 +33,7 @@ interface ProjectSubmissionProps {
     github_url: string;
     submitted_at: string | null;
   } | null;
+  evaluations: Evaluation[];
   isTeamLeader: boolean;
   deadlinePassed: boolean;
   deadline: string;
@@ -37,6 +52,7 @@ interface ProjectSubmissionProps {
 export default function ProjectSubmission({
   team,
   submission,
+  evaluations,
   isTeamLeader,
   deadlinePassed,
   deadline,
@@ -522,6 +538,152 @@ export default function ProjectSubmission({
                     View Code <ExternalLink className="h-4 w-4" />
                   </a>
                 </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Judge Evaluations Section */}
+          {evaluations && evaluations.length > 0 && (
+            <div className="bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+              <h2 className="text-2xl font-semibold text-white mb-4 flex items-center">
+                <Star className="h-6 w-6 mr-2 text-yellow-400" />
+                Judge Evaluations
+              </h2>
+              
+              {/* Average Score */}
+              <div className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-4 mb-6">
+                <div className="text-center">
+                  <p className="text-gray-300 text-sm mb-1">Average Final Score</p>
+                  <p className="text-4xl font-bold text-white">
+                    {(evaluations.reduce((sum, e) => sum + e.final_score, 0) / evaluations.length).toFixed(2)}
+                    <span className="text-xl text-gray-300">/100</span>
+                  </p>
+                  <p className="text-gray-400 text-xs mt-1">
+                    Based on {evaluations.length} evaluation{evaluations.length > 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Individual Evaluations */}
+              <div className="space-y-6">
+                {evaluations.map((evaluation, index) => (
+                  <div key={evaluation.id} className="bg-gray-700 rounded-lg p-5">
+                    {/* Judge Header */}
+                    <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-600">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">
+                          Evaluation #{index + 1}
+                        </h3>
+                        <p className="text-sm text-gray-400">by {evaluation.judge_name}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-yellow-400">
+                          {evaluation.final_score.toFixed(2)}
+                        </p>
+                        <p className="text-xs text-gray-400">Final Score</p>
+                      </div>
+                    </div>
+                    
+                    {/* Detailed Scores */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Problem-Solving & Relevance (25%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-blue-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.problem_solving_relevance_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.problem_solving_relevance_score}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Functional MVP / Prototype (25%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-green-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.functional_mvp_prototype_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.functional_mvp_prototype_score}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Technical Execution (20%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-purple-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.technical_execution_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.technical_execution_score}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Creativity & Innovation (10%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-yellow-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.creativity_innovation_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.creativity_innovation_score}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Impact & Scalability (10%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-orange-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.impact_scalability_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.impact_scalability_score}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-gray-800 rounded p-3">
+                        <p className="text-xs text-gray-400 mb-1">Presentation Clarity (10%)</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 bg-gray-600 rounded-full h-2 mr-3">
+                            <div 
+                              className="bg-pink-500 h-2 rounded-full" 
+                              style={{ width: `${evaluation.presentation_clarity_score}%` }}
+                            />
+                          </div>
+                          <span className="text-white font-semibold">{evaluation.presentation_clarity_score}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Comments */}
+                    {evaluation.comments && (
+                      <div className="bg-gray-800 rounded p-4 mt-4">
+                        <div className="flex items-start">
+                          <MessageSquare className="h-5 w-5 text-blue-400 mr-2 mt-0.5 flex-shrink-0" />
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-gray-300 mb-1">Judge's Feedback</p>
+                            <p className="text-gray-400 text-sm whitespace-pre-line">{evaluation.comments}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Timestamp */}
+                    <p className="text-xs text-gray-500 mt-3 text-right">
+                      Evaluated on {new Date(evaluation.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           )}

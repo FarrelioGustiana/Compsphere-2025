@@ -37,12 +37,37 @@ class ProjectSubmissionController extends Controller
         // Get submission if exists
         $submission = $team->projectSubmission;
         
+        // Get evaluations with judge information if submission exists
+        $evaluations = [];
+        if ($submission) {
+            $evaluations = $submission->evaluations()
+                ->with(['judge.user'])
+                ->where('is_completed', true)
+                ->get()
+                ->map(function ($evaluation) {
+                    return [
+                        'id' => $evaluation->id,
+                        'judge_name' => $evaluation->judge->user->full_name ?? 'Anonymous Judge',
+                        'problem_solving_relevance_score' => $evaluation->problem_solving_relevance_score,
+                        'functional_mvp_prototype_score' => $evaluation->functional_mvp_prototype_score,
+                        'technical_execution_score' => $evaluation->technical_execution_score,
+                        'creativity_innovation_score' => $evaluation->creativity_innovation_score,
+                        'impact_scalability_score' => $evaluation->impact_scalability_score,
+                        'presentation_clarity_score' => $evaluation->presentation_clarity_score,
+                        'final_score' => $evaluation->final_score,
+                        'comments' => $evaluation->comments,
+                        'created_at' => $evaluation->created_at->format('Y-m-d H:i:s'),
+                    ];
+                });
+        }
+        
         // Check if submission deadline has passed
         $deadlinePassed = now() > config('hacksphere.submission_deadline', '2025-10-04 12:00:00');
         
         return Inertia::render('Participant/ProjectSubmission', [
             'team' => $team,
             'submission' => $submission,
+            'evaluations' => $evaluations,
             'isTeamLeader' => $isTeamLeader,
             'deadlinePassed' => $deadlinePassed,
             'deadline' => config('hacksphere.submission_deadline', '2025-10-04 12:00:00'),
