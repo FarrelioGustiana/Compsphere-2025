@@ -16,6 +16,7 @@ import Sponsors from "../Components/Home/Sponsors";
 import SponsorSection from "../Components/Home/SponsorSection";
 import { FaTiktok } from "react-icons/fa";
 import OneTimeNotification from "@/src/Components/Home/OneTimeNotification";
+import FeedbackFloatingModal from "@/src/Components/Home/FeedbackFloatingModal";
 
 export const getColorAndIcon = (eventCode: string) => {
     const colors: Record<string, string> = {
@@ -330,6 +331,9 @@ const Home: React.FC = () => {
                 message="Hi! We've noticed that there were some errors with the registration.<br />We at Jokey.it sincerely apologize for the inconvenience and have fixed the issues.<br />Happy Learning, Happy Competing, Happy Compsphere 2025!"
                 duration={3000}
             />
+
+            {/* Feedback Floating Modal */}
+            <FeedbackFloatingModal storageKey="compsphere_feedback_modal_shown" />
         </div>
     );
 };

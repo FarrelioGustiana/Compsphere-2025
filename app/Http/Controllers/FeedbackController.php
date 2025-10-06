@@ -36,7 +36,7 @@ class FeedbackController extends Controller
             $validated = $request->validate([
                 'subject' => 'required|string|max:255',
                 'message' => 'required|string|min:10',
-                'category' => 'required|in:general,bug_report,feature_request,event_feedback,technical_issue,other',
+                'category' => 'required|in:impression,suggestion,general,bug_report,feature_request,event_feedback,technical_issue,other',
                 'name' => 'nullable|string|max:255',
                 'email' => 'nullable|email|max:255',
             ]);

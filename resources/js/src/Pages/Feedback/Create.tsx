@@ -29,12 +29,14 @@ export default function Create({ user }: FeedbackCreateProps) {
     const [showSuccess, setShowSuccess] = useState(false);
 
     const categories = [
-        { value: "general", label: "General Feedback" },
-        { value: "bug_report", label: "Bug Report" },
-        { value: "feature_request", label: "Feature Request" },
-        { value: "event_feedback", label: "Event Feedback" },
-        { value: "technical_issue", label: "Technical Issue" },
-        { value: "other", label: "Other" },
+        { value: "impression", label: "💝 Impressions & Messages" },
+        { value: "event_feedback", label: "📝 Event Feedback" },
+        { value: "suggestion", label: "💡 Suggestions & Ideas" },
+        { value: "bug_report", label: "🐛 Bug Report" },
+        { value: "feature_request", label: "✨ Feature Request" },
+        { value: "technical_issue", label: "🔧 Technical Issue" },
+        { value: "general", label: "📋 General Feedback" },
+        { value: "other", label: "📌 Other" },
     ];
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -92,10 +94,10 @@ export default function Create({ user }: FeedbackCreateProps) {
                             </div>
                             <div>
                                 <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                    Share Your Feedback
+                                    Share Your Thoughts 💭
                                 </h1>
                                 <p className="text-gray-400 mt-1">
-                                    Help us improve Compsphere by sharing your thoughts and suggestions
+                                    We'd love to hear your impressions, suggestions, or any feedback about Compsphere!
                                 </p>
                             </div>
                         </div>
@@ -180,7 +182,7 @@ export default function Create({ user }: FeedbackCreateProps) {
                                         {/* Category */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-300 mb-2">
-                                                Category *
+                                                What would you like to share? *
                                             </label>
                                             <select
                                                 value={data.category}
@@ -212,7 +214,7 @@ export default function Create({ user }: FeedbackCreateProps) {
                                                 value={data.subject}
                                                 onChange={(e) => setData("subject", e.target.value)}
                                                 className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                placeholder="Brief description of your feedback"
+                                                placeholder="e.g., My experience at Hacksphere, Suggestion for next year, etc."
                                                 required
                                             />
                                             {errors.subject && (
@@ -226,14 +228,14 @@ export default function Create({ user }: FeedbackCreateProps) {
                                         {/* Message */}
                                         <div>
                                             <label className="block text-sm font-medium text-gray-300 mb-2">
-                                                Message *
+                                                Your Message *
                                             </label>
                                             <textarea
                                                 value={data.message}
                                                 onChange={(e) => setData("message", e.target.value)}
                                                 rows={6}
                                                 className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                                                placeholder="Please provide detailed feedback..."
+                                                placeholder="Share your impressions, suggestions, or any thoughts about the event..."
                                                 required
                                             />
                                             <div className="flex justify-between items-center mt-2">
@@ -266,7 +268,7 @@ export default function Create({ user }: FeedbackCreateProps) {
                                                 ) : (
                                                     <>
                                                         <Send className="w-4 h-4 mr-2" />
-                                                        Send Feedback
+                                                        Send Message
                                                     </>
                                                 )}
                                             </button>
@@ -314,24 +316,24 @@ export default function Create({ user }: FeedbackCreateProps) {
                                 {/* Guidelines */}
                                 <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
                                     <h3 className="text-lg font-semibold text-white mb-4">
-                                        Feedback Guidelines
+                                        💡 What You Can Share
                                     </h3>
                                     <ul className="space-y-3 text-sm text-gray-300">
                                         <li className="flex items-start space-x-2">
-                                            <span className="text-blue-400 mt-1">•</span>
-                                            <span>Be specific and constructive in your feedback</span>
+                                            <span className="text-blue-400 mt-1">💝</span>
+                                            <span>Your impressions and memorable moments</span>
                                         </li>
                                         <li className="flex items-start space-x-2">
-                                            <span className="text-blue-400 mt-1">•</span>
-                                            <span>Include steps to reproduce bugs if applicable</span>
+                                            <span className="text-purple-400 mt-1">💡</span>
+                                            <span>Suggestions for future improvements</span>
                                         </li>
                                         <li className="flex items-start space-x-2">
-                                            <span className="text-blue-400 mt-1">•</span>
-                                            <span>Suggest improvements for feature requests</span>
+                                            <span className="text-green-400 mt-1">📝</span>
+                                            <span>Feedback about the event experience</span>
                                         </li>
                                         <li className="flex items-start space-x-2">
-                                            <span className="text-blue-400 mt-1">•</span>
-                                            <span>Be respectful and professional</span>
+                                            <span className="text-yellow-400 mt-1">🐛</span>
+                                            <span>Technical issues or bugs you encountered</span>
                                         </li>
                                     </ul>
                                 </div>
@@ -339,10 +341,10 @@ export default function Create({ user }: FeedbackCreateProps) {
                                 {/* Contact Info */}
                                 <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
                                     <h3 className="text-lg font-semibold text-white mb-4">
-                                        Need Immediate Help?
+                                        📧 Contact Us
                                     </h3>
                                     <p className="text-gray-300 text-sm mb-4">
-                                        For urgent issues, you can also contact us directly:
+                                        For urgent matters or direct communication:
                                     </p>
                                     <div className="space-y-2 text-sm">
                                         <p className="text-gray-400">
