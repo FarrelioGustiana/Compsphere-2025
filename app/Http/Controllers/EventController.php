@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\SubEvent;
 use App\Models\EventRegistration;
+use App\Models\ProjectSubmission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -105,6 +106,31 @@ class EventController extends Controller
         $event->status = $event->status;
         $event->is_registration_open = $event->isRegistrationOpen();
         
+        // Get top 10 leaderboard for Hacksphere
+        $topTenLeaderboard = [];
+        if ($slug === 'hacksphere') {
+            $topTenLeaderboard = ProjectSubmission::with(['team.leader'])
+                ->whereHas('evaluations', function($query) {
+                    $query->where('is_completed', true);
+                })
+                ->get()
+                ->map(function($submission) {
+                    return [
+                        'team_name' => $submission->team->team_name,
+                        'project_title' => $submission->project_title,
+                        'team_leader' => $submission->team->leader ? $submission->team->leader->full_name : 'N/A',
+                        'average_score' => $submission->average_final_score,
+                    ];
+                })
+                ->sortByDesc('average_score')
+                ->take(10)
+                ->values()
+                ->map(function($item, $index) {
+                    $item['rank'] = $index + 1;
+                    return $item;
+                });
+        }
+        
         // Determine the component name based on the event code
         $componentName = 'Pages/Events/' . ucfirst($slug);
         
@@ -116,6 +142,7 @@ class EventController extends Controller
             'eventRegistration' => $eventRegistration,
             'subEvents' => $subEvents,
             'userSubEventRegistrations' => $userSubEventRegistrations,
+            'topTenLeaderboard' => $topTenLeaderboard,
         ]);
     }
 

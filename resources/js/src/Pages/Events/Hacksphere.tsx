@@ -12,7 +12,7 @@ import { motion, AnimatePresence, easeOut } from "framer-motion";
 import { ArrowDownCircle } from "lucide-react";
 import RegistrationSection from "@/src/Components/Hacksphere/RegistrationSection";
 import AboutSection from "@/src/Components/Hacksphere/AboutSection";
-import FeaturesSection from "@/src/Components/Hacksphere/FeaturesSection";
+import WinnersSection from "@/src/Components/Hacksphere/WinnersSection";
 import PrizesSection from "@/src/Components/Hacksphere/PrizesSection";
 import EventLayout from "@/src/Components/Layout/EventLayout";
 import StarGrid from "@/src/Components/StarGrid";
@@ -87,12 +87,21 @@ const CountdownTimer: React.FC<{ targetDate: Date }> = ({ targetDate }) => {
     );
 };
 
+interface LeaderboardItem {
+    rank: number;
+    team_name: string;
+    project_title: string;
+    team_leader: string;
+    average_score: number;
+}
+
 interface HacksphereProps {
     event: Event;
     user?: User;
     participantDetails?: Participant | null;
     isRegistered: boolean;
     eventRegistration?: EventRegistrationModel;
+    topTenLeaderboard: LeaderboardItem[];
 }
 
 const Hacksphere: React.FC<HacksphereProps> = ({
@@ -101,6 +110,7 @@ const Hacksphere: React.FC<HacksphereProps> = ({
     participantDetails,
     isRegistered,
     eventRegistration,
+    topTenLeaderboard,
 }) => {
     // Animation variants for sections
     const fadeInUpVariant = {
@@ -311,10 +321,14 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                     ) : (
                         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
                             <AboutSection fadeInUpVariant={fadeInUpVariant} />
-                            <FeaturesSection
+                            <WinnersSection
                                 fadeInUpVariant={fadeInUpVariant}
+                                leaderboard={topTenLeaderboard}
                             />
-                            <PrizesSection fadeInUpVariant={fadeInUpVariant} />
+                            <PrizesSection 
+                                fadeInUpVariant={fadeInUpVariant}
+                                leaderboard={topTenLeaderboard}
+                            />
 
                             <RegistrationSection
                                 fadeInUpVariant={fadeInUpVariant}
