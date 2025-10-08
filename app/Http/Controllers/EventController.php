@@ -115,8 +115,15 @@ class EventController extends Controller
                 })
                 ->get()
                 ->map(function($submission) {
-                    // Get all team members
+                    // Get all team members (including leader)
                     $members = [];
+                    
+                    // Add leader first
+                    if ($submission->team && $submission->team->leader && $submission->team->leader->user) {
+                        $members[] = $submission->team->leader->user->full_name . ' (Leader)';
+                    }
+                    
+                    // Add other members
                     if ($submission->team && $submission->team->members) {
                         foreach ($submission->team->members as $member) {
                             if ($member->user) {
