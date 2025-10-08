@@ -12,6 +12,61 @@ use Inertia\Inertia;
 class EventController extends Controller
 {
     /**
+     * Helper function to calculate scores with backward compatibility
+     * 
+     * @param \Illuminate\Support\Collection $evaluations
+     * @return array ['average_score' => float, 'criteria_scores' => array]
+     */
+    private function calculateScores($evaluations)
+    {
+        $evaluationsCount = $evaluations->count();
+        
+        if ($evaluationsCount === 0) {
+            return [
+                'average_score' => 0,
+                'criteria_scores' => [
+                    'problem_solving_relevance_score' => 0,
+                    'functional_mvp_prototype_score' => 0,
+                    'technical_execution_score' => 0,
+                    'creativity_innovation_score' => 0,
+                    'impact_scalability_score' => 0,
+                    'presentation_clarity_score' => 0,
+                ],
+            ];
+        }
+        
+        // Calculate average scores for each criterion
+        $criteriaScores = [
+            'problem_solving_relevance_score' => $evaluations->avg('problem_solving_relevance_score'),
+            'functional_mvp_prototype_score' => $evaluations->avg('functional_mvp_prototype_score'),
+            'technical_execution_score' => $evaluations->avg('technical_execution_score'),
+            'creativity_innovation_score' => $evaluations->avg('creativity_innovation_score'),
+            'impact_scalability_score' => $evaluations->avg('impact_scalability_score'),
+            'presentation_clarity_score' => $evaluations->avg('presentation_clarity_score'),
+        ];
+        
+        // Calculate weighted average
+        $weights = [
+            'problem_solving_relevance_score' => 0.25,
+            'functional_mvp_prototype_score' => 0.25,
+            'technical_execution_score' => 0.20,
+            'creativity_innovation_score' => 0.10,
+            'impact_scalability_score' => 0.10,
+            'presentation_clarity_score' => 0.10,
+        ];
+        
+        $weightedTotal = 0;
+        foreach ($criteriaScores as $criterion => $score) {
+            $weightedTotal += ($score ?? 0) * $weights[$criterion];
+        }
+        
+        return [
+            'average_score' => $weightedTotal,
+            'criteria_scores' => $criteriaScores,
+        ];
+    }
+    
+    /**
      * Get all events
      * 
      * @return \Illuminate\Http\JsonResponse
@@ -109,7 +164,7 @@ class EventController extends Controller
         // Get top 10 leaderboard for Hacksphere
         $topTenLeaderboard = [];
         if ($slug === 'hacksphere') {
-            $topTenLeaderboard = ProjectSubmission::with(['team.members.user', 'team.leader.user'])
+            $topTenLeaderboard = ProjectSubmission::with(['team.members.user', 'team.leader.user', 'evaluations'])
                 ->whereHas('evaluations', function($query) {
                     $query->where('is_completed', true);
                 })
@@ -132,11 +187,15 @@ class EventController extends Controller
                         }
                     }
                     
+                    // Calculate scores using helper function
+                    $scores = $this->calculateScores($submission->evaluations);
+                    
                     return [
                         'team_name' => $submission->team->team_name,
                         'project_title' => $submission->project_title,
                         'team_members' => $members,
-                        'average_score' => $submission->average_final_score,
+                        'average_score' => $scores['average_score'],
+                        'criteria_scores' => $scores['criteria_scores'],
                     ];
                 })
                 ->sortByDesc('average_score')

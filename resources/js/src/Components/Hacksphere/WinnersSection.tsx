@@ -2,12 +2,22 @@ import React from "react";
 import { motion, Variants } from "framer-motion";
 import { Trophy, Award, Heart, Mic, Code } from "lucide-react";
 
+interface CriteriaScores {
+    problem_solving_relevance_score: number;
+    functional_mvp_prototype_score: number;
+    technical_execution_score: number;
+    creativity_innovation_score: number;
+    impact_scalability_score: number;
+    presentation_clarity_score: number;
+}
+
 interface LeaderboardItem {
     rank: number;
     team_name: string;
     project_title: string;
     team_members: string[];
     average_score: number;
+    criteria_scores: CriteriaScores;
 }
 
 type Props = {
