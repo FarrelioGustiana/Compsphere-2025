@@ -109,21 +109,26 @@ class EventController extends Controller
         // Get top 10 leaderboard for Hacksphere
         $topTenLeaderboard = [];
         if ($slug === 'hacksphere') {
-            $topTenLeaderboard = ProjectSubmission::with(['team.leader.user'])
+            $topTenLeaderboard = ProjectSubmission::with(['team.members.user', 'team.leader.user'])
                 ->whereHas('evaluations', function($query) {
                     $query->where('is_completed', true);
                 })
                 ->get()
                 ->map(function($submission) {
-                    $leaderName = 'N/A';
-                    if ($submission->team && $submission->team->leader && $submission->team->leader->user) {
-                        $leaderName = $submission->team->leader->user->name;
+                    // Get all team members
+                    $members = [];
+                    if ($submission->team && $submission->team->members) {
+                        foreach ($submission->team->members as $member) {
+                            if ($member->user) {
+                                $members[] = $member->user->name;
+                            }
+                        }
                     }
                     
                     return [
                         'team_name' => $submission->team->team_name,
                         'project_title' => $submission->project_title,
-                        'team_leader' => $leaderName,
+                        'team_members' => $members,
                         'average_score' => $submission->average_final_score,
                     ];
                 })

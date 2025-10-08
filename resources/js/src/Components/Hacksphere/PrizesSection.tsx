@@ -5,7 +5,7 @@ interface LeaderboardItem {
     rank: number;
     team_name: string;
     project_title: string;
-    team_leader: string;
+    team_members: string[];
     average_score: number;
 }
 
@@ -66,11 +66,15 @@ function PrizesSection({ fadeInUpVariant, leaderboard }: Props) {
                                                         {item.project_title}
                                                     </p>
                                                 </div>
-                                                <div className="flex items-center gap-2 mt-1">
-                                                    <p className="text-xs text-gray-500 truncate">
-                                                        Team Leader: {item.team_leader}
-                                                    </p>
-                                                    <span className="text-xs text-gray-600">•</span>
+                                                <div className="flex items-center gap-2 mt-1 flex-wrap">
+                                                    {item.team_members && item.team_members.length > 0 && (
+                                                        <>
+                                                            <p className="text-xs text-gray-500">
+                                                                Members: {item.team_members.join(', ')}
+                                                            </p>
+                                                            <span className="text-xs text-gray-600">•</span>
+                                                        </>
+                                                    )}
                                                     <p className="text-xs text-blue-400 font-medium">
                                                         Score: {item.average_score.toFixed(2)}
                                                     </p>

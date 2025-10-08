@@ -6,7 +6,7 @@ interface LeaderboardItem {
     rank: number;
     team_name: string;
     project_title: string;
-    team_leader: string;
+    team_members: string[];
     average_score: number;
 }
 
