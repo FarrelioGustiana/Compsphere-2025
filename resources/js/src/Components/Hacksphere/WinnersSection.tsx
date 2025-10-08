@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Trophy, Award, Heart, Mic, Code } from "lucide-react";
+import { Trophy, Award, Heart, Mic, Code, ChevronDown, ChevronUp } from "lucide-react";
 
 interface CriteriaScores {
     problem_solving_relevance_score: number;
@@ -116,61 +116,133 @@ function WinnersSection({ fadeInUpVariant, leaderboard }: Props) {
 
             {/* Top 3 Winners - Clean Podium Style */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto">
-                {topThree.map((winner, index) => (
-                    <motion.div
-                        key={index}
-                        className={`${
-                            winner.highlight
-                                ? "lg:order-2"
-                                : index === 0
-                                ? "lg:order-1"
-                                : "lg:order-3"
-                        }`}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: index * 0.15 }}
-                    >
-                        <div
-                            className={`relative bg-gray-800/50 backdrop-blur-sm p-6 rounded-xl border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 ${
-                                winner.highlight ? "lg:scale-105" : ""
+                {topThree.map((winner, index) => {
+                    const [isExpanded, setIsExpanded] = useState(false);
+                    const originalItem = topThreeData[index];
+                    
+                    return (
+                        <motion.div
+                            key={index}
+                            className={`${
+                                winner.highlight
+                                    ? "lg:order-2"
+                                    : index === 0
+                                    ? "lg:order-1"
+                                    : "lg:order-3"
                             }`}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.15 }}
                         >
-                            {/* Rank Badge */}
-                            <div className="flex justify-center mb-4">
-                                <div
-                                    className={`w-16 h-16 rounded-full ${winner.bgColor} border-2 border-gray-700 flex items-center justify-center`}
-                                >
-                                    <Trophy className={`w-8 h-8 ${winner.textColor}`} />
+                            <div
+                                className={`relative bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 overflow-hidden ${
+                                    winner.highlight ? "lg:scale-105" : ""
+                                }`}
+                            >
+                                <div className="p-6">
+                                    {/* Rank Badge */}
+                                    <div className="flex justify-center mb-4">
+                                        <div
+                                            className={`w-16 h-16 rounded-full ${winner.bgColor} border-2 border-gray-700 flex items-center justify-center`}
+                                        >
+                                            <Trophy className={`w-8 h-8 ${winner.textColor}`} />
+                                        </div>
+                                    </div>
+
+                                    {/* Place */}
+                                    <div className={`text-center text-sm font-medium mb-2 ${winner.textColor}`}>
+                                        {winner.place}
+                                    </div>
+
+                                    {/* Team Name */}
+                                    <h3 className="text-center text-xl font-bold text-white mb-2">
+                                        {winner.team}
+                                    </h3>
+
+                                    {/* Project Name */}
+                                    <p className="text-center text-sm text-gray-400 mb-4 line-clamp-2">
+                                        {winner.project}
+                                    </p>
+
+                                    {/* Score */}
+                                    <div className="flex justify-center mb-3">
+                                        <div className={`px-6 py-2 rounded-lg ${winner.scoreColor} border border-gray-600/50`}>
+                                            <span className="text-2xl font-bold text-white">
+                                                {winner.score}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Expand Button */}
+                                    <div className="flex justify-center">
+                                        <button
+                                            onClick={() => setIsExpanded(!isExpanded)}
+                                            className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-700/50 transition-colors text-sm text-gray-400 hover:text-gray-300"
+                                        >
+                                            <span>Score Details</span>
+                                            {isExpanded ? (
+                                                <ChevronUp className="w-4 h-4" />
+                                            ) : (
+                                                <ChevronDown className="w-4 h-4" />
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
+
+                                {/* Expanded Criteria Scores */}
+                                {isExpanded && originalItem && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="border-t border-gray-700/50 bg-gray-900/30 p-4"
+                                    >
+                                        <p className="text-xs text-gray-400 mb-3 font-semibold text-center">Score Breakdown:</p>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">Problem Solving</p>
+                                                <p className="text-sm font-bold text-green-400">
+                                                    {originalItem.criteria_scores.problem_solving_relevance_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">MVP/Prototype</p>
+                                                <p className="text-sm font-bold text-blue-400">
+                                                    {originalItem.criteria_scores.functional_mvp_prototype_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">Technical</p>
+                                                <p className="text-sm font-bold text-purple-400">
+                                                    {originalItem.criteria_scores.technical_execution_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">Creativity</p>
+                                                <p className="text-sm font-bold text-yellow-400">
+                                                    {originalItem.criteria_scores.creativity_innovation_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">Impact</p>
+                                                <p className="text-sm font-bold text-orange-400">
+                                                    {originalItem.criteria_scores.impact_scalability_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                            <div className="bg-gray-800/50 rounded-lg p-2">
+                                                <p className="text-xs text-gray-500 mb-1">Presentation</p>
+                                                <p className="text-sm font-bold text-cyan-400">
+                                                    {originalItem.criteria_scores.presentation_clarity_score?.toFixed(1) || '0.0'}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
                             </div>
-
-                            {/* Place */}
-                            <div className={`text-center text-sm font-medium mb-2 ${winner.textColor}`}>
-                                {winner.place}
-                            </div>
-
-                            {/* Team Name */}
-                            <h3 className="text-center text-xl font-bold text-white mb-2">
-                                {winner.team}
-                            </h3>
-
-                            {/* Project Name */}
-                            <p className="text-center text-sm text-gray-400 mb-4 line-clamp-2">
-                                {winner.project}
-                            </p>
-
-                            {/* Score */}
-                            <div className="flex justify-center">
-                                <div className={`px-6 py-2 rounded-lg ${winner.scoreColor} border border-gray-600/50`}>
-                                    <span className="text-2xl font-bold text-white">
-                                        {winner.score}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
+                        </motion.div>
+                    );
+                })}
             </div>
 
             {/* Special Awards - Enhanced Cards */}
