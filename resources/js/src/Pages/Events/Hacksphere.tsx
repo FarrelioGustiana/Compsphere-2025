@@ -14,6 +14,7 @@ import RegistrationSection from "@/src/Components/Hacksphere/RegistrationSection
 import AboutSection from "@/src/Components/Hacksphere/AboutSection";
 import WinnersSection from "@/src/Components/Hacksphere/WinnersSection";
 import PrizesSection from "@/src/Components/Hacksphere/PrizesSection";
+import ThankYouSection from "@/src/Components/Hacksphere/ThankYouSection";
 import EventLayout from "@/src/Components/Layout/EventLayout";
 import StarGrid from "@/src/Components/StarGrid";
 import KAI from "@/src/Components/KAI";
@@ -330,30 +331,7 @@ const Hacksphere: React.FC<HacksphereProps> = ({
                                 leaderboard={topTenLeaderboard}
                             />
 
-                            <RegistrationSection
-                                fadeInUpVariant={fadeInUpVariant}
-                                isRegistered={isRegistered}
-                                eventRegistration={eventRegistration}
-                                event={event}
-                                showTwibbonEditMode={showTwibbonEditMode}
-                                setShowTwibbonEditMode={setShowTwibbonEditMode}
-                                twibbonForm={twibbonForm}
-                                twibbonMessage={twibbonMessage}
-                                setTwibbonMessage={setTwibbonMessage}
-                                showNikForm={showNikForm}
-                                setShowNikForm={setShowNikForm}
-                                handleNikSubmit={handleNikSubmit}
-                                processing={processing}
-                                errors={errors}
-                                handleRegisterClick={handleRegisterClick}
-                                data={data}
-                                setData={setData}
-                                user={user}
-                                isProfileComplete={isProfileComplete}
-                                isProfileCompleteButNikMissing={
-                                    isProfileCompleteButNikMissing
-                                }
-                            />
+                            <ThankYouSection fadeInUpVariant={fadeInUpVariant} />
                         </div>
                     )}
                 </div>
