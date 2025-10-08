@@ -120,7 +120,7 @@ class EventController extends Controller
                     if ($submission->team && $submission->team->members) {
                         foreach ($submission->team->members as $member) {
                             if ($member->user) {
-                                $members[] = $member->user->name;
+                                $members[] = $member->user->full_name;
                             }
                         }
                     }
