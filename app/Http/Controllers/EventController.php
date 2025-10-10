@@ -191,11 +191,16 @@ class EventController extends Controller
                     $scores = $this->calculateScores($submission->evaluations);
                     
                     return [
+                        'submission_id' => $submission->id,
                         'team_name' => $submission->team->team_name,
                         'project_title' => $submission->project_title,
+                        'project_description' => $submission->project_description,
                         'team_members' => $members,
                         'average_score' => $scores['average_score'],
                         'criteria_scores' => $scores['criteria_scores'],
+                        'presentation_url' => $submission->presentation_url,
+                        'youtube_url' => $submission->youtube_url,
+                        'github_url' => $submission->github_url,
                     ];
                 })
                 ->sortByDesc('average_score')

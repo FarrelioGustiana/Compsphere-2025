@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Youtube, FileText } from "lucide-react";
 
 interface CriteriaScores {
     problem_solving_relevance_score: number;
@@ -12,12 +12,17 @@ interface CriteriaScores {
 }
 
 interface LeaderboardItem {
+    submission_id: number;
     rank: number;
     team_name: string;
     project_title: string;
+    project_description: string;
     team_members: string[];
     average_score: number;
     criteria_scores: CriteriaScores;
+    presentation_url: string;
+    youtube_url: string;
+    github_url: string;
 }
 
 type Props = {
@@ -75,7 +80,6 @@ function PrizesSection({ fadeInUpVariant, leaderboard }: Props) {
                                                             <h4 className="font-bold text-white truncate">
                                                                 {item.team_name}
                                                             </h4>
-                                                            <span className="text-sm text-gray-500 hidden sm:inline">•</span>
                                                             <p className="text-sm text-gray-400 truncate">
                                                                 {item.project_title}
                                                             </p>
@@ -92,6 +96,32 @@ function PrizesSection({ fadeInUpVariant, leaderboard }: Props) {
                                                             <p className="text-xs text-blue-400 font-medium">
                                                                 Score: {item.average_score.toFixed(2)}
                                                             </p>
+                                                        </div>
+                                                        
+                                                        {/* Project Resources */}
+                                                        <div className="mt-3 flex flex-wrap gap-2">
+                                                            {item.youtube_url && (
+                                                                <a
+                                                                    href={item.youtube_url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded text-xs text-red-400 hover:text-red-300 transition-all duration-200"
+                                                                >
+                                                                    <Youtube className="w-3 h-3" />
+                                                                    <span>Demo</span>
+                                                                </a>
+                                                            )}
+                                                            {item.presentation_url && (
+                                                                <a
+                                                                    href={item.presentation_url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 hover:border-blue-500/50 rounded text-xs text-blue-400 hover:text-blue-300 transition-all duration-200"
+                                                                >
+                                                                    <FileText className="w-3 h-3" />
+                                                                    <span>Slides</span>
+                                                                </a>
+                                                            )}
                                                         </div>
                                                     </div>
 

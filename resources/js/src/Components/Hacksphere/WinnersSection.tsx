@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, Variants } from "framer-motion";
-import { Trophy, Award, Heart, Mic, Code, ChevronDown, ChevronUp } from "lucide-react";
+import { Trophy, Award, Heart, Mic, Code, ChevronDown, ChevronUp, Youtube, FileText } from "lucide-react";
 
 interface CriteriaScores {
     problem_solving_relevance_score: number;
@@ -12,12 +12,17 @@ interface CriteriaScores {
 }
 
 interface LeaderboardItem {
+    submission_id: number;
     rank: number;
     team_name: string;
     project_title: string;
+    project_description: string;
     team_members: string[];
     average_score: number;
     criteria_scores: CriteriaScores;
+    presentation_url: string;
+    youtube_url: string;
+    github_url: string;
 }
 
 type Props = {
@@ -172,6 +177,32 @@ function WinnersSection({ fadeInUpVariant, leaderboard }: Props) {
                                                 {winner.score}
                                             </span>
                                         </div>
+                                    </div>
+
+                                    {/* Project Resources */}
+                                    <div className="flex justify-center mb-3 flex-wrap gap-2">
+                                        {originalItem.youtube_url && (
+                                            <a
+                                                href={originalItem.youtube_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 rounded text-sm text-red-400 hover:text-red-300 transition-all duration-200"
+                                            >
+                                                <Youtube className="w-4 h-4" />
+                                                <span>Demo</span>
+                                            </a>
+                                        )}
+                                        {originalItem.presentation_url && (
+                                            <a
+                                                href={originalItem.presentation_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 hover:border-blue-500/50 rounded text-sm text-blue-400 hover:text-blue-300 transition-all duration-200"
+                                            >
+                                                <FileText className="w-4 h-4" />
+                                                <span>Slides</span>
+                                            </a>
+                                        )}
                                     </div>
 
                                     {/* Expand Button */}

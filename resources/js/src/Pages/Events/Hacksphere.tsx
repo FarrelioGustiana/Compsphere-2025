@@ -98,12 +98,17 @@ interface CriteriaScores {
 }
 
 interface LeaderboardItem {
+    submission_id: number;
     rank: number;
     team_name: string;
     project_title: string;
+    project_description: string;
     team_members: string[];
     average_score: number;
     criteria_scores: CriteriaScores;
+    presentation_url: string;
+    youtube_url: string;
+    github_url: string;
 }
 
 interface HacksphereProps {
